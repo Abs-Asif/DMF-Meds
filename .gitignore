@@ -1,0 +1,10 @@
+.gradle/
+build/
+app/build/
+*.apk
+local.properties
+.idea/
+*.iml
+*.log
+preprocess.py
+generics_processed.json

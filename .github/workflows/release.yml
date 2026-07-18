@@ -1,0 +1,64 @@
+name: Build and Release DMF Meds APK
+
+on:
+  push:
+    branches:
+      - '**'
+
+jobs:
+  build:
+    name: Build Signed Release APK
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '21'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: Make Gradle Wrapper Executable
+        run: chmod +x gradlew || true
+
+      - name: Generate Version and Build Release APK
+        id: build_apk
+        run: |
+          # Generate version name based on current UTC date and time
+          VERSION_NAME=$(date +'%Y.%m.%d-%H%M')
+          echo "VERSION_NAME=${VERSION_NAME}" >> $GITHUB_ENV
+          echo "TAG_NAME=v${VERSION_NAME}" >> $GITHUB_ENV
+
+          # Build signed release APK
+          export VERSION_NAME="${VERSION_NAME}"
+          gradle :app:assembleRelease
+
+      - name: Verify APK Creation
+        run: |
+          ls -lh app/build/outputs/apk/release/
+          mv app/build/outputs/apk/release/app-release.apk app/build/outputs/apk/release/dmf-meds-release.apk
+
+      - name: Create GitHub Release and Upload APK
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ env.TAG_NAME }}
+          name: DMF Meds Release ${{ env.VERSION_NAME }}
+          body: |
+            Automated Release of DMF Meds Android App.
+
+            - **Version:** `${{ env.VERSION_NAME }}`
+            - **Build Date:** $(date -u)
+            - **Branch:** `${{ github.ref_name }}`
+          draft: false
+          prerelease: false
+          files: |
+            app/build/outputs/apk/release/dmf-meds-release.apk
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
