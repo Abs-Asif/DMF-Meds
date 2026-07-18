@@ -1,0 +1,73 @@
+1. Aspirin  
+2. Paracetamol  
+3. Diclofenac  
+4. Ibuprofen  
+5. Methyl salicylate  
+6. Albendazole  
+7. Amoxicillin  
+8. Ampicillin  
+9. Chloroquine phosphate  
+10. Cloxacillin  
+11. Co-trimoxazole  
+12. Doxycycline  
+13. Griseofulvin  
+14. Phenoxymethylpenicillin  
+15. Procaine penicillin  
+16. Pyrantel pamoate  
+17. Quinine  
+18. Pyrimethamine with sulfadoxine  
+19. Tetracycline/Oxytetracycline  
+20. Glyceryl trinitrate  
+21. Methyldopa  
+22. Propranolol  
+23. Antacid chewable  
+24. Glycerin  
+25. Hyoscine N-butylbromide  
+26. Milk of magnesia  
+27. Omeprazole  
+28. Oral rehydration salts (ORS)  
+29. Ranitidine  
+30. Potassium permanganate  
+31. Atropine  
+32. Benzoic acid and salicylic acid  
+33. Benzyl benzoate  
+34. Chlorhexidine  
+35. Chlorhexidine plus cetrimide  
+36. Chloroxylenol  
+37. Gentian violet  
+38. Neomycin/Gentamicin/Bacitracin combination  
+39. Permethrin  
+40. Povidone iodine  
+41. Silver sulfadiazine  
+42. Calcium  
+43. Ferrous sulfate/gluconate/fumarate  
+44. Folic acid  
+45. Multivitamin  
+46. Riboflavin  
+47. Vitamin A  
+48. Vitamin B complex  
+49. Vitamin C (ascorbic acid)  
+50. Zinc  
+51. Chloramphenicol  
+52. Chlorpheniramine maleate  
+53. Dextromethorphan  
+54. Promethazine theoclate  
+55. Salbutamol  
+56. Xylometazoline 0.1%  
+57. Contraceptive low dose  
+58. Emergency contraceptive  
+59. Cholera fluid  
+60. Dextrose in water (5%, 25%, 50%)  
+61. I.V. saline of various strengths (0.9%, 0.25%, 0.18%) with 4% dextrose / 0.9% saline without dextrose  
+62. Redistilled water (pyrogen free)  
+63. Diazepam  
+64. Phenobarbitone  
+65. Ergometrine/Methylergometrine maleate  
+66. Misoprostol  
+67. Oxytocin  
+68. Hydrochlorothiazide  
+69. Lidocaine 1%, 2% without adrenaline  
+70. BCG/DPT/TT/Polio/Measles/Hepatitis B/Influenza vaccines  
+71. DT/DPT/Polio/Tetanus/Diphtheria vaccine  
+72. Hepatitis B vaccine  
+73. Tetanus Ig
