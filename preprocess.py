@@ -156,6 +156,46 @@ def get_single_description(name):
         if name_clean.endswith(suffix) or f'{suffix} ' in name_clean:
             return desc
 
+    # Keyword-based classifications for remaining generics to complete missing/default data
+    if any(x in name_clean for x in ['vitamin', 'mineral', 'nutrient', 'nutrients', 'folate', 'calcium', 'zinc', 'iron', 'supplement', 'multivitamin', 'nutritional']):
+        return "A comprehensive nutritional supplement containing essential vitamins and minerals to support overall health and fill dietary gaps."
+
+    if any(x in name_clean for x in ['herb', 'extract', 'arista', 'asava', 'rasa', 'bhasma', 'lauha', 'ghrita', 'taila', 'hayat', 'abhayarista', 'vasica', 'glycyrrhiza', 'centella']):
+        return "A traditional herbal/ayurvedic formulation used for holistic health management, natural healing, and symptom relief."
+
+    if any(x in name_clean for x in ['estradiol', 'estrogen', 'progesterone', 'testosterone', 'hormone', 'levonorgestrel', 'desogestrel']):
+        return "A hormone replacement or endocrine agent used for therapeutic hormone balance and related clinical indications."
+
+    if any(x in name_clean for x in ['vaccine', 'immunoglobulin', 'tetanus', 'bcg', 'toxoid']):
+        return "An immunizing agent used to induce active immunity and protect against specific infectious diseases."
+
+    if any(x in name_clean for x in ['adapalene', 'benzoyl peroxide', 'tretinoin', 'isotretinoin', 'clindamycin', 'acne', 'salicylic']):
+        return "A dermatological preparation used for the topical treatment of acne and other skin conditions."
+
+    if any(x in name_clean for x in ['alendronic', 'bisphosphonate', 'ibandronate', 'risedronate', 'zoledronic']):
+        return "A bone-resorption inhibitor used for the treatment and prevention of osteoporosis and bone disorders."
+
+    if any(x in name_clean for x in ['alfuzosin', 'tamsulosin', 'silodosin', 'dutasteride', 'finasteride']):
+        return "A therapeutic urological agent used to improve urinary flow and treat symptoms of benign prostatic hyperplasia (BPH)."
+
+    if any(x in name_clean for x in ['acarbose', 'miglitol', 'voglibose', 'metformin', 'gliclazide', 'glimepiride', 'vildagliptin', 'sitagliptin', 'empagliflozin', 'dapagliflozin', 'pioglitazone']):
+        return "An oral antidiabetic medication used to improve glycemic control in patients with type 2 diabetes."
+
+    if any(x in name_clean for x in ['acetylcysteine', 'carbocisteine', 'bromhexine', 'ambroxol', 'guaifenesin']):
+        return "A mucolytic or expectorant agent used to reduce the viscosity of mucus and assist in clearing the respiratory tract."
+
+    if 'charcoal' in name_clean:
+        return "An adsorbent agent used in the emergency management of oral poisonings, drug overdoses, and abdominal gas."
+
+    if any(x in name_clean for x in ['adrenaline', 'epinephrine', 'norepinephrine', 'dopamine', 'dobutamine']):
+        return "A potent sympathomimetic amine used as an emergency vasopressor and cardiac stimulant during critical care."
+
+    if any(x in name_clean for x in ['allantoin', 'urea', 'glycolic', 'moisturizer', 'panthenol']):
+        return "A keratolytic skin-conditioning agent used to soothe, hydrate, and promote healing of dry or rough skin."
+
+    if any(x in name_clean for x in ['eye drop', 'eye ointment', 'lubricant eye', 'tear', 'hypromellose', 'carboxymethylcellulose']):
+        return "An ophthalmic lubricant or artificial tear preparation used to relieve dry, irritated, or burning eyes."
+
     return f"A pharmaceutical agent used for therapeutic management of relevant clinical conditions."
 
 def generate_description_for_generic(g_name):
@@ -428,7 +468,10 @@ def main():
 
     print(f"Processed: Allowed={allowed_count}, OTC={otc_count}, Antibiotic={anti_count}")
 
-    # Save the processed mapping
+    # Save the processed mapping inside assets
+    with open('app/src/main/assets/generics_processed.json', 'w') as f:
+        json.dump(processed_generics, f, indent=4)
+    # Also save at root for reference/caching
     with open('generics_processed.json', 'w') as f:
         json.dump(processed_generics, f, indent=4)
 

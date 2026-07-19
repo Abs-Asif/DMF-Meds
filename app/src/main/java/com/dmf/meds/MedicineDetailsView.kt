@@ -33,6 +33,7 @@ fun MedicineDetailsView(
     med: Medicine,
     medicines: List<Medicine>,
     genericsMetadata: Map<String, GenericMetadata>,
+    isBangla: Boolean,
     onSelectMedicine: (Medicine) -> Unit
 ) {
     val meta = genericsMetadata[med.generic]
@@ -47,7 +48,7 @@ fun MedicineDetailsView(
         item {
             Card(
                 modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(containerColor = Color.White),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
                 elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
                 shape = RoundedCornerShape(16.dp)
             ) {
@@ -62,7 +63,7 @@ fun MedicineDetailsView(
                             text = med.brand,
                             fontSize = 24.sp,
                             fontWeight = FontWeight.Bold,
-                            color = Color(0xFF1E293B),
+                            color = MaterialTheme.colorScheme.onSurface,
                             modifier = Modifier.weight(1f)
                         )
                         Spacer(modifier = Modifier.width(8.dp))
@@ -78,26 +79,26 @@ fun MedicineDetailsView(
 
                     // Generic Name
                     Text(
-                        text = "Generic Name",
+                        text = Trans.genericNameLabel(isBangla),
                         fontSize = 12.sp,
-                        color = Color.Gray,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
                         fontWeight = FontWeight.SemiBold
                     )
                     Text(
                         text = med.generic,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Color(0xFF0F172A)
+                        color = MaterialTheme.colorScheme.onSurface
                     )
 
                     Spacer(modifier = Modifier.height(6.dp))
 
                     // Generic Description
-                    val description = meta?.description ?: "No description available."
+                    val description = meta?.description ?: Trans.noDescription(isBangla)
                     Text(
                         text = description,
                         fontSize = 13.sp,
-                        color = Color(0xFF475569),
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                         lineHeight = 18.sp
                     )
 
@@ -105,16 +106,16 @@ fun MedicineDetailsView(
 
                     // Manufacturer
                     Text(
-                        text = "Manufacturer",
+                        text = Trans.manufacturerLabel(isBangla),
                         fontSize = 12.sp,
-                        color = Color.Gray,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
                         fontWeight = FontWeight.SemiBold
                     )
                     Text(
                         text = med.manufacturer,
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Medium,
-                        color = Color(0xFF334155)
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                 }
             }
@@ -124,25 +125,25 @@ fun MedicineDetailsView(
         item {
             Card(
                 modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(containerColor = Color.White),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
                 elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
                 shape = RoundedCornerShape(16.dp)
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Text(
-                        text = "Prescription Assessment",
+                        text = Trans.prescriptionAssessment(isBangla),
                         fontSize = 15.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Color(0xFF1E293B),
+                        color = MaterialTheme.colorScheme.onSurface,
                         modifier = Modifier.padding(bottom = 12.dp)
                     )
 
                     // 1. Allowance Status (Mandatory)
                     val isAllowed = meta?.isAllowed == true
                     RemarkRow(
-                        title = "Allowance Status",
-                        value = if (isAllowed) "YES" else "NO",
-                        subtext = if (isAllowed) "DMF / MATS practitioners are allowed to prescribe this medicine." else "NOT allowed to prescribe. This medicine contains generics not listed in the approved prescription lists.",
+                        title = Trans.allowanceStatus(isBangla),
+                        value = if (isAllowed) Trans.allowedYes(isBangla) else Trans.allowedNo(isBangla),
+                        subtext = if (isAllowed) Trans.allowedSubtextYes(isBangla) else Trans.allowedSubtextNo(isBangla),
                         isPositive = isAllowed,
                         icon = if (isAllowed) Icons.Default.CheckCircle else Icons.Default.Cancel
                     )
@@ -152,9 +153,9 @@ fun MedicineDetailsView(
                     if (isOtc) {
                         Spacer(modifier = Modifier.height(12.dp))
                         RemarkRow(
-                            title = "OTC Status",
-                            value = "YES",
-                            subtext = "This is an Over-The-Counter (OTC) medicine. DMF practitioners are permitted to prescribe it by default.",
+                            title = Trans.otcStatus(isBangla),
+                            value = Trans.allowedYes(isBangla),
+                            subtext = Trans.otcSubtext(isBangla),
                             isPositive = true,
                             icon = Icons.Default.Info
                         )
@@ -165,9 +166,9 @@ fun MedicineDetailsView(
                     if (isAntibiotic) {
                         Spacer(modifier = Modifier.height(12.dp))
                         RemarkRow(
-                            title = "Antibiotic Warning",
-                            value = "YES",
-                            subtext = "Warning: This is an Antibiotic. Exercise maximum caution and follow antibiotic stewardship guidelines.",
+                            title = Trans.antibioticWarning(isBangla),
+                            value = Trans.allowedYes(isBangla),
+                            subtext = Trans.antibioticSubtext(isBangla),
                             isPositive = false, // Yellow/Warning style
                             isWarning = true,
                             icon = Icons.Default.Warning
@@ -182,12 +183,12 @@ fun MedicineDetailsView(
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
 
                 // 1. Show alternatives (Same 'g' and 'p')
-                ExpandableCard(title = "Show Alternatives") {
+                ExpandableCard(title = Trans.showAlternatives(isBangla)) {
                     val alternatives = remember(med) {
                         SearchEngine.getAlternatives(med, medicines)
                     }
                     if (alternatives.isEmpty()) {
-                        Text("No alternatives found with the same power.", fontSize = 13.sp, color = Color.Gray)
+                        Text(Trans.noAlternatives(isBangla), fontSize = 13.sp, color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f))
                     } else {
                         Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                             alternatives.take(30).forEach { alt ->
@@ -198,12 +199,12 @@ fun MedicineDetailsView(
                 }
 
                 // 2. Other Powers (Same 'g')
-                ExpandableCard(title = "Other Powers") {
+                ExpandableCard(title = Trans.otherPowers(isBangla)) {
                     val otherPowers = remember(med) {
                         SearchEngine.getOtherPowers(med, medicines)
                     }
                     if (otherPowers.isEmpty()) {
-                        Text("No other powers available.", fontSize = 13.sp, color = Color.Gray)
+                        Text(Trans.noOtherPowers(isBangla), fontSize = 13.sp, color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f))
                     } else {
                         Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                             otherPowers.take(30).forEach { alt ->
@@ -214,19 +215,19 @@ fun MedicineDetailsView(
                 }
 
                 // 3. Other Combination (Clickable generics list)
-                ExpandableCard(title = "Other Combinations") {
+                ExpandableCard(title = Trans.otherCombinations(isBangla)) {
                     val otherCombos = remember(med) {
                         SearchEngine.getOtherCombinations(med.generic, genericsMetadata.keys)
                     }
                     if (otherCombos.isEmpty()) {
-                        Text("No other combination generics containing this drug.", fontSize = 13.sp, color = Color.Gray)
+                        Text(Trans.noOtherCombos(isBangla), fontSize = 13.sp, color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f))
                     } else {
                         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                             otherCombos.forEach { comboGeneric ->
                                 Row(
                                     modifier = Modifier
                                         .fillMaxWidth()
-                                        .border(1.dp, Color(0xFFE2E8F0), RoundedCornerShape(8.dp))
+                                        .border(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.3f), RoundedCornerShape(8.dp))
                                         .clickable { showCombinationPopupFor = comboGeneric }
                                         .padding(12.dp),
                                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -260,6 +261,7 @@ fun MedicineDetailsView(
         CombinationPopup(
             genericName = selectedGeneric,
             medicines = medicines,
+            isBangla = isBangla,
             onClose = { showCombinationPopupFor = null },
             onSelect = { selectedMed ->
                 showCombinationPopupFor = null
@@ -278,16 +280,18 @@ fun RemarkRow(
     isWarning: Boolean = false,
     icon: androidx.compose.ui.graphics.vector.ImageVector
 ) {
+    val isDark = MaterialTheme.colorScheme.background == Color(0xFF0F172A)
+
     val tintColor = when {
-        isWarning -> Color(0xFFD97706) // Orange for warning
-        isPositive -> Color(0xFF16A34A) // Green for positive
-        else -> Color(0xFFDC2626) // Red for negative
+        isWarning -> if (isDark) Color(0xFFFBBF24) else Color(0xFFD97706) // Orange
+        isPositive -> if (isDark) Color(0xFF4ADE80) else Color(0xFF16A34A) // Green
+        else -> if (isDark) Color(0xFFF87171) else Color(0xFFDC2626) // Red
     }
 
     val containerColor = when {
-        isWarning -> Color(0xFFFEF3C7)
-        isPositive -> Color(0xFFDCFCE7)
-        else -> Color(0xFFFEE2E2)
+        isWarning -> if (isDark) Color(0xFF78350F) else Color(0xFFFEF3C7)
+        isPositive -> if (isDark) Color(0xFF064E3B) else Color(0xFFDCFCE7)
+        else -> if (isDark) Color(0xFF7F1D1D) else Color(0xFFFEE2E2)
     }
 
     Row(
@@ -312,7 +316,7 @@ fun RemarkRow(
                     text = "$title: ",
                     fontWeight = FontWeight.Bold,
                     fontSize = 14.sp,
-                    color = Color(0xFF1E293B)
+                    color = MaterialTheme.colorScheme.onSurface
                 )
                 Text(
                     text = value,
@@ -325,7 +329,7 @@ fun RemarkRow(
             Text(
                 text = subtext,
                 fontSize = 12.sp,
-                color = Color(0xFF475569),
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f),
                 lineHeight = 16.sp
             )
         }
@@ -337,8 +341,8 @@ fun CompactMedicineTile(med: Medicine) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .border(1.dp, Color(0xFFF1F5F9), RoundedCornerShape(8.dp))
-            .background(Color(0xFFF8FAFC))
+            .border(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.2f), RoundedCornerShape(8.dp))
+            .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f))
             .padding(10.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
@@ -348,12 +352,12 @@ fun CompactMedicineTile(med: Medicine) {
                 text = med.brand,
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color(0xFF334155)
+                color = MaterialTheme.colorScheme.onSurface
             )
             Text(
                 text = med.manufacturer,
                 fontSize = 11.sp,
-                color = Color.Gray,
+                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
@@ -362,7 +366,7 @@ fun CompactMedicineTile(med: Medicine) {
             text = med.power,
             fontSize = 13.sp,
             fontWeight = FontWeight.SemiBold,
-            color = Color(0xFF64748B)
+            color = MaterialTheme.colorScheme.primary
         )
     }
 }
@@ -376,7 +380,7 @@ fun ExpandableCard(
     Card(
         modifier = Modifier
             .fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         shape = RoundedCornerShape(12.dp)
     ) {
@@ -393,12 +397,12 @@ fun ExpandableCard(
                     text = title,
                     fontWeight = FontWeight.Bold,
                     fontSize = 15.sp,
-                    color = Color(0xFF334155)
+                    color = MaterialTheme.colorScheme.onSurface
                 )
                 Icon(
                     imageVector = if (expanded) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
                     contentDescription = null,
-                    tint = Color(0xFF64748B)
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
             if (expanded) {
@@ -416,6 +420,7 @@ fun ExpandableCard(
 fun CombinationPopup(
     genericName: String,
     medicines: List<Medicine>,
+    isBangla: Boolean,
     onClose: () -> Unit,
     onSelect: (Medicine) -> Unit
 ) {
@@ -451,7 +456,7 @@ fun CombinationPopup(
                 .fillMaxSize()
                 .padding(16.dp), // Space margins in all sides
             shape = RoundedCornerShape(24.dp),
-            colors = CardDefaults.cardColors(containerColor = Color.White),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
             elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
         ) {
             Column(
@@ -469,7 +474,7 @@ fun CombinationPopup(
                         text = genericName,
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Color(0xFF0F172A),
+                        color = MaterialTheme.colorScheme.onSurface,
                         modifier = Modifier.weight(1f),
                         maxLines = 2,
                         overflow = TextOverflow.Ellipsis
@@ -478,7 +483,7 @@ fun CombinationPopup(
                         Icon(
                             imageVector = Icons.Default.Close,
                             contentDescription = "Close",
-                            tint = Color(0xFF64748B)
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                 }
@@ -491,8 +496,14 @@ fun CombinationPopup(
                     onValueChange = { popupQuery = it },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .border(1.dp, Color(0xFFE2E8F0), RoundedCornerShape(20.dp)),
-                    placeholder = { Text("Search brand name or power...") },
+                        .border(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.3f), RoundedCornerShape(20.dp)),
+                    placeholder = {
+                        Text(
+                            text = Trans.searchBrandPower(isBangla),
+                            fontSize = 14.sp,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
+                        )
+                    },
                     leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
                     trailingIcon = {
                         if (popupQuery.isNotEmpty()) {
@@ -504,10 +515,12 @@ fun CombinationPopup(
                     singleLine = true,
                     shape = RoundedCornerShape(20.dp),
                     colors = OutlinedTextFieldDefaults.colors(
-                        focusedContainerColor = Color(0xFFF8FAFC),
-                        unfocusedContainerColor = Color(0xFFF8FAFC),
+                        focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+                        unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
                         focusedBorderColor = MaterialTheme.colorScheme.primary,
-                        unfocusedBorderColor = Color.Transparent
+                        unfocusedBorderColor = Color.Transparent,
+                        focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                        unfocusedTextColor = MaterialTheme.colorScheme.onSurface
                     ),
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
                     keyboardActions = KeyboardActions(onSearch = {
@@ -524,7 +537,7 @@ fun CombinationPopup(
                             modifier = Modifier.fillMaxSize(),
                             contentAlignment = Alignment.Center
                         ) {
-                            Text("No medicines found.", color = Color.Gray)
+                            Text(Trans.noMedicinesFound(isBangla), color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f))
                         }
                     } else {
                         LazyColumn(
@@ -535,9 +548,9 @@ fun CombinationPopup(
                                 Row(
                                     modifier = Modifier
                                         .fillMaxWidth()
-                                        .border(1.dp, Color(0xFFF1F5F9), RoundedCornerShape(12.dp))
+                                        .border(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.2f), RoundedCornerShape(12.dp))
                                         .clickable { onSelect(med) }
-                                        .background(Color(0xFFF8FAFC))
+                                        .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f))
                                         .padding(12.dp),
                                     horizontalArrangement = Arrangement.SpaceBetween,
                                     verticalAlignment = Alignment.CenterVertically
@@ -547,12 +560,12 @@ fun CombinationPopup(
                                             text = med.brand,
                                             fontSize = 15.sp,
                                             fontWeight = FontWeight.Bold,
-                                            color = Color(0xFF1E293B)
+                                            color = MaterialTheme.colorScheme.onSurface
                                         )
                                         Text(
                                             text = med.manufacturer,
                                             fontSize = 11.sp,
-                                            color = Color.Gray,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
                                             maxLines = 1,
                                             overflow = TextOverflow.Ellipsis
                                         )

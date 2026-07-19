@@ -5,6 +5,7 @@ import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -28,9 +29,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
-import kotlinx.coroutines.launch
 import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -38,14 +36,17 @@ import java.util.Locale
 fun MedicineScreen(
     medicines: List<Medicine>,
     uniqueBrands: List<String>,
-    genericsMetadata: Map<String, GenericMetadata>
+    genericsMetadata: Map<String, GenericMetadata>,
+    isBangla: Boolean,
+    isSearchFocused: Boolean,
+    onSearchFocusedChange: (Boolean) -> Unit,
+    queryState: MutableState<String>,
+    selectedMedicineState: MutableState<Medicine?>
 ) {
-    var query by remember { mutableStateOf("") }
-    var selectedMedicine by remember { mutableStateOf<Medicine?>(null) }
-    var isSearchFocused by remember { mutableStateOf(false) }
+    var query by queryState
+    var selectedMedicine by selectedMedicineState
     var searchResultState by remember { mutableStateOf<SearchResultState>(SearchResultState.Success(emptyList())) }
 
-    val coroutineScope = rememberCoroutineScope()
     val focusManager = LocalFocusManager.current
 
     // Trigger suggestion search when query changes
@@ -57,26 +58,39 @@ fun MedicineScreen(
         }
     }
 
-    // Moving pastel gradient background
+    // Moving soft/pastel gradient background matching light/dark modes
     val infiniteTransition = rememberInfiniteTransition(label = "gradient")
     val animOffset by infiniteTransition.animateFloat(
         initialValue = 0f,
         targetValue = 1200f,
         animationSpec = infiniteRepeatable(
-            animation = tween(6000, easing = LinearEasing),
+            animation = tween(10000, easing = LinearEasing),
             repeatMode = RepeatMode.Reverse
         ),
         label = "offset"
     )
 
-    val movingGradient = Brush.linearGradient(
-        colors = listOf(
+    val backgroundColors = if (MaterialTheme.colorScheme.background == Color(0xFF0F172A)) {
+        // Dark Mode pastel gradient
+        listOf(
+            Color(0xFF0F172A),
+            Color(0xFF1E1E38),
+            Color(0xFF111827),
+            Color(0xFF0F172A)
+        )
+    } else {
+        // Light Mode pastel gradient
+        listOf(
             Color(0xFFFFFFFF),
             Color(0xFFF1F5F9), // Soft slate/white
             Color(0xFFEFF6FF), // Soft blue/white
             Color(0xFFFDF2F8), // Soft pink/white
             Color(0xFFFFFFFF)
-        ),
+        )
+    }
+
+    val movingGradient = Brush.linearGradient(
+        colors = backgroundColors,
         start = Offset(animOffset, animOffset),
         end = Offset(animOffset + 800f, animOffset + 1200f)
     )
@@ -85,6 +99,14 @@ fun MedicineScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(movingGradient)
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null
+            ) {
+                // Clicking on any blank spot in the background clears search focus
+                focusManager.clearFocus()
+                onSearchFocusedChange(false)
+            }
     ) {
         Column(
             modifier = Modifier
@@ -112,10 +134,10 @@ fun MedicineScreen(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = "Search Medicines",
+                        text = Trans.searchMedicines(isBangla),
                         fontSize = 28.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Color(0xFF1E293B),
+                        color = MaterialTheme.colorScheme.onBackground,
                         modifier = Modifier.padding(bottom = 16.dp)
                     )
                 }
@@ -125,7 +147,11 @@ fun MedicineScreen(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
+                    .padding(horizontal = 16.dp)
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null
+                    ) {}, // Consume clicks on this bar
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 OutlinedTextField(
@@ -138,17 +164,32 @@ fun MedicineScreen(
                     },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .onFocusChanged { isSearchFocused = it.isFocused }
-                        .border(1.dp, Color(0xFFCBD5E1), RoundedCornerShape(28.dp)),
-                    placeholder = { Text("Enter brand name, power...") },
-                    leadingIcon = { Icon(Icons.Default.Search, contentDescription = "Search") },
+                        .onFocusChanged { onSearchFocusedChange(it.isFocused) }
+                        .border(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.5f), RoundedCornerShape(28.dp)),
+                    placeholder = {
+                        Text(
+                            text = Trans.enterBrandName(isBangla),
+                            fontSize = 15.sp,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
+                        )
+                    },
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Default.Search,
+                            contentDescription = "Search",
+                            modifier = Modifier.padding(start = 12.dp) // Symmetric edge margin
+                        )
+                    },
                     trailingIcon = {
                         if (query.isNotEmpty()) {
-                            IconButton(onClick = {
-                                query = ""
-                                selectedMedicine = null
-                                focusManager.clearFocus()
-                            }) {
+                            IconButton(
+                                onClick = {
+                                    query = ""
+                                    selectedMedicine = null
+                                    focusManager.clearFocus()
+                                },
+                                modifier = Modifier.padding(end = 8.dp) // Symmetric edge margin
+                            ) {
                                 Icon(Icons.Default.Clear, contentDescription = "Clear")
                             }
                         }
@@ -156,10 +197,12 @@ fun MedicineScreen(
                     singleLine = true,
                     shape = RoundedCornerShape(28.dp),
                     colors = OutlinedTextFieldDefaults.colors(
-                        focusedContainerColor = Color.White,
-                        unfocusedContainerColor = Color.White,
+                        focusedContainerColor = MaterialTheme.colorScheme.surface,
+                        unfocusedContainerColor = MaterialTheme.colorScheme.surface,
                         focusedBorderColor = MaterialTheme.colorScheme.primary,
-                        unfocusedBorderColor = Color.Transparent
+                        unfocusedBorderColor = Color.Transparent,
+                        focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                        unfocusedTextColor = MaterialTheme.colorScheme.onSurface
                     ),
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
                     keyboardActions = KeyboardActions(onSearch = {
@@ -176,6 +219,14 @@ fun MedicineScreen(
                     .fillMaxWidth()
                     .weight(1f)
                     .padding(horizontal = 16.dp)
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null
+                    ) {
+                        // Clicking on empty space of suggestions container clears search focus
+                        focusManager.clearFocus()
+                        onSearchFocusedChange(false)
+                    }
             ) {
                 if (selectedMedicine != null) {
                     // Show Medicine details
@@ -183,6 +234,7 @@ fun MedicineScreen(
                         med = selectedMedicine!!,
                         medicines = medicines,
                         genericsMetadata = genericsMetadata,
+                        isBangla = isBangla,
                         onSelectMedicine = { newMed ->
                             selectedMedicine = newMed
                             query = "${newMed.brand} ${newMed.power}"
@@ -199,8 +251,8 @@ fun MedicineScreen(
                                     contentAlignment = Alignment.TopCenter
                                 ) {
                                     Text(
-                                        text = "No medicines found.",
-                                        color = Color.Gray,
+                                        text = Trans.noMedicinesFound(isBangla),
+                                        color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f),
                                         modifier = Modifier.padding(top = 32.dp)
                                     )
                                 }
@@ -227,7 +279,11 @@ fun MedicineScreen(
                                         .fillMaxWidth()
                                         .padding(bottom = 12.dp),
                                     colors = CardDefaults.cardColors(
-                                        containerColor = Color(0xFFFEF3C7) // soft orange/yellow warning
+                                        containerColor = if (MaterialTheme.colorScheme.background == Color(0xFF0F172A)) {
+                                            Color(0xFF78350F) // dark orange warning
+                                        } else {
+                                            Color(0xFFFEF3C7) // soft orange/yellow warning
+                                        }
                                     ),
                                     shape = RoundedCornerShape(12.dp)
                                 ) {
@@ -238,21 +294,33 @@ fun MedicineScreen(
                                         Icon(
                                             imageVector = Icons.Default.Warning,
                                             contentDescription = "Warning",
-                                            tint = Color(0xFFD97706),
+                                            tint = if (MaterialTheme.colorScheme.background == Color(0xFF0F172A)) {
+                                                Color(0xFFFBBF24)
+                                            } else {
+                                                Color(0xFFD97706)
+                                            },
                                             modifier = Modifier.padding(end = 8.dp)
                                         )
                                         Column {
                                             Text(
-                                                text = "Spelling / Pronunciation Fallback",
+                                                text = Trans.spellingFallbackTitle(isBangla),
                                                 fontWeight = FontWeight.Bold,
                                                 fontSize = 14.sp,
-                                                color = Color(0xFF92400E)
+                                                color = if (MaterialTheme.colorScheme.background == Color(0xFF0F172A)) {
+                                                    Color(0xFFFCD34D)
+                                                } else {
+                                                    Color(0xFF92400E)
+                                                }
                                             )
                                             Spacer(modifier = Modifier.height(2.dp))
                                             Text(
-                                                text = "You might have typed the medicine name incorrectly. Perhaps you were searching for one of the following:",
+                                                text = Trans.spellingFallbackText(isBangla),
                                                 fontSize = 12.sp,
-                                                color = Color(0xFFB45309)
+                                                color = if (MaterialTheme.colorScheme.background == Color(0xFF0F172A)) {
+                                                    Color(0xFFFCD34D).copy(alpha = 0.9f)
+                                                } else {
+                                                    Color(0xFFB45309)
+                                                }
                                             )
                                         }
                                     }
@@ -283,19 +351,14 @@ fun MedicineScreen(
                             horizontalAlignment = Alignment.CenterHorizontally,
                             modifier = Modifier.padding(top = 40.dp)
                         ) {
-                            Icon(
-                                imageVector = Icons.Default.MedicalServices,
-                                contentDescription = null,
-                                tint = MaterialTheme.colorScheme.primary.copy(alpha = 0.4f),
-                                modifier = Modifier.size(64.dp)
-                            )
-                            Spacer(modifier = Modifier.height(16.dp))
+                            // REMOVED THE MEDICINE BAG ICON AS PER REQUIREMENT 3
                             Text(
-                                text = "Enter a medicine brand name or power to verify prescription compliance and view detailed info.",
-                                fontSize = 14.sp,
-                                color = Color.Gray,
+                                text = Trans.searchHelp(isBangla),
+                                fontSize = 12.sp, // REDUCED FONT SIZE AS PER REQUIREMENT 3
+                                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f),
                                 textAlign = TextAlign.Center,
-                                modifier = Modifier.padding(horizontal = 24.dp)
+                                modifier = Modifier.padding(horizontal = 24.dp),
+                                lineHeight = 16.sp
                             )
                         }
                     }
@@ -311,7 +374,7 @@ fun SuggestionTile(med: Medicine, onClick: () -> Unit) {
         modifier = Modifier
             .fillMaxWidth()
             .clickable { onClick() },
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         shape = RoundedCornerShape(12.dp)
     ) {
@@ -327,7 +390,7 @@ fun SuggestionTile(med: Medicine, onClick: () -> Unit) {
                     text = med.brand,
                     fontWeight = FontWeight.Bold,
                     fontSize = 16.sp,
-                    color = Color(0xFF1E293B)
+                    color = MaterialTheme.colorScheme.onSurface
                 )
                 Text(
                     text = med.power,
@@ -340,7 +403,7 @@ fun SuggestionTile(med: Medicine, onClick: () -> Unit) {
             Text(
                 text = med.generic,
                 fontSize = 12.sp,
-                color = Color.Gray,
+                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.8f),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
@@ -348,7 +411,7 @@ fun SuggestionTile(med: Medicine, onClick: () -> Unit) {
             Text(
                 text = med.manufacturer,
                 fontSize = 11.sp,
-                color = Color.LightGray,
+                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )

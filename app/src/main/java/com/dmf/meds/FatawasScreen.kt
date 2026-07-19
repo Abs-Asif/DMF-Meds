@@ -3,6 +3,7 @@ package com.dmf.meds
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -13,7 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun FatawasScreen() {
+fun FatawasScreen(isBangla: Boolean) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -21,10 +22,11 @@ fun FatawasScreen() {
         contentAlignment = Alignment.Center
     ) {
         Text(
-            text = "Coming Soon",
+            text = if (isBangla) "শীঘ্রই আসছে" else "Coming Soon",
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
+            color = MaterialTheme.colorScheme.onBackground
         )
     }
 }
