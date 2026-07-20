@@ -1,11 +1,11 @@
 package com.dmf.meds
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.graphics.Bitmap
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -13,33 +13,22 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Launch
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Launch
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.compose.ui.window.Dialog
 import java.io.BufferedReader
 import java.io.InputStreamReader
 
@@ -58,171 +47,18 @@ enum class ArticleType {
     OTC_LIST
 }
 
-@Composable
-fun parseBoldText(text: String): AnnotatedString {
-    return buildAnnotatedString {
-        val parts = text.split("**")
-        for (i in parts.indices) {
-            if (i % 2 == 1) {
-                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                    append(parts[i])
-                }
-            } else {
-                append(parts[i])
-            }
-        }
-    }
-}
-
-@Composable
-fun MarkdownText(
-    text: String,
-    isBangla: Boolean,
-    modifier: Modifier = Modifier,
-    color: Color = MaterialTheme.colorScheme.onSurface,
-    fontSize: TextUnit = 14.sp,
-    fontWeight: FontWeight? = null,
-    lineHeight: TextUnit = 20.sp
-) {
-    val family = getAppFontFamily(isBangla)
-    Text(
-        text = parseBoldText(text),
-        fontFamily = family,
-        fontSize = fontSize,
-        fontWeight = fontWeight,
-        color = color,
-        lineHeight = lineHeight,
-        modifier = modifier
-    )
-}
-
-@Composable
-fun MarkdownBody(markdown: String, isBangla: Boolean) {
-    val lines = markdown.lineSequence()
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(bottom = 24.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        lines.forEach { line ->
-            val trimmed = line.trim()
-            when {
-                trimmed.isEmpty() -> {
-                    Spacer(modifier = Modifier.height(4.dp))
-                }
-                trimmed.startsWith("# ") -> {
-                    MarkdownText(
-                        text = trimmed.substring(2),
-                        isBangla = isBangla,
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.ExtraBold,
-                        color = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.padding(top = 16.dp, bottom = 4.dp),
-                        lineHeight = 30.sp
-                    )
-                }
-                trimmed.startsWith("## ") -> {
-                    MarkdownText(
-                        text = trimmed.substring(3),
-                        isBangla = isBangla,
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.padding(top = 12.dp, bottom = 4.dp),
-                        lineHeight = 26.sp
-                    )
-                }
-                trimmed.startsWith("### ") -> {
-                    MarkdownText(
-                        text = trimmed.substring(4),
-                        isBangla = isBangla,
-                        fontSize = 17.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colorScheme.onSurface,
-                        modifier = Modifier.padding(top = 8.dp, bottom = 2.dp),
-                        lineHeight = 22.sp
-                    )
-                }
-                trimmed.startsWith("* ") || trimmed.startsWith("- ") -> {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(start = 8.dp),
-                        verticalAlignment = Alignment.Top
-                    ) {
-                        Text(
-                            text = "• ",
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.primary,
-                            fontFamily = getAppFontFamily(isBangla)
-                        )
-                        MarkdownText(
-                            text = trimmed.substring(2),
-                            isBangla = isBangla,
-                            fontSize = 14.sp,
-                            color = MaterialTheme.colorScheme.onSurface,
-                            modifier = Modifier.weight(1f)
-                        )
-                    }
-                }
-                trimmed.startsWith("1. ") || trimmed.startsWith("২. ") || (trimmed.firstOrNull()?.isDigit() == true && trimmed.contains(". ")) -> {
-                    val index = trimmed.indexOf(". ")
-                    val num = trimmed.substring(0, index + 2)
-                    val rest = trimmed.substring(index + 2)
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(start = 8.dp),
-                        verticalAlignment = Alignment.Top
-                    ) {
-                        Text(
-                            text = num,
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.primary,
-                            fontFamily = getAppFontFamily(isBangla)
-                        )
-                        MarkdownText(
-                            text = rest,
-                            isBangla = isBangla,
-                            fontSize = 14.sp,
-                            color = MaterialTheme.colorScheme.onSurface,
-                            modifier = Modifier.weight(1f)
-                        )
-                    }
-                }
-                else -> {
-                    MarkdownText(
-                        text = trimmed,
-                        isBangla = isBangla,
-                        fontSize = 14.sp,
-                        color = MaterialTheme.colorScheme.onSurface,
-                        lineHeight = 22.sp,
-                        modifier = Modifier.padding(vertical = 2.dp)
-                    )
-                }
-            }
-        }
-    }
-}
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun InfoScreen(
-    isBangla: Boolean,
-    isDarkTheme: Boolean,
-    onThemeToggle: () -> Unit,
-    onLanguageToggle: () -> Unit
-) {
+fun InfoScreen() {
+    val isBangla = false // Force English UI controls
     var activeArticleType by remember { mutableStateOf<ArticleType?>(null) }
     var activeTitle by remember { mutableStateOf("") }
     var activeUrl by remember { mutableStateOf("") }
 
-    var showSettingsDialog by remember { mutableStateOf(false) }
-
-    val context = LocalContext.current
+    // Navigation fix: handle back presses inside InfoScreen when an article is open
+    BackHandler(enabled = activeArticleType != null) {
+        activeArticleType = null
+    }
 
     val links = remember {
         listOf(
@@ -254,100 +90,6 @@ fun InfoScreen(
         )
     }
 
-    // Settings Popup Dialog
-    if (showSettingsDialog) {
-        Dialog(onDismissRequest = { showSettingsDialog = false }) {
-            Card(
-                shape = RoundedCornerShape(20.dp),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
-            ) {
-                Column(
-                    modifier = Modifier
-                        .padding(20.dp)
-                        .fillMaxWidth()
-                ) {
-                    Text(
-                        text = Trans.settingsTitle(isBangla),
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onSurface,
-                        modifier = Modifier.padding(bottom = 16.dp)
-                    )
-
-                    // Theme Toggle
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 12.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = Trans.themeLabel(isBangla),
-                            fontSize = 15.sp,
-                            fontWeight = FontWeight.Medium,
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Text(
-                                text = if (isDarkTheme) Trans.darkModeLabel(isBangla) else Trans.lightModeLabel(isBangla),
-                                fontSize = 13.sp,
-                                color = MaterialTheme.colorScheme.primary,
-                                modifier = Modifier.padding(end = 8.dp)
-                            )
-                            Switch(
-                                checked = isDarkTheme,
-                                onCheckedChange = { onThemeToggle() }
-                            )
-                        }
-                    }
-
-                    HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp), color = MaterialTheme.colorScheme.outline.copy(alpha = 0.2f))
-
-                    // Language Toggle
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 12.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = Trans.languageLabel(isBangla),
-                            fontSize = 15.sp,
-                            fontWeight = FontWeight.Medium,
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Text(
-                                text = if (isBangla) "বাংলা" else "English",
-                                fontSize = 13.sp,
-                                color = MaterialTheme.colorScheme.primary,
-                                modifier = Modifier.padding(end = 8.dp)
-                            )
-                            Switch(
-                                checked = isBangla,
-                                onCheckedChange = { onLanguageToggle() }
-                            )
-                        }
-                    }
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterEnd) {
-                        Button(onClick = { showSettingsDialog = false }) {
-                            Text(text = Trans.closeLabel(isBangla))
-                        }
-                    }
-                }
-            }
-        }
-    }
-
     if (activeArticleType != null) {
         // Show active article view
         Column(
@@ -357,13 +99,12 @@ fun InfoScreen(
         ) {
             TopAppBar(
                 title = {
-                    Text(
+                    DMFText(
                         text = activeTitle,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold,
-                        fontFamily = getAppFontFamily(isBangla)
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold
                     )
                 },
                 navigationIcon = {
@@ -383,13 +124,14 @@ fun InfoScreen(
                     AppWebView(url = activeUrl)
                 }
                 ArticleType.BMDC_ACT -> {
-                    ArticleReaderView(filename = "bmdc_act.md", isBangla = isBangla)
+                    // Fully compiled native page
+                    DrugActScreen(onBack = { activeArticleType = null })
                 }
                 ArticleType.APPROVED_LIST -> {
-                    DrugListArticleView(filename = "allowed.txt", isBangla = isBangla)
+                    DrugListArticleView(filename = "allowed.txt")
                 }
                 ArticleType.OTC_LIST -> {
-                    DrugListArticleView(filename = "OTC.txt", isBangla = isBangla)
+                    DrugListArticleView(filename = "OTC.txt")
                 }
                 else -> {}
             }
@@ -406,26 +148,18 @@ fun InfoScreen(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
+                DMFText(
                     text = Trans.infoDesk(isBangla),
-                    fontSize = 24.sp,
+                    fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onBackground
                 )
-                // Settings button
-                IconButton(onClick = { showSettingsDialog = true }) {
-                    Icon(
-                        imageVector = Icons.Default.Settings,
-                        contentDescription = "Settings",
-                        tint = MaterialTheme.colorScheme.primary
-                    )
-                }
             }
-            Text(
+            DMFText(
                 text = Trans.infoSubtext(isBangla),
-                fontSize = 14.sp,
+                fontSize = 12.sp,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.padding(bottom = 24.dp)
+                modifier = Modifier.padding(top = 4.dp, bottom = 24.dp)
             )
 
             LazyVerticalGrid(
@@ -446,41 +180,40 @@ fun InfoScreen(
                             .fillMaxWidth()
                             .height(180.dp),
                         colors = CardDefaults.elevatedCardColors(
-                            containerColor = MaterialTheme.colorScheme.surfaceVariant
-                        )
+                            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+                        ),
+                        shape = RoundedCornerShape(16.dp)
                     ) {
                         Column(
                             modifier = Modifier
                                 .fillMaxSize()
-                                .padding(12.dp),
+                                .padding(14.dp),
                             verticalArrangement = Arrangement.SpaceBetween
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Info,
                                 contentDescription = null,
                                 tint = MaterialTheme.colorScheme.primary,
-                                modifier = Modifier.size(28.dp)
+                                modifier = Modifier.size(24.dp)
                             )
                             Column {
-                                Text(
+                                DMFText(
                                     text = link.titleKey(isBangla),
                                     fontWeight = FontWeight.Bold,
-                                    fontSize = 15.sp,
+                                    fontSize = 13.sp,
                                     maxLines = 2,
                                     overflow = TextOverflow.Ellipsis,
-                                    lineHeight = 18.sp,
-                                    color = MaterialTheme.colorScheme.onSurface,
-                                    fontFamily = getAppFontFamily(isBangla)
+                                    lineHeight = 16.sp,
+                                    color = MaterialTheme.colorScheme.onSurface
                                 )
                                 Spacer(modifier = Modifier.height(4.dp))
-                                Text(
+                                DMFText(
                                     text = link.descriptionKey(isBangla),
-                                    fontSize = 11.sp,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    fontSize = 10.sp,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.8f),
                                     maxLines = 3,
                                     overflow = TextOverflow.Ellipsis,
-                                    lineHeight = 14.sp,
-                                    fontFamily = getAppFontFamily(isBangla)
+                                    lineHeight = 12.sp
                                 )
                             }
                             Row(
@@ -503,47 +236,7 @@ fun InfoScreen(
 }
 
 @Composable
-fun ArticleReaderView(filename: String, isBangla: Boolean) {
-    val context = LocalContext.current
-    var content by remember { mutableStateOf("") }
-
-    LaunchedEffect(filename) {
-        try {
-            val assetStream = context.assets.open(filename)
-            val reader = BufferedReader(InputStreamReader(assetStream))
-            val sb = StringBuilder()
-            var line: String? = reader.readLine()
-            while (line != null) {
-                sb.append(line).append("\n")
-                line = reader.readLine()
-            }
-            reader.close()
-            assetStream.close()
-            content = sb.toString()
-        } catch (e: Exception) {
-            content = "Error loading article: ${e.message}"
-        }
-    }
-
-    if (content.isEmpty()) {
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            CircularProgressIndicator()
-        }
-    } else {
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp)
-        ) {
-            item {
-                MarkdownBody(markdown = content, isBangla = isBangla)
-            }
-        }
-    }
-}
-
-@Composable
-fun DrugListArticleView(filename: String, isBangla: Boolean) {
+fun DrugListArticleView(filename: String) {
     val context = LocalContext.current
     var drugsList by remember { mutableStateOf<List<String>>(emptyList()) }
 
@@ -579,7 +272,7 @@ fun DrugListArticleView(filename: String, isBangla: Boolean) {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(10.dp)
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             items(drugsList.size) { index ->
                 val drug = drugsList[index]
@@ -587,13 +280,13 @@ fun DrugListArticleView(filename: String, isBangla: Boolean) {
 
                 Card(
                     modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(12.dp),
+                    shape = RoundedCornerShape(16.dp),
                     colors = CardDefaults.cardColors(
                         containerColor = MaterialTheme.colorScheme.surface
                     ),
                     elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
                 ) {
-                    Column(modifier = Modifier.padding(14.dp)) {
+                    Column(modifier = Modifier.padding(16.dp)) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
@@ -611,28 +304,20 @@ fun DrugListArticleView(filename: String, isBangla: Boolean) {
                                 )
                             }
                             Spacer(modifier = Modifier.width(10.dp))
-                            Text(
+                            DMFText(
                                 text = drug,
                                 fontWeight = FontWeight.Bold,
-                                fontSize = 16.sp,
+                                fontSize = 14.sp,
                                 color = MaterialTheme.colorScheme.onSurface
                             )
                         }
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text(
-                            text = if (isBangla) "নির্দেশনা ও ব্যবহার:" else "Indication & Usage:",
-                            fontSize = 11.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.primary,
-                            fontFamily = getAppFontFamily(isBangla)
-                        )
-                        Spacer(modifier = Modifier.height(2.dp))
-                        Text(
+                        Spacer(modifier = Modifier.height(10.dp))
+                        // Removed "Indication & Usage:" label. Directly display indication text using DMFText.
+                        DMFText(
                             text = indication,
-                            fontSize = 13.sp,
+                            fontSize = 12.sp,
                             lineHeight = 18.sp,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            fontFamily = getAppFontFamily(isBangla)
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                 }

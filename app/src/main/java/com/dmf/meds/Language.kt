@@ -6,19 +6,77 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.material3.Text
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.sp
 
 val KalpurushFontFamily = FontFamily(
     Font(R.font.kalpurush, FontWeight.Normal)
 )
 
+fun String.containsBangla(): Boolean {
+    for (char in this) {
+        if (char in '\u0980'..'\u09FF') return true
+    }
+    return false
+}
+
+@Composable
+fun DMFText(
+    text: String,
+    modifier: Modifier = Modifier,
+    color: Color = Color.Unspecified,
+    fontSize: TextUnit = TextUnit.Unspecified,
+    fontWeight: FontWeight? = null,
+    textAlign: TextAlign? = null,
+    overflow: TextOverflow = TextOverflow.Clip,
+    maxLines: Int = Int.MAX_VALUE,
+    lineHeight: TextUnit = TextUnit.Unspecified
+) {
+    val containsBn = text.containsBangla()
+    val family = if (containsBn) KalpurushFontFamily else FontFamily.Default
+
+    // Scale up font size and line height if the text contains Bangla
+    val finalFontSize = if (containsBn && fontSize != TextUnit.Unspecified) {
+        (fontSize.value * 1.25f).sp
+    } else {
+        fontSize
+    }
+
+    val finalLineHeight = if (containsBn && lineHeight != TextUnit.Unspecified) {
+        (lineHeight.value * 1.25f).sp
+    } else if (containsBn && fontSize != TextUnit.Unspecified) {
+        (fontSize.value * 1.25f * 1.35f).sp
+    } else {
+        lineHeight
+    }
+
+    Text(
+        text = text,
+        modifier = modifier,
+        color = color,
+        fontSize = finalFontSize,
+        fontWeight = fontWeight,
+        fontFamily = family,
+        textAlign = textAlign,
+        overflow = overflow,
+        maxLines = maxLines,
+        lineHeight = finalLineHeight
+    )
+}
+
 @Composable
 fun getAppFontFamily(isBangla: Boolean): FontFamily {
-    return if (isBangla) KalpurushFontFamily else FontFamily.Default
+    return KalpurushFontFamily
 }
 
 @Composable
 fun getTypography(isBangla: Boolean): Typography {
-    val family = if (isBangla) KalpurushFontFamily else FontFamily.Default
+    val family = KalpurushFontFamily
     return Typography(
         displayLarge = TextStyle(fontFamily = family),
         displayMedium = TextStyle(fontFamily = family),
@@ -117,21 +175,21 @@ object Trans {
     }
     fun drugActTitle(isBangla: Boolean) = if (isBangla) "ঔষধ ও কসমেটিকস আইন ২০২৩" else "Drug & Cosmetic Act 2023"
     fun drugActDesc(isBangla: Boolean) = if (isBangla) {
-        "ঔষধ ও কসমেটিকস আইনের ধারা ও নিবন্ধসমূহ (BM&DC-act.md)"
+        "ঔষধ ও কসমেটিকস আইনের ধারা ও নিবন্ধসমূহ"
     } else {
-        "Official bdlaws portal for Drug and Cosmetic Act"
+        "Drug and Cosmetic Act 2023"
     }
     fun approvedListTitle(isBangla: Boolean) = if (isBangla) "অনুমোদিত ঔষধের তালিকা" else "Approved Drug List"
     fun approvedListDesc(isBangla: Boolean) = if (isBangla) {
-        "মেডিকেল অ্যাসিস্ট্যান্টদের জন্য বিএমডিসির অনুমোদিত ঔষধের তালিকা ও ইন্ডিকেশন"
+        "মেডিকেল অ্যাসিস্ট্যান্টদের জন্য বিএমডিসির অনুমোদিত ঔষধের তালিকা"
     } else {
         "Official BM&DC list of medicines for medical assistants"
     }
     fun otcListTitle(isBangla: Boolean) = if (isBangla) "ওটিসি ঔষধের তালিকা" else "OTC Drug List"
     fun otcListDesc(isBangla: Boolean) = if (isBangla) {
-        "ইন্ডিকেশনসহ বিএমডিসি অনুমোদিত ওভার-দ্য-কাউন্টার ঔষধের তালিকা"
+        "বিএমডিসি অনুমোদিত ওভার-দ্য-কাউন্টার ঔষধের তালিকা"
     } else {
-        "BM&DC approved Over-The-Counter drugs list with indications"
+        "BM&DC approved Over-The-Counter drugs list"
     }
 
     // Exit confirmation

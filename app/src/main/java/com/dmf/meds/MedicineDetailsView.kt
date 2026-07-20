@@ -28,6 +28,14 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import java.util.Locale
 
+data class AssessmentItem(
+    val title: String,
+    val subtext: String,
+    val isPositive: Boolean,
+    val isWarning: Boolean = false,
+    val icon: androidx.compose.ui.graphics.vector.ImageVector
+)
+
 @Composable
 fun MedicineDetailsView(
     med: Medicine,
@@ -37,7 +45,6 @@ fun MedicineDetailsView(
     onSelectMedicine: (Medicine) -> Unit
 ) {
     val meta = genericsMetadata[med.generic]
-
     var showCombinationPopupFor by remember { mutableStateOf<String?>(null) }
 
     LazyColumn(
@@ -59,17 +66,17 @@ fun MedicineDetailsView(
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.Top
                     ) {
-                        Text(
+                        DMFText(
                             text = med.brand,
-                            fontSize = 24.sp,
+                            fontSize = 20.sp,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onSurface,
                             modifier = Modifier.weight(1f)
                         )
                         Spacer(modifier = Modifier.width(8.dp))
-                        Text(
+                        DMFText(
                             text = med.power,
-                            fontSize = 18.sp,
+                            fontSize = 16.sp,
                             fontWeight = FontWeight.SemiBold,
                             color = MaterialTheme.colorScheme.primary
                         )
@@ -78,15 +85,15 @@ fun MedicineDetailsView(
                     Spacer(modifier = Modifier.height(12.dp))
 
                     // Generic Name
-                    Text(
+                    DMFText(
                         text = Trans.genericNameLabel(isBangla),
-                        fontSize = 12.sp,
+                        fontSize = 11.sp,
                         color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
                         fontWeight = FontWeight.SemiBold
                     )
-                    Text(
+                    DMFText(
                         text = med.generic,
-                        fontSize = 16.sp,
+                        fontSize = 14.sp,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface
                     )
@@ -95,25 +102,25 @@ fun MedicineDetailsView(
 
                     // Generic Description
                     val description = meta?.description ?: Trans.noDescription(isBangla)
-                    Text(
+                    DMFText(
                         text = description,
-                        fontSize = 13.sp,
+                        fontSize = 12.sp,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        lineHeight = 18.sp
+                        lineHeight = 16.sp
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
 
                     // Manufacturer
-                    Text(
+                    DMFText(
                         text = Trans.manufacturerLabel(isBangla),
-                        fontSize = 12.sp,
+                        fontSize = 11.sp,
                         color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
                         fontWeight = FontWeight.SemiBold
                     )
-                    Text(
+                    DMFText(
                         text = med.manufacturer,
-                        fontSize = 14.sp,
+                        fontSize = 13.sp,
                         fontWeight = FontWeight.Medium,
                         color = MaterialTheme.colorScheme.onSurface
                     )
@@ -121,7 +128,7 @@ fun MedicineDetailsView(
             }
         }
 
-        // Remarks Section (1 Mandatory, 2 Optional)
+        // Prescription Assessment Card (One single box, no nested boxes)
         item {
             Card(
                 modifier = Modifier.fillMaxWidth(),
@@ -130,49 +137,88 @@ fun MedicineDetailsView(
                 shape = RoundedCornerShape(16.dp)
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
-                    Text(
+                    DMFText(
                         text = Trans.prescriptionAssessment(isBangla),
-                        fontSize = 15.sp,
+                        fontSize = 14.sp,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface,
                         modifier = Modifier.padding(bottom = 12.dp)
                     )
 
-                    // 1. Allowance Status (Mandatory)
-                    val isAllowed = meta?.isAllowed == true
-                    RemarkRow(
-                        title = Trans.allowanceStatus(isBangla),
-                        value = if (isAllowed) Trans.allowedYes(isBangla) else Trans.allowedNo(isBangla),
-                        subtext = if (isAllowed) Trans.allowedSubtextYes(isBangla) else Trans.allowedSubtextNo(isBangla),
-                        isPositive = isAllowed,
-                        icon = if (isAllowed) Icons.Default.CheckCircle else Icons.Default.Cancel
-                    )
+                    // Collect active assessments dynamically
+                    val items = remember(meta, isBangla) {
+                        val activeItems = mutableListOf<AssessmentItem>()
+                        if (meta != null) {
+                            // 1. Allowance
+                            val isAllowed = meta.isAllowed
+                            activeItems.add(
+                                AssessmentItem(
+                                    title = if (isAllowed) "Allowed to Prescribe" else "Not Allowed to Prescribe",
+                                    subtext = if (isAllowed) Trans.allowedSubtextYes(isBangla) else Trans.allowedSubtextNo(isBangla),
+                                    isPositive = isAllowed,
+                                    icon = if (isAllowed) Icons.Default.CheckCircle else Icons.Default.Cancel
+                                )
+                            )
 
-                    // 2. OTC Status (Optional - only show if OTC)
-                    val isOtc = meta?.isOtc == true
-                    if (isOtc) {
-                        Spacer(modifier = Modifier.height(12.dp))
-                        RemarkRow(
-                            title = Trans.otcStatus(isBangla),
-                            value = Trans.allowedYes(isBangla),
-                            subtext = Trans.otcSubtext(isBangla),
-                            isPositive = true,
-                            icon = Icons.Default.Info
-                        )
+                            // 2. OTC (Optional)
+                            if (meta.isOtc) {
+                                activeItems.add(
+                                    AssessmentItem(
+                                        title = "OTC Medicine (Allowed by Default)",
+                                        subtext = Trans.otcSubtext(isBangla),
+                                        isPositive = true,
+                                        icon = Icons.Default.Info
+                                    )
+                                )
+                            }
+
+                            // 3. Antibiotic (Optional)
+                            if (meta.isAntibiotic) {
+                                activeItems.add(
+                                    AssessmentItem(
+                                        title = "Antibiotic Medicine (Exercise Caution)",
+                                        subtext = Trans.antibioticSubtext(isBangla),
+                                        isPositive = false,
+                                        isWarning = true,
+                                        icon = Icons.Default.Warning
+                                    )
+                                )
+                            }
+                        } else {
+                            // Default Fallback
+                            activeItems.add(
+                                AssessmentItem(
+                                    title = "Not Allowed to Prescribe",
+                                    subtext = Trans.allowedSubtextNo(isBangla),
+                                    isPositive = false,
+                                    icon = Icons.Default.Cancel
+                                )
+                            )
+                        }
+                        activeItems
                     }
 
-                    // 3. Antibiotic Status (Optional - only show if antibiotic)
-                    val isAntibiotic = meta?.isAntibiotic == true
-                    if (isAntibiotic) {
-                        Spacer(modifier = Modifier.height(12.dp))
-                        RemarkRow(
-                            title = Trans.antibioticWarning(isBangla),
-                            value = Trans.allowedYes(isBangla),
-                            subtext = Trans.antibioticSubtext(isBangla),
-                            isPositive = false, // Yellow/Warning style
-                            isWarning = true,
-                            icon = Icons.Default.Warning
-                        )
+                    // Render items as a single combined container with custom rounded corners
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        items.forEachIndexed { index, item ->
+                            val shape = when (items.size) {
+                                1 -> RoundedCornerShape(12.dp)
+                                2 -> if (index == 0) {
+                                    RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp)
+                                } else {
+                                    RoundedCornerShape(bottomStart = 12.dp, bottomEnd = 12.dp)
+                                }
+                                else -> when (index) {
+                                    0 -> RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp)
+                                    items.size - 1 -> RoundedCornerShape(bottomStart = 12.dp, bottomEnd = 12.dp)
+                                    else -> RoundedCornerShape(0.dp) // middle is flat
+                                }
+                            }
+
+                            UnifiedRemarkRow(item = item, shape = shape)
+                        }
                     }
                 }
             }
@@ -188,7 +234,7 @@ fun MedicineDetailsView(
                         SearchEngine.getAlternatives(med, medicines)
                     }
                     if (alternatives.isEmpty()) {
-                        Text(Trans.noAlternatives(isBangla), fontSize = 13.sp, color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f))
+                        DMFText(Trans.noAlternatives(isBangla), fontSize = 12.sp, color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f))
                     } else {
                         Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                             alternatives.take(30).forEach { alt ->
@@ -204,7 +250,7 @@ fun MedicineDetailsView(
                         SearchEngine.getOtherPowers(med, medicines)
                     }
                     if (otherPowers.isEmpty()) {
-                        Text(Trans.noOtherPowers(isBangla), fontSize = 13.sp, color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f))
+                        DMFText(Trans.noOtherPowers(isBangla), fontSize = 12.sp, color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f))
                     } else {
                         Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                             otherPowers.take(30).forEach { alt ->
@@ -220,7 +266,7 @@ fun MedicineDetailsView(
                         SearchEngine.getOtherCombinations(med.generic, genericsMetadata.keys)
                     }
                     if (otherCombos.isEmpty()) {
-                        Text(Trans.noOtherCombos(isBangla), fontSize = 13.sp, color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f))
+                        DMFText(Trans.noOtherCombos(isBangla), fontSize = 12.sp, color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f))
                     } else {
                         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                             otherCombos.forEach { comboGeneric ->
@@ -233,9 +279,9 @@ fun MedicineDetailsView(
                                     horizontalArrangement = Arrangement.SpaceBetween,
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
-                                    Text(
+                                    DMFText(
                                         text = comboGeneric,
-                                        fontSize = 14.sp,
+                                        fontSize = 13.sp,
                                         fontWeight = FontWeight.Medium,
                                         color = MaterialTheme.colorScheme.primary,
                                         modifier = Modifier.weight(1f)
@@ -251,6 +297,9 @@ fun MedicineDetailsView(
                         }
                     }
                 }
+
+                // Extra margin space after the other combination button
+                Spacer(modifier = Modifier.height(48.dp))
             }
         }
     }
@@ -272,65 +321,53 @@ fun MedicineDetailsView(
 }
 
 @Composable
-fun RemarkRow(
-    title: String,
-    value: String,
-    subtext: String,
-    isPositive: Boolean,
-    isWarning: Boolean = false,
-    icon: androidx.compose.ui.graphics.vector.ImageVector
+fun UnifiedRemarkRow(
+    item: AssessmentItem,
+    shape: RoundedCornerShape
 ) {
     val isDark = MaterialTheme.colorScheme.background == Color(0xFF0F172A)
 
     val tintColor = when {
-        isWarning -> if (isDark) Color(0xFFFBBF24) else Color(0xFFD97706) // Orange
-        isPositive -> if (isDark) Color(0xFF4ADE80) else Color(0xFF16A34A) // Green
+        item.isWarning -> if (isDark) Color(0xFFFBBF24) else Color(0xFFD97706) // Orange
+        item.isPositive -> if (isDark) Color(0xFF4ADE80) else Color(0xFF16A34A) // Green
         else -> if (isDark) Color(0xFFF87171) else Color(0xFFDC2626) // Red
     }
 
     val containerColor = when {
-        isWarning -> if (isDark) Color(0xFF78350F) else Color(0xFFFEF3C7)
-        isPositive -> if (isDark) Color(0xFF064E3B) else Color(0xFFDCFCE7)
+        item.isWarning -> if (isDark) Color(0xFF78350F) else Color(0xFFFEF3C7)
+        item.isPositive -> if (isDark) Color(0xFF064E3B) else Color(0xFFDCFCE7)
         else -> if (isDark) Color(0xFF7F1D1D) else Color(0xFFFEE2E2)
     }
 
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background(containerColor, RoundedCornerShape(12.dp))
+            .background(containerColor, shape)
             .padding(12.dp),
         verticalAlignment = Alignment.Top
     ) {
         Icon(
-            imageVector = icon,
+            imageVector = item.icon,
             contentDescription = null,
             tint = tintColor,
             modifier = Modifier
-                .size(24.dp)
+                .size(20.dp)
                 .padding(top = 2.dp)
         )
         Spacer(modifier = Modifier.width(10.dp))
         Column {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(
-                    text = "$title: ",
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 14.sp,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-                Text(
-                    text = value,
-                    fontWeight = FontWeight.ExtraBold,
-                    fontSize = 14.sp,
-                    color = tintColor
-                )
-            }
+            DMFText(
+                text = item.title,
+                fontWeight = FontWeight.ExtraBold,
+                fontSize = 13.sp,
+                color = tintColor
+            )
             Spacer(modifier = Modifier.height(2.dp))
-            Text(
-                text = subtext,
-                fontSize = 12.sp,
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f),
-                lineHeight = 16.sp
+            DMFText(
+                text = item.subtext,
+                fontSize = 11.sp,
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.85f),
+                lineHeight = 14.sp
             )
         }
     }
@@ -348,23 +385,23 @@ fun CompactMedicineTile(med: Medicine) {
         verticalAlignment = Alignment.CenterVertically
     ) {
         Column(modifier = Modifier.weight(1f)) {
-            Text(
+            DMFText(
                 text = med.brand,
-                fontSize = 14.sp,
+                fontSize = 13.sp,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onSurface
             )
-            Text(
+            DMFText(
                 text = med.manufacturer,
-                fontSize = 11.sp,
+                fontSize = 10.sp,
                 color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
         }
-        Text(
+        DMFText(
             text = med.power,
-            fontSize = 13.sp,
+            fontSize = 12.sp,
             fontWeight = FontWeight.SemiBold,
             color = MaterialTheme.colorScheme.primary
         )
@@ -393,10 +430,10 @@ fun ExpandableCard(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
+                DMFText(
                     text = title,
                     fontWeight = FontWeight.Bold,
-                    fontSize = 15.sp,
+                    fontSize = 13.sp,
                     color = MaterialTheme.colorScheme.onSurface
                 )
                 Icon(
@@ -470,9 +507,9 @@ fun CombinationPopup(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(
+                    DMFText(
                         text = genericName,
-                        fontSize = 18.sp,
+                        fontSize = 15.sp,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface,
                         modifier = Modifier.weight(1f),
@@ -498,9 +535,9 @@ fun CombinationPopup(
                         .fillMaxWidth()
                         .border(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.3f), RoundedCornerShape(20.dp)),
                     placeholder = {
-                        Text(
+                        DMFText(
                             text = Trans.searchBrandPower(isBangla),
-                            fontSize = 14.sp,
+                            fontSize = 13.sp,
                             color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
                         )
                     },
@@ -537,7 +574,7 @@ fun CombinationPopup(
                             modifier = Modifier.fillMaxSize(),
                             contentAlignment = Alignment.Center
                         ) {
-                            Text(Trans.noMedicinesFound(isBangla), color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f))
+                            DMFText(Trans.noMedicinesFound(isBangla), color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f))
                         }
                     } else {
                         LazyColumn(
@@ -556,24 +593,24 @@ fun CombinationPopup(
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
                                     Column(modifier = Modifier.weight(1f)) {
-                                        Text(
+                                        DMFText(
                                             text = med.brand,
-                                            fontSize = 15.sp,
+                                            fontSize = 14.sp,
                                             fontWeight = FontWeight.Bold,
                                             color = MaterialTheme.colorScheme.onSurface
                                         )
-                                        Text(
+                                        DMFText(
                                             text = med.manufacturer,
-                                            fontSize = 11.sp,
+                                            fontSize = 10.sp,
                                             color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
                                             maxLines = 1,
                                             overflow = TextOverflow.Ellipsis
                                         )
                                     }
                                     Spacer(modifier = Modifier.width(8.dp))
-                                    Text(
+                                    DMFText(
                                         text = med.power,
-                                        fontSize = 14.sp,
+                                        fontSize = 13.sp,
                                         fontWeight = FontWeight.SemiBold,
                                         color = MaterialTheme.colorScheme.primary
                                     )

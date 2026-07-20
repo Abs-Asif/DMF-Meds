@@ -31,6 +31,119 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import java.util.Locale
 
+@Composable
+fun MovingBlurredBubblesBackground() {
+    val infiniteTransition = rememberInfiniteTransition(label = "bubbles")
+
+    // Bubble 1 animations (Sky Blue)
+    val x1 by infiniteTransition.animateFloat(
+        initialValue = 0.1f,
+        targetValue = 0.9f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(18000, easing = LinearOutSlowInEasing),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "x1"
+    )
+    val y1 by infiniteTransition.animateFloat(
+        initialValue = 0.2f,
+        targetValue = 0.8f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(14000, easing = FastOutLinearInEasing),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "y1"
+    )
+
+    // Bubble 2 animations (Violet/Indigo)
+    val x2 by infiniteTransition.animateFloat(
+        initialValue = 0.8f,
+        targetValue = 0.2f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(22000, easing = FastOutSlowInEasing),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "x2"
+    )
+    val y2 by infiniteTransition.animateFloat(
+        initialValue = 0.1f,
+        targetValue = 0.9f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(16000, easing = LinearEasing),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "y2"
+    )
+
+    // Bubble 3 animations (Vibrant Pink/Rose)
+    val x3 by infiniteTransition.animateFloat(
+        initialValue = 0.3f,
+        targetValue = 0.7f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(15000, easing = LinearEasing),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "x3"
+    )
+    val y3 by infiniteTransition.animateFloat(
+        initialValue = 0.8f,
+        targetValue = 0.3f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(20000, easing = FastOutSlowInEasing),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "y3"
+    )
+
+    androidx.compose.foundation.Canvas(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFF0F172A)) // Forced Dark Theme base background color
+    ) {
+        val width = size.width
+        val height = size.height
+
+        // Draw Bubble 1 (Sky Blue)
+        val center1 = Offset(x1 * width, y1 * height)
+        val radius1 = 280.dp.toPx()
+        drawCircle(
+            brush = Brush.radialGradient(
+                colors = listOf(Color(0x3060A5FA), Color.Transparent),
+                center = center1,
+                radius = radius1
+            ),
+            center = center1,
+            radius = radius1
+        )
+
+        // Draw Bubble 2 (Violet)
+        val center2 = Offset(x2 * width, y2 * height)
+        val radius2 = 320.dp.toPx()
+        drawCircle(
+            brush = Brush.radialGradient(
+                colors = listOf(Color(0x248B5CF6), Color.Transparent),
+                center = center2,
+                radius = radius2
+            ),
+            center = center2,
+            radius = radius2
+        )
+
+        // Draw Bubble 3 (Rose/Pink)
+        val center3 = Offset(x3 * width, y3 * height)
+        val radius3 = 240.dp.toPx()
+        drawCircle(
+            brush = Brush.radialGradient(
+                colors = listOf(Color(0x1CFC49A1), Color.Transparent),
+                center = center3,
+                radius = radius3
+            ),
+            center = center3,
+            radius = radius3
+        )
+    }
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MedicineScreen(
@@ -58,47 +171,9 @@ fun MedicineScreen(
         }
     }
 
-    // Moving soft/pastel gradient background matching light/dark modes
-    val infiniteTransition = rememberInfiniteTransition(label = "gradient")
-    val animOffset by infiniteTransition.animateFloat(
-        initialValue = 0f,
-        targetValue = 1200f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(10000, easing = LinearEasing),
-            repeatMode = RepeatMode.Reverse
-        ),
-        label = "offset"
-    )
-
-    val backgroundColors = if (MaterialTheme.colorScheme.background == Color(0xFF0F172A)) {
-        // Dark Mode pastel gradient
-        listOf(
-            Color(0xFF0F172A),
-            Color(0xFF1E1E38),
-            Color(0xFF111827),
-            Color(0xFF0F172A)
-        )
-    } else {
-        // Light Mode pastel gradient
-        listOf(
-            Color(0xFFFFFFFF),
-            Color(0xFFF1F5F9), // Soft slate/white
-            Color(0xFFEFF6FF), // Soft blue/white
-            Color(0xFFFDF2F8), // Soft pink/white
-            Color(0xFFFFFFFF)
-        )
-    }
-
-    val movingGradient = Brush.linearGradient(
-        colors = backgroundColors,
-        start = Offset(animOffset, animOffset),
-        end = Offset(animOffset + 800f, animOffset + 1200f)
-    )
-
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(movingGradient)
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null
@@ -108,6 +183,9 @@ fun MedicineScreen(
                 onSearchFocusedChange(false)
             }
     ) {
+        // High quality premium live blurred bubble background
+        MovingBlurredBubblesBackground()
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -133,9 +211,9 @@ fun MedicineScreen(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text(
+                    DMFText(
                         text = Trans.searchMedicines(isBangla),
-                        fontSize = 28.sp,
+                        fontSize = 24.sp,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onBackground,
                         modifier = Modifier.padding(bottom = 16.dp)
@@ -167,9 +245,9 @@ fun MedicineScreen(
                         .onFocusChanged { onSearchFocusedChange(it.isFocused) }
                         .border(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.5f), RoundedCornerShape(28.dp)),
                     placeholder = {
-                        Text(
+                        DMFText(
                             text = Trans.enterBrandName(isBangla),
-                            fontSize = 15.sp,
+                            fontSize = 14.sp,
                             color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
                         )
                     },
@@ -250,8 +328,9 @@ fun MedicineScreen(
                                     modifier = Modifier.fillMaxSize(),
                                     contentAlignment = Alignment.TopCenter
                                 ) {
-                                    Text(
+                                    DMFText(
                                         text = Trans.noMedicinesFound(isBangla),
+                                        fontSize = 14.sp,
                                         color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f),
                                         modifier = Modifier.padding(top = 32.dp)
                                     )
@@ -279,11 +358,7 @@ fun MedicineScreen(
                                         .fillMaxWidth()
                                         .padding(bottom = 12.dp),
                                     colors = CardDefaults.cardColors(
-                                        containerColor = if (MaterialTheme.colorScheme.background == Color(0xFF0F172A)) {
-                                            Color(0xFF78350F) // dark orange warning
-                                        } else {
-                                            Color(0xFFFEF3C7) // soft orange/yellow warning
-                                        }
+                                        containerColor = Color(0xFF78350F) // dark orange warning
                                     ),
                                     shape = RoundedCornerShape(12.dp)
                                 ) {
@@ -294,33 +369,21 @@ fun MedicineScreen(
                                         Icon(
                                             imageVector = Icons.Default.Warning,
                                             contentDescription = "Warning",
-                                            tint = if (MaterialTheme.colorScheme.background == Color(0xFF0F172A)) {
-                                                Color(0xFFFBBF24)
-                                            } else {
-                                                Color(0xFFD97706)
-                                            },
+                                            tint = Color(0xFFFBBF24),
                                             modifier = Modifier.padding(end = 8.dp)
                                         )
                                         Column {
-                                            Text(
+                                            DMFText(
                                                 text = Trans.spellingFallbackTitle(isBangla),
                                                 fontWeight = FontWeight.Bold,
-                                                fontSize = 14.sp,
-                                                color = if (MaterialTheme.colorScheme.background == Color(0xFF0F172A)) {
-                                                    Color(0xFFFCD34D)
-                                                } else {
-                                                    Color(0xFF92400E)
-                                                }
+                                                fontSize = 13.sp,
+                                                color = Color(0xFFFCD34D)
                                             )
                                             Spacer(modifier = Modifier.height(2.dp))
-                                            Text(
+                                            DMFText(
                                                 text = Trans.spellingFallbackText(isBangla),
-                                                fontSize = 12.sp,
-                                                color = if (MaterialTheme.colorScheme.background == Color(0xFF0F172A)) {
-                                                    Color(0xFFFCD34D).copy(alpha = 0.9f)
-                                                } else {
-                                                    Color(0xFFB45309)
-                                                }
+                                                fontSize = 11.sp,
+                                                color = Color(0xFFFCD34D).copy(alpha = 0.9f)
                                             )
                                         }
                                     }
@@ -351,10 +414,9 @@ fun MedicineScreen(
                             horizontalAlignment = Alignment.CenterHorizontally,
                             modifier = Modifier.padding(top = 40.dp)
                         ) {
-                            // REMOVED THE MEDICINE BAG ICON AS PER REQUIREMENT 3
-                            Text(
+                            DMFText(
                                 text = Trans.searchHelp(isBangla),
-                                fontSize = 12.sp, // REDUCED FONT SIZE AS PER REQUIREMENT 3
+                                fontSize = 11.sp,
                                 color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f),
                                 textAlign = TextAlign.Center,
                                 modifier = Modifier.padding(horizontal = 24.dp),
@@ -386,31 +448,31 @@ fun SuggestionTile(med: Medicine, onClick: () -> Unit) {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
+                DMFText(
                     text = med.brand,
                     fontWeight = FontWeight.Bold,
-                    fontSize = 16.sp,
+                    fontSize = 14.sp,
                     color = MaterialTheme.colorScheme.onSurface
                 )
-                Text(
+                DMFText(
                     text = med.power,
                     fontWeight = FontWeight.Medium,
-                    fontSize = 14.sp,
+                    fontSize = 13.sp,
                     color = MaterialTheme.colorScheme.primary
                 )
             }
             Spacer(modifier = Modifier.height(4.dp))
-            Text(
+            DMFText(
                 text = med.generic,
-                fontSize = 12.sp,
+                fontSize = 11.sp,
                 color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.8f),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
             Spacer(modifier = Modifier.height(2.dp))
-            Text(
+            DMFText(
                 text = med.manufacturer,
-                fontSize = 11.sp,
+                fontSize = 10.sp,
                 color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
