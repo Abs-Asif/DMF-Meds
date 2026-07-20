@@ -55,33 +55,27 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            var isDarkTheme by remember { mutableStateOf(false) }
-            var isBangla by remember { mutableStateOf(false) }
+            // Force Dark Theme and English UI globally
+            val isDarkTheme = true
+            val isBangla = false
 
-            val colorScheme = if (isDarkTheme) DarkColorScheme else LightColorScheme
+            val colorScheme = DarkColorScheme
             val typography = getTypography(isBangla)
 
             MaterialTheme(
                 colorScheme = colorScheme,
                 typography = typography
             ) {
-                MainAppContainer(
-                    isDarkTheme = isDarkTheme,
-                    isBangla = isBangla,
-                    onThemeToggle = { isDarkTheme = !isDarkTheme },
-                    onLanguageToggle = { isBangla = !isBangla }
-                )
+                MainAppContainer()
             }
         }
     }
 
     @Composable
-    fun MainAppContainer(
-        isDarkTheme: Boolean,
-        isBangla: Boolean,
-        onThemeToggle: () -> Unit,
-        onLanguageToggle: () -> Unit
-    ) {
+    fun MainAppContainer() {
+        val isDarkTheme = true
+        val isBangla = false
+
         var medicines by remember { mutableStateOf<List<Medicine>?>(null) }
         var uniqueBrands by remember { mutableStateOf<List<String>?>(null) }
         var genericsMetadata by remember { mutableStateOf<Map<String, GenericMetadata>?>(null) }
@@ -151,7 +145,7 @@ class MainActivity : ComponentActivity() {
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = if (isBangla) "মেডিসিন ডাটাবেস লোড হচ্ছে..." else "Loading Medicine Database...",
+                        text = "Loading Medicine Database...",
                         fontSize = 14.sp,
                         color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
                     )
@@ -179,6 +173,9 @@ class MainActivity : ComponentActivity() {
                     isSearchActive = false
                     queryState.value = ""
                     selectedMedicineState.value = null
+                } else if (selectedTab == 0 || selectedTab == 2) {
+                    // Go back to home/search page
+                    selectedTab = 1
                 } else {
                     showExitDialog = true
                 }
@@ -281,12 +278,7 @@ class MainActivity : ComponentActivity() {
                         .background(MaterialTheme.colorScheme.background)
                 ) {
                     when (selectedTab) {
-                        0 -> InfoScreen(
-                            isBangla = isBangla,
-                            isDarkTheme = isDarkTheme,
-                            onThemeToggle = onThemeToggle,
-                            onLanguageToggle = onLanguageToggle
-                        )
+                        0 -> InfoScreen()
                         1 -> MedicineScreen(
                             medicines = medicines!!,
                             uniqueBrands = uniqueBrands!!,
@@ -297,7 +289,7 @@ class MainActivity : ComponentActivity() {
                             queryState = queryState,
                             selectedMedicineState = selectedMedicineState
                         )
-                        2 -> FatawasScreen(isBangla = isBangla)
+                        2 -> FatawasScreen()
                     }
                 }
             }

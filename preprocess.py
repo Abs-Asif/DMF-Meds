@@ -219,11 +219,12 @@ def generate_description_for_generic(g_name):
 
 
 # Classify Allowed and OTC
-# We will read allowed.txt and OTC.txt and map them to generics in medic-data.json
-# To make it extremely reliable, we will parse the generic name and check matching rules.
+# To make it extremely reliable, we will parse the generic name and check matching rules on single ingredients.
 
 def match_allowed_rule(g_name_lower):
     # Standard single drugs mapping
+    if 'condom' in g_name_lower:
+        return True
     if g_name_lower == 'aspirin' or g_name_lower == 'acetylsalicylic acid':
         return True
     if g_name_lower == 'paracetamol' or g_name_lower == 'acetaminophen':
@@ -250,39 +251,39 @@ def match_allowed_rule(g_name_lower):
         return True
     if 'griseofulvin' in g_name_lower:
         return True
-    if 'phenoxymethylpenicillin' in g_name_lower:
+    if 'phenoxymethylpenicillin' in g_name_lower or 'penicillin v' in g_name_lower:
         return True
-    if 'procaine penicillin' in g_name_lower or 'procaine benzylpenicillin' in g_name_lower:
+    if 'procaine penicillin' in g_name_lower or 'procaine benzylpenicillin' in g_name_lower or 'benzylpenicillin' in g_name_lower:
         return True
     if 'pyrantel' in g_name_lower:
         return True
     if 'quinine' in g_name_lower:
         return True
-    if 'pyrimethamine' in g_name_lower and 'sulfadoxine' in g_name_lower:
+    if ('pyrimethamine' in g_name_lower and 'sulfadoxine' in g_name_lower) or ('pyrimethamine' in g_name_lower and 'sulphadoxine' in g_name_lower):
         return True
     if 'tetracycline' in g_name_lower or 'oxytetracycline' in g_name_lower:
         return True
-    if 'glyceryl trinitrate' in g_name_lower or 'nitroglycerin' in g_name_lower:
+    if 'glyceryl trinitrate' in g_name_lower or 'nitroglycerin' in g_name_lower or 'nitroglycerine' in g_name_lower:
         return True
     if 'methyldopa' in g_name_lower:
         return True
     if 'propranolol' in g_name_lower:
         return True
-    if 'antacid' in g_name_lower or ('aluminium hydroxide' in g_name_lower and 'magnesium hydroxide' in g_name_lower):
+    if 'antacid' in g_name_lower or ('aluminium hydroxide' in g_name_lower and 'magnesium hydroxide' in g_name_lower) or ('aluminum hydroxide' in g_name_lower and 'magnesium hydroxide' in g_name_lower):
         return True
     if g_name_lower == 'glycerin' or g_name_lower == 'glycerol' or 'glycerin (suppository)' in g_name_lower:
         return True
     if 'hyoscine' in g_name_lower:
         return True
-    if 'magnesium hydroxide' in g_name_lower: # Milk of Magnesia
+    if 'magnesium hydroxide' in g_name_lower or 'milk of magnesia' in g_name_lower:
         return True
     if g_name_lower == 'omeprazole':
         return True
-    if 'oral rehydration' in g_name_lower or g_name_lower == 'ors':
+    if 'oral rehydration' in g_name_lower or g_name_lower == 'ors' or 'rehydration salt' in g_name_lower or g_name_lower == 'ors sachet':
         return True
     if 'ranitidine' in g_name_lower:
         return True
-    if 'potassium permanganate' in g_name_lower:
+    if 'potassium permanganate' in g_name_lower or 'potassium permengnate' in g_name_lower:
         return True
     if 'atropine' in g_name_lower:
         return True
@@ -308,7 +309,7 @@ def match_allowed_rule(g_name_lower):
         return True
     if 'ferrous' in g_name_lower or 'fumarate' in g_name_lower or 'gluconate' in g_name_lower or 'carbonyl iron' in g_name_lower or 'iron polymaltose' in g_name_lower:
         return True
-    if 'folic acid' in g_name_lower:
+    if 'folic acid' in g_name_lower or 'folate' in g_name_lower:
         return True
     if 'multivitamin' in g_name_lower:
         return True
@@ -316,7 +317,7 @@ def match_allowed_rule(g_name_lower):
         return True
     if 'vitamin a' in g_name_lower or 'retinol' in g_name_lower:
         return True
-    if 'vitamin b complex' in g_name_lower or 'vitamin b1' in g_name_lower or 'thiamine' in g_name_lower:
+    if 'vitamin b complex' in g_name_lower or 'vitamin b1' in g_name_lower or 'thiamine' in g_name_lower or 'pyridoxine' in g_name_lower or 'cyanocobalamin' in g_name_lower:
         return True
     if 'vitamin c' in g_name_lower or 'ascorbic acid' in g_name_lower:
         return True
@@ -334,7 +335,7 @@ def match_allowed_rule(g_name_lower):
         return True
     if 'xylometazoline' in g_name_lower:
         return True
-    if 'contraceptive' in g_name_lower or 'desogestrel' in g_name_lower or 'levonorgestrel' in g_name_lower:
+    if 'contraceptive' in g_name_lower or 'desogestrel' in g_name_lower or 'levonorgestrel' in g_name_lower or 'ethinylestradiol' in g_name_lower or 'ethinyl estradiol' in g_name_lower:
         return True
     if 'cholera fluid' in g_name_lower or 'cholera saline' in g_name_lower:
         return True
@@ -358,16 +359,22 @@ def match_allowed_rule(g_name_lower):
         return True
     if 'lidocaine' in g_name_lower or 'lignocaine' in g_name_lower:
         return True
-    if 'vaccine' in g_name_lower or 'tetanus' in g_name_lower or 'bcg' in g_name_lower:
+    if 'vaccine' in g_name_lower or 'tetanus' in g_name_lower or 'bcg' in g_name_lower or 'measles' in g_name_lower or 'polio' in g_name_lower or 'dpt' in g_name_lower or 'influenza' in g_name_lower or 'hepatitis b' in g_name_lower or 'toxoid' in g_name_lower:
         return True
     if 'mebendazole' in g_name_lower:
+        return True
+    if 'mouthwash' in g_name_lower:
+        return True
+    if 'sunscreen' in g_name_lower:
         return True
     return False
 
 def match_otc_rule(g_name_lower):
+    if 'condom' in g_name_lower:
+        return True
     if g_name_lower == 'albendazole':
         return True
-    if 'antacid' in g_name_lower or ('aluminium hydroxide' in g_name_lower and 'magnesium hydroxide' in g_name_lower):
+    if 'antacid' in g_name_lower or ('aluminium hydroxide' in g_name_lower and 'magnesium hydroxide' in g_name_lower) or ('aluminum hydroxide' in g_name_lower and 'magnesium hydroxide' in g_name_lower):
         return True
     if 'vitamin c' in g_name_lower or 'ascorbic acid' in g_name_lower:
         return True
@@ -393,13 +400,15 @@ def match_otc_rule(g_name_lower):
         return True
     if g_name_lower == 'glycerin' or g_name_lower == 'glycerol' or 'glycerin (suppository)' in g_name_lower:
         return True
-    if 'contraceptive' in g_name_lower or 'desogestrel' in g_name_lower or 'levonorgestrel' in g_name_lower:
+    if 'contraceptive' in g_name_lower or 'desogestrel' in g_name_lower or 'levonorgestrel' in g_name_lower or 'ethinylestradiol' in g_name_lower or 'ethinyl estradiol' in g_name_lower:
         return True
     if 'mebendazole' in g_name_lower:
         return True
     if 'methyl salicylate' in g_name_lower or 'methylsalicylate' in g_name_lower:
         return True
-    if 'magnesium hydroxide' in g_name_lower: # Milk of Magnesia
+    if 'magnesium hydroxide' in g_name_lower or 'milk of magnesia' in g_name_lower:
+        return True
+    if 'mouthwash' in g_name_lower:
         return True
     if 'multivitamin' in g_name_lower:
         return True
@@ -407,13 +416,13 @@ def match_otc_rule(g_name_lower):
         return True
     if g_name_lower == 'omeprazole':
         return True
-    if 'oral rehydration' in g_name_lower or g_name_lower == 'ors':
+    if 'oral rehydration' in g_name_lower or g_name_lower == 'ors' or 'rehydration salt' in g_name_lower or g_name_lower == 'ors sachet':
         return True
     if 'paracetamol' in g_name_lower or 'acetaminophen' in g_name_lower:
         return True
     if 'permethrin' in g_name_lower:
         return True
-    if 'potassium permanganate' in g_name_lower:
+    if 'potassium permanganate' in g_name_lower or 'potassium permengnate' in g_name_lower:
         return True
     if 'povidone iodine' in g_name_lower or 'povidone-iodine' in g_name_lower:
         return True
@@ -429,9 +438,11 @@ def match_otc_rule(g_name_lower):
         return True
     if 'silver sulfadiazine' in g_name_lower or 'silver sulphadiazine' in g_name_lower:
         return True
+    if 'sunscreen' in g_name_lower:
+        return True
     if 'vitamin a' in g_name_lower or 'retinol' in g_name_lower:
         return True
-    if 'vitamin b complex' in g_name_lower or 'vitamin b1' in g_name_lower or 'thiamine' in g_name_lower:
+    if 'vitamin b complex' in g_name_lower or 'vitamin b1' in g_name_lower or 'thiamine' in g_name_lower or 'pyridoxine' in g_name_lower or 'cyanocobalamin' in g_name_lower:
         return True
     if 'xylometazoline' in g_name_lower:
         return True
@@ -448,14 +459,41 @@ def main():
 
     processed_generics = {}
     for g in unique_g:
-        g_lower = g.lower()
-        is_allowed = match_allowed_rule(g_lower)
-        is_otc = match_otc_rule(g_lower)
+        g_lower = g.lower().strip()
+
+        # Guard: if condom is in generic, bypass splitting
+        if 'condom' in g_lower:
+            parts = [g_lower]
+        else:
+            # Split by '+', '&', '/', or word 'and', 'with', 'plus'
+            parts = [p.strip().lower() for p in re.split(r'\s*\+\s*|\s*&\s*|\s+and\s+|\s+with\s+|\s+plus\s+|\s*/\s*', g, flags=re.IGNORECASE) if p.strip()]
+
+        if len(parts) > 1:
+            # Combined drug logic: allowed ONLY if ALL individual constituent generics are approved
+            all_parts_allowed = True
+            all_parts_otc = True
+            for p in parts:
+                p_allowed = match_allowed_rule(p) or match_otc_rule(p)
+                p_otc = match_otc_rule(p)
+
+                # Special broad rule matching for individual constituent checks (like vitamins/minerals)
+                if not p_allowed:
+                    all_parts_allowed = False
+                if not p_otc:
+                    all_parts_otc = False
+
+            is_allowed = all_parts_allowed
+            is_otc = all_parts_otc
+        else:
+            # Single drug logic
+            is_allowed = match_allowed_rule(g_lower) or match_otc_rule(g_lower)
+            is_otc = match_otc_rule(g_lower)
+
         is_anti = is_antibiotic_generic(g)
         desc = generate_description_for_generic(g)
 
         processed_generics[g] = {
-            'is_allowed': is_allowed or is_otc, # Allowed if in either allowed list or OTC list
+            'is_allowed': is_allowed,
             'is_otc': is_otc,
             'is_antibiotic': is_anti,
             'description': desc

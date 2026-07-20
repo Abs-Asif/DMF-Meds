@@ -36,7 +36,7 @@
         "description": "A comprehensive nutritional supplement containing essential vitamins and minerals to support overall health and fill dietary gaps."
     },
     "6s-5-Methyltetrahydrofolate [Bio-Active Folate]": {
-        "is_allowed": false,
+        "is_allowed": true,
         "is_otc": false,
         "is_antibiotic": false,
         "description": "A comprehensive nutritional supplement containing essential vitamins and minerals to support overall health and fill dietary gaps."
@@ -138,8 +138,8 @@
         "description": "A pharmaceutical agent used for therapeutic management of relevant clinical conditions."
     },
     "Aclidinium Bromide + Formoterol Fumarate": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Aclidinium Bromide (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Formoterol Fumarate (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
     },
@@ -312,8 +312,8 @@
         "description": "An essential mineral used to prevent or treat low blood calcium levels, or as an antacid."
     },
     "Algae Calcium + Vitamin D3": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Algae Calcium (An essential mineral used to prevent or treat low blood calcium levels, or as an antacid); Vitamin D3 (A vitamin essential for calcium absorption, bone health, and immune support)."
     },
@@ -450,14 +450,14 @@
         "description": "A pharmaceutical agent used for therapeutic management of relevant clinical conditions."
     },
     "Aluminium Hydroxide + Magnesium Hydroxide": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "An antacid combination used to relieve indigestion, heartburn, and sour stomach."
     },
     "Aluminium Hydroxide + Magnesium Hydroxide + Simethicone": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "An antacid and antigas combination used to treat heartburn, acid indigestion, and gas bloating."
     },
@@ -522,8 +522,8 @@
         "description": "A pharmaceutical agent used for therapeutic management of relevant clinical conditions."
     },
     "Amino Acid + Calcium": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Amino Acid (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Calcium (An essential mineral used to prevent or treat low blood calcium levels, or as an antacid)."
     },
@@ -546,7 +546,7 @@
         "description": "A combination therapy containing: Amino Acid, D-sorbitol, Vitamins (A comprehensive nutritional supplement containing essential vitamins and minerals to support overall health and fill dietary gaps); Electrolytes (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
     },
     "Amino Acid, Dextrose & Eloctrolytes": {
-        "is_allowed": true,
+        "is_allowed": false,
         "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Amino Acid, Dextrose (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Eloctrolytes (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
@@ -660,7 +660,7 @@
         "description": "A pharmaceutical agent used for therapeutic management of relevant clinical conditions."
     },
     "Amoxicillin + Clavulanic Acid": {
-        "is_allowed": true,
+        "is_allowed": false,
         "is_otc": false,
         "is_antibiotic": true,
         "description": "A combination therapy containing: Amoxicillin (A penicillin antibiotic used to treat a wide range of bacterial infections); Clavulanic Acid (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
@@ -918,8 +918,8 @@
         "description": "A pharmaceutical agent used for therapeutic management of relevant clinical conditions."
     },
     "Astaxanthin + Vitamin E + Vitamin C": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Astaxanthin (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Vitamin E (A comprehensive nutritional supplement containing essential vitamins and minerals to support overall health and fill dietary gaps); Vitamin C (An essential antioxidant vitamin (Vitamin C) used to support immune function, collagen synthesis, and iron absorption)."
     },
@@ -1110,8 +1110,8 @@
         "description": "A pharmaceutical agent used for therapeutic management of relevant clinical conditions."
     },
     "Bacitracin Zinc + Polymyxin B Sulfate": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Bacitracin Zinc (An essential mineral vital for immune function, wound healing, protein synthesis, and growth); Polymyxin B Sulfate (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
     },
@@ -1206,14 +1206,14 @@
         "description": "A corticosteroid anti-inflammatory agent used to reduce swelling and allergic reactions."
     },
     "Beclomethasone Dipropionate + Chloramphenicol + Clotrimazole + Lidocaine": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": true,
         "description": "A combination therapy containing: Beclomethasone Dipropionate (A corticosteroid anti-inflammatory agent used to reduce swelling and allergic reactions); Chloramphenicol (An antibiotic used to treat serious eye, ear, or systemic bacterial infections); Clotrimazole (An antifungal medication used to treat fungal infections of the skin like athlete's foot); Lidocaine (A local anesthetic used to numb tissue in a specific area)."
     },
     "Beclomethasone Dipropionate + Formoterol Fumarate": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Beclomethasone Dipropionate (A corticosteroid anti-inflammatory agent used to reduce swelling and allergic reactions); Formoterol Fumarate (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
     },
@@ -1260,8 +1260,8 @@
         "description": "A combination therapy containing: Benzocaine (A local anesthetic used to numb a specific area of the body); Butamben (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Tetracaine Hydrochloride (A local anesthetic used to numb a specific area of the body)."
     },
     "Benzoic Acid + Salicylic Acid": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "An antifungal and keratolytic ointment used to treat skin fungal infections (Whitfield's Ointment)."
     },
@@ -1278,8 +1278,8 @@
         "description": "A dermatological preparation used for the topical treatment of acne and other skin conditions."
     },
     "Benzydamine + Chlorhexidine gluconate": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Benzydamine (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Chlorhexidine gluconate (An antiseptic and disinfectant used to reduce bacteria on the skin and in the mouth)."
     },
@@ -1308,8 +1308,8 @@
         "description": "A fluoroquinolone antibiotic used to treat various bacterial infections, including urinary tract and respiratory infections."
     },
     "Betacarotene + Vitamin C + Vitamin E": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Betacarotene (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Vitamin C (An essential antioxidant vitamin (Vitamin C) used to support immune function, collagen synthesis, and iron absorption); Vitamin E (A comprehensive nutritional supplement containing essential vitamins and minerals to support overall health and fill dietary gaps)."
     },
@@ -1344,25 +1344,25 @@
         "description": "A combination therapy containing: Betamethasone (A potent corticosteroid used to reduce inflammation, itching, and redness in skin conditions); Clotrimazole (An antifungal medication used to treat fungal infections of the skin like athlete's foot)."
     },
     "Betamethasone + Clotrimazole + Gentamicin": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Betamethasone (A potent corticosteroid used to reduce inflammation, itching, and redness in skin conditions); Clotrimazole (An antifungal medication used to treat fungal infections of the skin like athlete's foot); Gentamicin (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
     },
     "Betamethasone + Neomycin Sulphate (E/E)": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": true,
         "description": "A combination therapy containing: Betamethasone (A potent corticosteroid used to reduce inflammation, itching, and redness in skin conditions); Neomycin Sulphate (E/E) (An antibiotic used to treat serious bacterial infections)."
     },
     "Betamethasone + Neomycin Sulphate (Topical)": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": true,
         "description": "A combination therapy containing: Betamethasone (A potent corticosteroid used to reduce inflammation, itching, and redness in skin conditions); Neomycin Sulphate (Topical) (An antibiotic used to treat serious bacterial infections)."
     },
     "Betamethasone + Phenylephrine + Lignocaine": {
-        "is_allowed": true,
+        "is_allowed": false,
         "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Betamethasone (A potent corticosteroid used to reduce inflammation, itching, and redness in skin conditions); Phenylephrine (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Lignocaine (A local anesthetic used to numb tissue in a specific area)."
@@ -1482,14 +1482,14 @@
         "description": "A beta-blocker used to lower blood pressure, reduce heart rate, and treat angina."
     },
     "Bisoprolol Fumarate + Amlodipine Besilate": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Bisoprolol Fumarate (A beta-blocker used to lower blood pressure, reduce heart rate, and treat angina); Amlodipine Besilate (A calcium channel blocker used to treat high blood pressure and chest pain (angina))."
     },
     "Bisoprolol Fumarate + Hydrochlorothiazide": {
         "is_allowed": true,
-        "is_otc": true,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Bisoprolol Fumarate (A beta-blocker used to lower blood pressure, reduce heart rate, and treat angina); Hydrochlorothiazide (A diuretic (water pill) used to treat high blood pressure and fluid retention (edema))."
     },
@@ -1662,8 +1662,8 @@
         "description": "A pharmaceutical agent used for therapeutic management of relevant clinical conditions."
     },
     "Budesonide + Formoterol Fumarate": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Budesonide (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Formoterol Fumarate (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
     },
@@ -1680,7 +1680,7 @@
         "description": "A local anesthetic used to numb a specific area of the body."
     },
     "Bupivacaine Hydrochloride + Dextrose": {
-        "is_allowed": true,
+        "is_allowed": false,
         "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Bupivacaine Hydrochloride (A local anesthetic used to numb a specific area of the body); Dextrose (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
@@ -1734,7 +1734,7 @@
         "description": "A pharmaceutical agent used for therapeutic management of relevant clinical conditions."
     },
     "Calamine + Zinc Oxide + Glycerine": {
-        "is_allowed": true,
+        "is_allowed": false,
         "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Calamine (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Zinc Oxide (An essential mineral vital for immune function, wound healing, protein synthesis, and growth); Glycerine (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
@@ -1752,14 +1752,14 @@
         "description": "A pharmaceutical agent used for therapeutic management of relevant clinical conditions."
     },
     "Calcium + Vitamin D3 + Multimineral": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Calcium (An essential mineral used to prevent or treat low blood calcium levels, or as an antacid); Vitamin D3 (A vitamin essential for calcium absorption, bone health, and immune support); Multimineral (A comprehensive nutritional supplement containing essential vitamins and minerals to support overall health and fill dietary gaps)."
     },
     "Calcium + Vitamin D3 + Vitamin C + Vitamin E + Multimineral": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Calcium (An essential mineral used to prevent or treat low blood calcium levels, or as an antacid); Vitamin D3 (A vitamin essential for calcium absorption, bone health, and immune support); Vitamin C (An essential antioxidant vitamin (Vitamin C) used to support immune function, collagen synthesis, and iron absorption); Vitamin E (A comprehensive nutritional supplement containing essential vitamins and minerals to support overall health and fill dietary gaps); Multimineral (A comprehensive nutritional supplement containing essential vitamins and minerals to support overall health and fill dietary gaps)."
     },
@@ -1776,8 +1776,8 @@
         "description": "An essential mineral used to prevent or treat low blood calcium levels, or as an antacid."
     },
     "Calcium Citrate + Calcitriol": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Calcium Citrate (An essential mineral used to prevent or treat low blood calcium levels, or as an antacid); Calcitriol (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
     },
@@ -1788,8 +1788,8 @@
         "description": "An essential mineral used to prevent or treat low blood calcium levels, or as an antacid."
     },
     "Calcium Dobesilate + Lidocaine + Dexamethasone": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Calcium Dobesilate (An essential mineral used to prevent or treat low blood calcium levels, or as an antacid); Lidocaine (A local anesthetic used to numb tissue in a specific area); Dexamethasone (A corticosteroid anti-inflammatory agent used to reduce swelling and allergic reactions)."
     },
@@ -1812,20 +1812,20 @@
         "description": "A combination therapy containing: Calcium Lactate Gluconate (An essential mineral used to prevent or treat low blood calcium levels, or as an antacid); Calcium Carbonate (An essential mineral used to prevent or treat low blood calcium levels, or as an antacid); Vitamin C (An essential antioxidant vitamin (Vitamin C) used to support immune function, collagen synthesis, and iron absorption)."
     },
     "Calcium Lactate Gluconate + Calcium Carbonate + Vitamin C + Vitamin D3": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Calcium Lactate Gluconate (An essential mineral used to prevent or treat low blood calcium levels, or as an antacid); Calcium Carbonate (An essential mineral used to prevent or treat low blood calcium levels, or as an antacid); Vitamin C (An essential antioxidant vitamin (Vitamin C) used to support immune function, collagen synthesis, and iron absorption); Vitamin D3 (A vitamin essential for calcium absorption, bone health, and immune support)."
     },
     "Calcium Lactate Gluconate + Calcium Carbonate + Vitamin D3": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Calcium Lactate Gluconate (An essential mineral used to prevent or treat low blood calcium levels, or as an antacid); Calcium Carbonate (An essential mineral used to prevent or treat low blood calcium levels, or as an antacid); Vitamin D3 (A vitamin essential for calcium absorption, bone health, and immune support)."
     },
     "Calcium Lactate Gluconate + Calcium Carbonate + Vitamin D3 + Multiminerals": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Calcium Lactate Gluconate (An essential mineral used to prevent or treat low blood calcium levels, or as an antacid); Calcium Carbonate (An essential mineral used to prevent or treat low blood calcium levels, or as an antacid); Vitamin D3 (A vitamin essential for calcium absorption, bone health, and immune support); Multiminerals (A comprehensive nutritional supplement containing essential vitamins and minerals to support overall health and fill dietary gaps)."
     },
@@ -1842,8 +1842,8 @@
         "description": "An essential mineral used to prevent or treat low blood calcium levels, or as an antacid."
     },
     "Calcium Phosphate [Milk source] + Vitamin D3": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Calcium Phosphate [Milk source] (An essential mineral used to prevent or treat low blood calcium levels, or as an antacid); Vitamin D3 (A vitamin essential for calcium absorption, bone health, and immune support)."
     },
@@ -1854,8 +1854,8 @@
         "description": "An essential mineral used to prevent or treat low blood calcium levels, or as an antacid."
     },
     "Calcium acetate +  Magnesium carbonate": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Calcium acetate (An essential mineral used to prevent or treat low blood calcium levels, or as an antacid); Magnesium carbonate (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
     },
@@ -1890,7 +1890,7 @@
         "description": "An angiotensin II receptor blocker used to lower high blood pressure and protect kidney function."
     },
     "Candesartan Cilexetil + Hydrochlorothiazide": {
-        "is_allowed": true,
+        "is_allowed": false,
         "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Candesartan Cilexetil (An angiotensin II receptor blocker used to lower high blood pressure and protect kidney function); Hydrochlorothiazide (A diuretic (water pill) used to treat high blood pressure and fluid retention (edema))."
@@ -1951,19 +1951,19 @@
     },
     "Carbonyl Iron + Folic Acid": {
         "is_allowed": true,
-        "is_otc": true,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Carbonyl Iron (An essential mineral used to prevent and treat iron deficiency anemia); Folic Acid (A B-vitamin (B9) essential for DNA synthesis, red blood cell production, and fetal development)."
     },
     "Carbonyl Iron + Folic Acid + Zinc Sulfate": {
         "is_allowed": true,
-        "is_otc": true,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Carbonyl Iron (An essential mineral used to prevent and treat iron deficiency anemia); Folic Acid (A B-vitamin (B9) essential for DNA synthesis, red blood cell production, and fetal development); Zinc Sulfate (An essential mineral vital for immune function, wound healing, protein synthesis, and growth)."
     },
     "Carbonyl Iron + Folic Acid + Zinc Sulfate + Vitamin B Complex + Vitamin C": {
         "is_allowed": true,
-        "is_otc": true,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Carbonyl Iron (An essential mineral used to prevent and treat iron deficiency anemia); Folic Acid (A B-vitamin (B9) essential for DNA synthesis, red blood cell production, and fetal development); Zinc Sulfate (An essential mineral vital for immune function, wound healing, protein synthesis, and growth); Vitamin B Complex (A supplement containing a combination of B vitamins, essential for energy metabolism and neurological health); Vitamin C (An essential antioxidant vitamin (Vitamin C) used to support immune function, collagen synthesis, and iron absorption)."
     },
@@ -2269,19 +2269,19 @@
     },
     "Chloramphenicol + Lidocaine Hydrochloride": {
         "is_allowed": true,
-        "is_otc": true,
+        "is_otc": false,
         "is_antibiotic": true,
         "description": "A combination therapy containing: Chloramphenicol (An antibiotic used to treat serious eye, ear, or systemic bacterial infections); Lidocaine Hydrochloride (A local anesthetic used to numb tissue in a specific area)."
     },
     "Chlorhexidine Gluconate + Cetrimide": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Chlorhexidine Gluconate (An antiseptic and disinfectant used to reduce bacteria on the skin and in the mouth); Cetrimide (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
     },
     "Chlorhexidine Gluconate + Isopropyl alcohol": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Chlorhexidine Gluconate (An antiseptic and disinfectant used to reduce bacteria on the skin and in the mouth); Isopropyl alcohol (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
     },
@@ -2310,14 +2310,14 @@
         "description": "An antiseptic and disinfectant used to reduce bacteria on the skin and in the mouth."
     },
     "Chlorhexidine Hydrochloride + Cetrimide": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Chlorhexidine Hydrochloride (An antiseptic and disinfectant used to reduce bacteria on the skin and in the mouth); Cetrimide (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
     },
     "Chlorhexidine hydrochloride + Nystatin": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Chlorhexidine hydrochloride (An antiseptic and disinfectant used to reduce bacteria on the skin and in the mouth); Nystatin (A statin used to lower cholesterol levels and reduce risk of cardiovascular disease)."
     },
@@ -2340,8 +2340,8 @@
         "description": "An antiseptic and disinfectant used for skin disinfection and surgical cleaning."
     },
     "Chloroxylenol + Triclosan": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Chloroxylenol (An antiseptic and disinfectant used for skin disinfection and surgical cleaning); Triclosan (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
     },
@@ -2436,8 +2436,8 @@
         "description": "A combination therapy containing: Cinchocaine (A local anesthetic used to numb a specific area of the body); Hydrocortisone (A mild corticosteroid used to reduce skin inflammation, swelling, and itching); Framycetin (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Esculin (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
     },
     "Cinchocaine + Hydrocortisone + Neomycin + Esculin": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": true,
         "description": "A combination therapy containing: Cinchocaine (A local anesthetic used to numb a specific area of the body); Hydrocortisone (A mild corticosteroid used to reduce skin inflammation, swelling, and itching); Neomycin (An antibiotic used to treat serious bacterial infections); Esculin (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
     },
@@ -2586,8 +2586,8 @@
         "description": "A pharmaceutical agent used for therapeutic management of relevant clinical conditions."
     },
     "Clobetasol Propionate + Neomycin Sulphate + Nystatin": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": true,
         "description": "A combination therapy containing: Clobetasol Propionate (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Neomycin Sulphate (An antibiotic used to treat serious bacterial infections); Nystatin (A statin used to lower cholesterol levels and reduce risk of cardiovascular disease)."
     },
@@ -2814,8 +2814,8 @@
         "description": "A combination therapy containing: Copper Peptide (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Procapil (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Niacinamide (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Biotin (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); L-Arginine (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
     },
     "Coral Calcium + Vitamin D3": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Coral Calcium (An essential mineral used to prevent or treat low blood calcium levels, or as an antacid); Vitamin D3 (A vitamin essential for calcium absorption, bone health, and immune support)."
     },
@@ -2880,8 +2880,8 @@
         "description": "A pharmaceutical agent used for therapeutic management of relevant clinical conditions."
     },
     "Cyanocobalamin": {
-        "is_allowed": false,
-        "is_otc": false,
+        "is_allowed": true,
+        "is_otc": true,
         "is_antibiotic": false,
         "description": "A pharmaceutical agent used for therapeutic management of relevant clinical conditions."
     },
@@ -3204,8 +3204,8 @@
         "description": "A corticosteroid anti-inflammatory agent used to reduce swelling and allergic reactions."
     },
     "Dexamethasone + Chloramphenicol": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": true,
         "description": "A combination therapy containing: Dexamethasone (A corticosteroid anti-inflammatory agent used to reduce swelling and allergic reactions); Chloramphenicol (An antibiotic used to treat serious eye, ear, or systemic bacterial infections)."
     },
@@ -3216,14 +3216,14 @@
         "description": "A combination therapy containing: Dexamethasone (A corticosteroid anti-inflammatory agent used to reduce swelling and allergic reactions); Levofloxacin (A fluoroquinolone antibiotic used to treat severe bacterial infections)."
     },
     "Dexamethasone + Neomycin + Glacial Acetic Acid": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": true,
         "description": "A combination therapy containing: Dexamethasone (A corticosteroid anti-inflammatory agent used to reduce swelling and allergic reactions); Neomycin (An antibiotic used to treat serious bacterial infections); Glacial Acetic Acid (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
     },
     "Dexamethasone + Neomycin Sulphate + Polymyxin B Sulphate": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": true,
         "description": "A combination therapy containing: Dexamethasone (A corticosteroid anti-inflammatory agent used to reduce swelling and allergic reactions); Neomycin Sulphate (An antibiotic used to treat serious bacterial infections); Polymyxin B Sulphate (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
     },
@@ -3264,7 +3264,7 @@
         "description": "A keratolytic skin-conditioning agent used to soothe, hydrate, and promote healing of dry or rough skin."
     },
     "Dextran + Dextrose": {
-        "is_allowed": true,
+        "is_allowed": false,
         "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Dextran (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Dextrose (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
@@ -3276,26 +3276,26 @@
         "description": "A combination therapy containing: Dextran (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Hypromellose (An ophthalmic lubricant or artificial tear preparation used to relieve dry, irritated, or burning eyes)."
     },
     "Dextran + Sodium Chloride": {
-        "is_allowed": true,
+        "is_allowed": false,
         "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Dextran (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Sodium Chloride (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
     },
     "Dextromethorphan + Bupropion": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Dextromethorphan (A cough suppressant used to temporarily relieve coughs caused by minor throat irritation); Bupropion (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
     },
     "Dextromethorphan + Phenylephrine + Triprolidine": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Dextromethorphan (A cough suppressant used to temporarily relieve coughs caused by minor throat irritation); Phenylephrine (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Triprolidine (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
     },
     "Dextromethorphan + Pseudoephedrine + Triprolidine": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Dextromethorphan (A cough suppressant used to temporarily relieve coughs caused by minor throat irritation); Pseudoephedrine (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Triprolidine (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
     },
@@ -3306,8 +3306,8 @@
         "description": "A cough suppressant used to temporarily relieve coughs caused by minor throat irritation."
     },
     "Dextromethorphan Hydrobromide + Guaifenesin": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Dextromethorphan Hydrobromide (A cough suppressant used to temporarily relieve coughs caused by minor throat irritation); Guaifenesin (A mucolytic or expectorant agent used to reduce the viscosity of mucus and assist in clearing the respiratory tract)."
     },
@@ -3324,7 +3324,7 @@
         "description": "A pharmaceutical agent used for therapeutic management of relevant clinical conditions."
     },
     "Dextrose & Hartmann's Solution": {
-        "is_allowed": true,
+        "is_allowed": false,
         "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Dextrose (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Hartmann's Solution (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
@@ -3342,8 +3342,8 @@
         "description": "A pharmaceutical agent used for therapeutic management of relevant clinical conditions."
     },
     "Diclofenac Diethylamine + Mephenesin + Menthol + Methyl Salicylate + Turpentine Oil": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Diclofenac Diethylamine (A nonsteroidal anti-inflammatory drug (NSAID) used to relieve pain and reduce inflammation in joint and muscle conditions); Mephenesin (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Menthol (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Methyl Salicylate (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Turpentine Oil (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
     },
@@ -3367,19 +3367,19 @@
     },
     "Diclofenac Sodium + Lidocaine Hydrochloride": {
         "is_allowed": true,
-        "is_otc": true,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Diclofenac Sodium (A nonsteroidal anti-inflammatory drug (NSAID) used to relieve pain and reduce inflammation in joint and muscle conditions); Lidocaine Hydrochloride (A local anesthetic used to numb tissue in a specific area)."
     },
     "Diclofenac Sodium + Methyl Salicylate + Linseed Oil + Menthol": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Diclofenac Sodium (A nonsteroidal anti-inflammatory drug (NSAID) used to relieve pain and reduce inflammation in joint and muscle conditions); Methyl Salicylate (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Linseed Oil (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Menthol (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
     },
     "Diclofenac Sodium + Misoprostol": {
         "is_allowed": true,
-        "is_otc": true,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Diclofenac Sodium (A nonsteroidal anti-inflammatory drug (NSAID) used to relieve pain and reduce inflammation in joint and muscle conditions); Misoprostol (A synthetic prostaglandin used to prevent stomach ulcers and for obstetric indications)."
     },
@@ -3462,8 +3462,8 @@
         "description": "A combination therapy containing: Diosmin (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Hesperidin (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
     },
     "Diphenhydramine + Dextromethorphan + Levomenthol": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Diphenhydramine (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Dextromethorphan (A cough suppressant used to temporarily relieve coughs caused by minor throat irritation); Levomenthol (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
     },
@@ -3480,13 +3480,13 @@
         "description": "A pharmaceutical agent used for therapeutic management of relevant clinical conditions."
     },
     "Diphenhydramine Hydrochloride + Zinc Acetate": {
-        "is_allowed": true,
+        "is_allowed": false,
         "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Diphenhydramine Hydrochloride (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Zinc Acetate (An essential mineral vital for immune function, wound healing, protein synthesis, and growth)."
     },
     "Diphtheria + Tetanus + Pertussis + Hepatitis B + Polio + HIB": {
-        "is_allowed": true,
+        "is_allowed": false,
         "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Diphtheria (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Tetanus (An immunizing agent used to induce active immunity and protect against specific infectious diseases); Pertussis (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Hepatitis B (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Polio (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); HIB (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
@@ -3738,14 +3738,14 @@
         "description": "A pharmaceutical agent used for therapeutic management of relevant clinical conditions."
     },
     "Eggshell Calcium + Vitamin D3": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Eggshell Calcium (An essential mineral used to prevent or treat low blood calcium levels, or as an antacid); Vitamin D3 (A vitamin essential for calcium absorption, bone health, and immune support)."
     },
     "Eggshell Calcium + Vitamin D3 + 19 Vitamin & Minerals": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Eggshell Calcium (An essential mineral used to prevent or treat low blood calcium levels, or as an antacid); Vitamin D3 (A vitamin essential for calcium absorption, bone health, and immune support); 19 Vitamin (A comprehensive nutritional supplement containing essential vitamins and minerals to support overall health and fill dietary gaps); Minerals (A comprehensive nutritional supplement containing essential vitamins and minerals to support overall health and fill dietary gaps)."
     },
@@ -3762,8 +3762,8 @@
         "description": "A pharmaceutical agent used for therapeutic management of relevant clinical conditions."
     },
     "Elemental Calcium + Vitamin D3": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Elemental Calcium (An essential mineral used to prevent or treat low blood calcium levels, or as an antacid); Vitamin D3 (A vitamin essential for calcium absorption, bone health, and immune support)."
     },
@@ -4008,7 +4008,7 @@
         "description": "A proton pump inhibitor used to decrease stomach acid production, treating acid reflux and heartburn."
     },
     "Esomeprazole + Amoxicillin + Clarithromycin": {
-        "is_allowed": true,
+        "is_allowed": false,
         "is_otc": false,
         "is_antibiotic": true,
         "description": "A combination therapy containing: Esomeprazole (A proton pump inhibitor used to decrease stomach acid production, treating acid reflux and heartburn); Amoxicillin (A penicillin antibiotic used to treat a wide range of bacterial infections); Clarithromycin (A macrolide antibiotic used to treat bacterial infections such as respiratory and skin infections)."
@@ -4164,8 +4164,8 @@
         "description": "A pharmaceutical agent used for therapeutic management of relevant clinical conditions."
     },
     "Eucalyptol + Menthol + Methyl Salicylate + Thymol + Sodium Fluoride": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Eucalyptol (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Menthol (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Methyl Salicylate (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Thymol (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Sodium Fluoride (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
     },
@@ -4315,13 +4315,13 @@
     },
     "Ferrous Ascorbate + Folic Acid + Zinc Sulfate": {
         "is_allowed": true,
-        "is_otc": true,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Ferrous Ascorbate (An essential mineral used to prevent and treat iron deficiency anemia); Folic Acid (A B-vitamin (B9) essential for DNA synthesis, red blood cell production, and fetal development); Zinc Sulfate (An essential mineral vital for immune function, wound healing, protein synthesis, and growth)."
     },
     "Ferrous Fumarate + Folic acid": {
         "is_allowed": true,
-        "is_otc": true,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Ferrous Fumarate (An essential mineral used to prevent and treat iron deficiency anemia); Folic acid (A B-vitamin (B9) essential for DNA synthesis, red blood cell production, and fetal development)."
     },
@@ -4333,13 +4333,13 @@
     },
     "Ferrous Sulfate + Folic Acid": {
         "is_allowed": true,
-        "is_otc": true,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Ferrous Sulfate (An essential mineral used to prevent and treat iron deficiency anemia); Folic Acid (A B-vitamin (B9) essential for DNA synthesis, red blood cell production, and fetal development)."
     },
     "Ferrous Sulfate + Folic Acid + Zinc Sulfate": {
         "is_allowed": true,
-        "is_otc": true,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Ferrous Sulfate (An essential mineral used to prevent and treat iron deficiency anemia); Folic Acid (A B-vitamin (B9) essential for DNA synthesis, red blood cell production, and fetal development); Zinc Sulfate (An essential mineral vital for immune function, wound healing, protein synthesis, and growth)."
     },
@@ -4476,20 +4476,20 @@
         "description": "A combination therapy containing: Fluocinolone Acetonide (A corticosteroid anti-inflammatory agent used to reduce swelling and allergic reactions); Hydroquinone (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Tretinoin (A dermatological preparation used for the topical treatment of acne and other skin conditions)."
     },
     "Fluocinolone Acetonide + Neomycin Sulfate": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": true,
         "description": "A combination therapy containing: Fluocinolone Acetonide (A corticosteroid anti-inflammatory agent used to reduce swelling and allergic reactions); Neomycin Sulfate (An antibiotic used to treat serious bacterial infections)."
     },
     "Fluormetholone + Neomycin Sulphate": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": true,
         "description": "A combination therapy containing: Fluormetholone (A corticosteroid anti-inflammatory agent used to reduce swelling and allergic reactions); Neomycin Sulphate (An antibiotic used to treat serious bacterial infections)."
     },
     "Fluorometholone + Gentamicin": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Fluorometholone (A corticosteroid anti-inflammatory agent used to reduce swelling and allergic reactions); Gentamicin (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
     },
@@ -4590,8 +4590,8 @@
         "description": "A corticosteroid anti-inflammatory agent used to reduce swelling and allergic reactions."
     },
     "Fluticasone Propionate + Formoterol Fumarate": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Fluticasone Propionate (A corticosteroid anti-inflammatory agent used to reduce swelling and allergic reactions); Formoterol Fumarate (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
     },
@@ -4668,8 +4668,8 @@
         "description": "A pharmaceutical agent used for therapeutic management of relevant clinical conditions."
     },
     "Formoterol Fumarate + Glycopyrrolate + Budesonide": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Formoterol Fumarate (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Glycopyrrolate (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Budesonide (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
     },
@@ -4812,8 +4812,8 @@
         "description": "A fluoroquinolone antibiotic used to treat various bacterial infections, including urinary tract and respiratory infections."
     },
     "Gentamicin + Hydrocortisone Acetate": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Gentamicin (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Hydrocortisone Acetate (A mild corticosteroid used to reduce skin inflammation, swelling, and itching)."
     },
@@ -4950,7 +4950,7 @@
         "description": "A pharmaceutical agent used for therapeutic management of relevant clinical conditions."
     },
     "Glycerin + Hypromellose + Polyethylene glycol + Tetrahydrozoline + Zinc Sulfate": {
-        "is_allowed": true,
+        "is_allowed": false,
         "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Glycerin (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Hypromellose (An ophthalmic lubricant or artificial tear preparation used to relieve dry, irritated, or burning eyes); Polyethylene glycol (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Tetrahydrozoline (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Zinc Sulfate (An essential mineral vital for immune function, wound healing, protein synthesis, and growth)."
@@ -5004,8 +5004,8 @@
         "description": "A pharmaceutical agent used for therapeutic management of relevant clinical conditions."
     },
     "Glycopyrronium Bromide + Formoterol Fumarate": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Glycopyrronium Bromide (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Formoterol Fumarate (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
     },
@@ -5046,8 +5046,8 @@
         "description": "A pharmaceutical agent used for therapeutic management of relevant clinical conditions."
     },
     "Gramacidin + Neomycin + Polymixin B": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": true,
         "description": "A combination therapy containing: Gramacidin (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Neomycin (An antibiotic used to treat serious bacterial infections); Polymixin B (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
     },
@@ -5070,8 +5070,8 @@
         "description": "A mucolytic or expectorant agent used to reduce the viscosity of mucus and assist in clearing the respiratory tract."
     },
     "Guaifenesin + Dextromethorphan + Menthol": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Guaifenesin (A mucolytic or expectorant agent used to reduce the viscosity of mucus and assist in clearing the respiratory tract); Dextromethorphan (A cough suppressant used to temporarily relieve coughs caused by minor throat irritation); Menthol (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
     },
@@ -5238,7 +5238,7 @@
         "description": "A pharmaceutical agent used for therapeutic management of relevant clinical conditions."
     },
     "Hepatitis B Immuneglobulin": {
-        "is_allowed": false,
+        "is_allowed": true,
         "is_otc": false,
         "is_antibiotic": false,
         "description": "A pharmaceutical agent used for therapeutic management of relevant clinical conditions."
@@ -5364,14 +5364,14 @@
         "description": "A mild corticosteroid used to reduce skin inflammation, swelling, and itching."
     },
     "Hydrocortisone + Lidocaine": {
-        "is_allowed": true,
+        "is_allowed": false,
         "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Hydrocortisone (A mild corticosteroid used to reduce skin inflammation, swelling, and itching); Lidocaine (A local anesthetic used to numb tissue in a specific area)."
     },
     "Hydrocortisone + Neomycin Sulphate + Polymixin B": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": true,
         "description": "A combination therapy containing: Hydrocortisone (A mild corticosteroid used to reduce skin inflammation, swelling, and itching); Neomycin Sulphate (An antibiotic used to treat serious bacterial infections); Polymixin B (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
     },
@@ -5382,14 +5382,14 @@
         "description": "A mild corticosteroid used to reduce skin inflammation, swelling, and itching."
     },
     "Hydrocortisone Acetate + Benzyl Benzoate + Bismuth Subgallate + Bismuth Oxide + Balsam Peru + Zinc Oxide": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Hydrocortisone Acetate (A mild corticosteroid used to reduce skin inflammation, swelling, and itching); Benzyl Benzoate (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Bismuth Subgallate (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Bismuth Oxide (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Balsam Peru (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Zinc Oxide (An essential mineral vital for immune function, wound healing, protein synthesis, and growth)."
     },
     "Hydrocortisone Acetate + Neomycin Sulphate": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": true,
         "description": "A combination therapy containing: Hydrocortisone Acetate (A mild corticosteroid used to reduce skin inflammation, swelling, and itching); Neomycin Sulphate (An antibiotic used to treat serious bacterial infections)."
     },
@@ -5436,7 +5436,7 @@
         "description": "A combination therapy containing: Hydroxyethyl Cellulose (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Glycerin (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
     },
     "Hydroxyethyl Starch + Sodium Chloride": {
-        "is_allowed": true,
+        "is_allowed": false,
         "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Hydroxyethyl Starch (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Sodium Chloride (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
@@ -5508,20 +5508,20 @@
         "description": "A pharmaceutical agent used for therapeutic management of relevant clinical conditions."
     },
     "Ibandronic Acid & Calcium Orotate": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Ibandronic Acid (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Calcium Orotate (An essential mineral used to prevent or treat low blood calcium levels, or as an antacid)."
     },
     "Ibandronic Acid + Algae Calcium + Vitamin D3": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Ibandronic Acid (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Algae Calcium (An essential mineral used to prevent or treat low blood calcium levels, or as an antacid); Vitamin D3 (A vitamin essential for calcium absorption, bone health, and immune support)."
     },
     "Ibandronic Acid + Coral Calcium + Vitamin D3": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Ibandronic Acid (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Coral Calcium (An essential mineral used to prevent or treat low blood calcium levels, or as an antacid); Vitamin D3 (A vitamin essential for calcium absorption, bone health, and immune support)."
     },
@@ -5790,7 +5790,7 @@
         "description": "An angiotensin II receptor blocker used to lower high blood pressure and protect kidney function."
     },
     "Irbesartan + Hydrochlorothiazide": {
-        "is_allowed": true,
+        "is_allowed": false,
         "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Irbesartan (An angiotensin II receptor blocker used to lower high blood pressure and protect kidney function); Hydrochlorothiazide (A diuretic (water pill) used to treat high blood pressure and fluid retention (edema))."
@@ -5802,20 +5802,20 @@
         "description": "A pharmaceutical agent used for therapeutic management of relevant clinical conditions."
     },
     "Iron + Folic Acid + Vitamin A + Vitamin C + Zinc": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Iron (An essential mineral used to prevent and treat iron deficiency anemia); Folic Acid (A B-vitamin (B9) essential for DNA synthesis, red blood cell production, and fetal development); Vitamin A (An essential vitamin vital for vision, immune function, and skin health); Vitamin C (An essential antioxidant vitamin (Vitamin C) used to support immune function, collagen synthesis, and iron absorption); Zinc (An essential mineral vital for immune function, wound healing, protein synthesis, and growth)."
     },
     "Iron + Folic Acid + Vitamin B Complex + Vitamine C + Zinc Sulfate": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Iron (An essential mineral used to prevent and treat iron deficiency anemia); Folic Acid (A B-vitamin (B9) essential for DNA synthesis, red blood cell production, and fetal development); Vitamin B Complex (A supplement containing a combination of B vitamins, essential for energy metabolism and neurological health); Vitamine C (A comprehensive nutritional supplement containing essential vitamins and minerals to support overall health and fill dietary gaps); Zinc Sulfate (An essential mineral vital for immune function, wound healing, protein synthesis, and growth)."
     },
     "Iron + Folic acid + Vitamin B complex + Vitamin C": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Iron (An essential mineral used to prevent and treat iron deficiency anemia); Folic acid (A B-vitamin (B9) essential for DNA synthesis, red blood cell production, and fetal development); Vitamin B complex (A supplement containing a combination of B vitamins, essential for energy metabolism and neurological health); Vitamin C (An essential antioxidant vitamin (Vitamin C) used to support immune function, collagen synthesis, and iron absorption)."
     },
@@ -5826,20 +5826,20 @@
         "description": "An essential mineral used to prevent and treat iron deficiency anemia."
     },
     "Iron Polymaltose Complex + Folic Acid + Zinc + Vitamin B-Complex": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Iron Polymaltose Complex (An essential mineral used to prevent and treat iron deficiency anemia); Folic Acid (A B-vitamin (B9) essential for DNA synthesis, red blood cell production, and fetal development); Zinc (An essential mineral vital for immune function, wound healing, protein synthesis, and growth); Vitamin B-Complex (A comprehensive nutritional supplement containing essential vitamins and minerals to support overall health and fill dietary gaps)."
     },
     "Iron Polymaltose Complex + Folic Acid + Zinc Sulfate": {
         "is_allowed": true,
-        "is_otc": true,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Iron Polymaltose Complex (An essential mineral used to prevent and treat iron deficiency anemia); Folic Acid (A B-vitamin (B9) essential for DNA synthesis, red blood cell production, and fetal development); Zinc Sulfate (An essential mineral vital for immune function, wound healing, protein synthesis, and growth)."
     },
     "Iron Polymaltose Complex + Vitamin B Complex + Zinc": {
         "is_allowed": true,
-        "is_otc": true,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Iron Polymaltose Complex (An essential mineral used to prevent and treat iron deficiency anemia); Vitamin B Complex (A supplement containing a combination of B vitamins, essential for energy metabolism and neurological health); Zinc (An essential mineral vital for immune function, wound healing, protein synthesis, and growth)."
     },
@@ -6066,7 +6066,7 @@
         "description": "An antifungal agent used to treat serious fungal infections, dandruff, and skin conditions."
     },
     "Ketoconazole + Zinc Pyrithione + Aleovera": {
-        "is_allowed": true,
+        "is_allowed": false,
         "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Ketoconazole (An antifungal agent used to treat serious fungal infections, dandruff, and skin conditions); Zinc Pyrithione (An essential mineral vital for immune function, wound healing, protein synthesis, and growth); Aleovera (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
@@ -6150,13 +6150,13 @@
         "description": "A combination therapy containing: L-Ornithine L-Aspartate (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Pancreatin (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
     },
     "L-arginie + Proanthocyanidin + Folic Acid + Zinc": {
-        "is_allowed": true,
+        "is_allowed": false,
         "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: L-arginie (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Proanthocyanidin (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Folic Acid (A B-vitamin (B9) essential for DNA synthesis, red blood cell production, and fetal development); Zinc (An essential mineral vital for immune function, wound healing, protein synthesis, and growth)."
     },
     "L-carnitine + L-arginine + Coenzyme Q10 + Vitamin E + Zinc + Folic acid + Glutathione + Selenium": {
-        "is_allowed": true,
+        "is_allowed": false,
         "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: L-carnitine (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); L-arginine (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Coenzyme Q10 (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Vitamin E (A comprehensive nutritional supplement containing essential vitamins and minerals to support overall health and fill dietary gaps); Zinc (An essential mineral vital for immune function, wound healing, protein synthesis, and growth); Folic acid (A B-vitamin (B9) essential for DNA synthesis, red blood cell production, and fetal development); Glutathione (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Selenium (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
@@ -6234,7 +6234,7 @@
         "description": "A combination therapy containing: Lamivudine (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Zidovudine (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Nevirapine (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
     },
     "Lamivudine [For Chronic Hepatitis B]": {
-        "is_allowed": false,
+        "is_allowed": true,
         "is_otc": false,
         "is_antibiotic": false,
         "description": "A pharmaceutical agent used for therapeutic management of relevant clinical conditions."
@@ -6258,7 +6258,7 @@
         "description": "A proton pump inhibitor used to decrease stomach acid production."
     },
     "Lansoprazole + Amoxicillin + Clarithromycin": {
-        "is_allowed": true,
+        "is_allowed": false,
         "is_otc": false,
         "is_antibiotic": true,
         "description": "A combination therapy containing: Lansoprazole (A proton pump inhibitor used to decrease stomach acid production); Amoxicillin (A penicillin antibiotic used to treat a wide range of bacterial infections); Clarithromycin (A macrolide antibiotic used to treat bacterial infections such as respiratory and skin infections)."
@@ -6306,50 +6306,50 @@
         "description": "A pharmaceutical agent used for therapeutic management of relevant clinical conditions."
     },
     "Latex condom [Amore]": {
-        "is_allowed": false,
-        "is_otc": false,
+        "is_allowed": true,
+        "is_otc": true,
         "is_antibiotic": false,
         "description": "A pharmaceutical agent used for therapeutic management of relevant clinical conditions."
     },
     "Latex condom [Hero]": {
-        "is_allowed": false,
-        "is_otc": false,
+        "is_allowed": true,
+        "is_otc": true,
         "is_antibiotic": false,
         "description": "A pharmaceutical agent used for therapeutic management of relevant clinical conditions."
     },
     "Latex condom [Panther]": {
-        "is_allowed": false,
-        "is_otc": false,
+        "is_allowed": true,
+        "is_otc": true,
         "is_antibiotic": false,
         "description": "A pharmaceutical agent used for therapeutic management of relevant clinical conditions."
     },
     "Latex condom [Raja Super]": {
-        "is_allowed": false,
-        "is_otc": false,
+        "is_allowed": true,
+        "is_otc": true,
         "is_antibiotic": false,
         "description": "A pharmaceutical agent used for therapeutic management of relevant clinical conditions."
     },
     "Latex condom [SKINS]": {
-        "is_allowed": false,
-        "is_otc": false,
+        "is_allowed": true,
+        "is_otc": true,
         "is_antibiotic": false,
         "description": "A pharmaceutical agent used for therapeutic management of relevant clinical conditions."
     },
     "Latex condom [Sensation]": {
-        "is_allowed": false,
-        "is_otc": false,
+        "is_allowed": true,
+        "is_otc": true,
         "is_antibiotic": false,
         "description": "A pharmaceutical agent used for therapeutic management of relevant clinical conditions."
     },
     "Latex condom [U & ME]": {
-        "is_allowed": false,
-        "is_otc": false,
+        "is_allowed": true,
+        "is_otc": true,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Latex condom [U (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); ME] (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
     },
     "Latex condom [Xtreme]": {
-        "is_allowed": false,
-        "is_otc": false,
+        "is_allowed": true,
+        "is_otc": true,
         "is_antibiotic": false,
         "description": "A pharmaceutical agent used for therapeutic management of relevant clinical conditions."
     },
@@ -6540,19 +6540,19 @@
         "description": "A combination therapy containing: Licorice (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Yellow Silk Cotton (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Mastic tree (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
     },
     "Lidocaine + Adrenaline": {
-        "is_allowed": true,
+        "is_allowed": false,
         "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Lidocaine (A local anesthetic used to numb tissue in a specific area); Adrenaline (A potent sympathomimetic amine used as an emergency vasopressor and cardiac stimulant during critical care)."
     },
     "Lidocaine + Epinephrine": {
-        "is_allowed": true,
+        "is_allowed": false,
         "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Lidocaine (A local anesthetic used to numb tissue in a specific area); Epinephrine (A potent sympathomimetic amine used as an emergency vasopressor and cardiac stimulant during critical care)."
     },
     "Lidocaine + Prilocaine": {
-        "is_allowed": true,
+        "is_allowed": false,
         "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Lidocaine (A local anesthetic used to numb tissue in a specific area); Prilocaine (A local anesthetic used to numb a specific area of the body)."
@@ -6588,8 +6588,8 @@
         "description": "A combination therapy containing: Light Liquid Paraffin (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); White Soft Paraffin (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Glycerine (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
     },
     "Light kaolin + Silver sulfadiazine + Calcium gluconate + Butane propellant": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Light kaolin (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Silver sulfadiazine (A topical antibacterial agent used to prevent and treat infections in second- and third-degree burns); Calcium gluconate (An essential mineral used to prevent or treat low blood calcium levels, or as an antacid); Butane propellant (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
     },
@@ -6630,8 +6630,8 @@
         "description": "A combination therapy containing: Liposome (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Perilla (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Sodium Hyaluronate (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
     },
     "Liquid Paraffin + Benzalkonium Chloride + Chlorhexidine + Isopropyl Myristate": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Liquid Paraffin (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Benzalkonium Chloride (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Chlorhexidine (An antiseptic and disinfectant used to reduce bacteria on the skin and in the mouth); Isopropyl Myristate (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
     },
@@ -6720,7 +6720,7 @@
         "description": "An angiotensin II receptor blocker used to lower high blood pressure and protect kidneys in diabetic patients."
     },
     "Losartan Potassium + Hydrochlorothiazide": {
-        "is_allowed": true,
+        "is_allowed": false,
         "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Losartan Potassium (An angiotensin II receptor blocker used to lower high blood pressure and protect kidneys in diabetic patients); Hydrochlorothiazide (A diuretic (water pill) used to treat high blood pressure and fluid retention (edema))."
@@ -6822,8 +6822,8 @@
         "description": "A pharmaceutical agent used for therapeutic management of relevant clinical conditions."
     },
     "Magnesium Hydroxide + Liquid Paraffin": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Magnesium Hydroxide (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Liquid Paraffin (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
     },
@@ -6846,8 +6846,8 @@
         "description": "A traditional herbal/ayurvedic formulation used for holistic health management, natural healing, and symptom relief."
     },
     "Malic Acid + Benzoic acid + Salicylic acid": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Malic Acid (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Benzoic acid (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Salicylic acid (A dermatological preparation used for the topical treatment of acne and other skin conditions)."
     },
@@ -7026,14 +7026,14 @@
         "description": "A pharmaceutical agent used for therapeutic management of relevant clinical conditions."
     },
     "Menaquinone-7 + Algae Calcium + Vitamin D3": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Menaquinone-7 (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Algae Calcium (An essential mineral used to prevent or treat low blood calcium levels, or as an antacid); Vitamin D3 (A vitamin essential for calcium absorption, bone health, and immune support)."
     },
     "Menaquinone-7 + Coral Calcium + Vitamin D3": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Menaquinone-7 (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Coral Calcium (An essential mineral used to prevent or treat low blood calcium levels, or as an antacid); Vitamin D3 (A vitamin essential for calcium absorption, bone health, and immune support)."
     },
@@ -7068,8 +7068,8 @@
         "description": "A combination therapy containing: Menthol (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Camphor (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Eucalyptus Oil (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Mint Oil (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
     },
     "Menthol + Camphor + Methyl Salicylate + Oleoresin Capsicum": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Menthol (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Camphor (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Methyl Salicylate (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Oleoresin Capsicum (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
     },
@@ -7080,8 +7080,8 @@
         "description": "A combination therapy containing: Menthol (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Eucalyptus Oil (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
     },
     "Menthol + Thymol + Eucalyptol  + Methyl Salicylate": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Menthol (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Thymol (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Eucalyptol (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Methyl Salicylate (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
     },
@@ -7152,14 +7152,14 @@
         "description": "A pharmaceutical agent used for therapeutic management of relevant clinical conditions."
     },
     "Methyl Salicylate + Menthol": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Methyl Salicylate (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Menthol (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
     },
     "Methyl Salicylate + Menthol + Camphor": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Methyl Salicylate (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Menthol (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Camphor (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
     },
@@ -7230,8 +7230,8 @@
         "description": "A combination therapy containing: Metronidazole (An antimicrobial medication used to treat bacterial and protozoal infections); Miconazole Nitrate (An antifungal medication used to treat skin, mouth, and vaginal yeast infections)."
     },
     "Metronidazole + Neomycin Sulphate + Polymyxin B + Nystatin": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": true,
         "description": "A combination therapy containing: Metronidazole (An antimicrobial medication used to treat bacterial and protozoal infections); Neomycin Sulphate (An antibiotic used to treat serious bacterial infections); Polymyxin B (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Nystatin (A statin used to lower cholesterol levels and reduce risk of cardiovascular disease)."
     },
@@ -7254,7 +7254,7 @@
         "description": "A combination therapy containing: Miconazole Nitrate (An antifungal medication used to treat skin, mouth, and vaginal yeast infections); Hydrocortisone (A mild corticosteroid used to reduce skin inflammation, swelling, and itching)."
     },
     "Miconazole Nitrate + Zinc Oxide + White Soft Paraffin": {
-        "is_allowed": true,
+        "is_allowed": false,
         "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Miconazole Nitrate (An antifungal medication used to treat skin, mouth, and vaginal yeast infections); Zinc Oxide (An essential mineral vital for immune function, wound healing, protein synthesis, and growth); White Soft Paraffin (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
@@ -7272,7 +7272,7 @@
         "description": "A pharmaceutical agent used for therapeutic management of relevant clinical conditions."
     },
     "Mifepristone + Misoprostol": {
-        "is_allowed": true,
+        "is_allowed": false,
         "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Mifepristone (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Misoprostol (A synthetic prostaglandin used to prevent stomach ulcers and for obstetric indications)."
@@ -7380,8 +7380,8 @@
         "description": "A corticosteroid anti-inflammatory agent used to reduce swelling and allergic reactions."
     },
     "Mometasone Furoate + Formoterol Fumarate": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Mometasone Furoate (A corticosteroid anti-inflammatory agent used to reduce swelling and allergic reactions); Formoterol Fumarate (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
     },
@@ -7500,80 +7500,80 @@
         "description": "A comprehensive supplement containing essential vitamins and minerals to support overall health."
     },
     "Multivitamin  [water soluble] + Normal Saline": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Multivitamin  [water soluble] (A comprehensive supplement containing essential vitamins and minerals to support overall health); Normal Saline (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
     },
     "Multivitamin & Multimineral": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Multivitamin (A comprehensive supplement containing essential vitamins and minerals to support overall health); Multimineral (A comprehensive nutritional supplement containing essential vitamins and minerals to support overall health and fill dietary gaps)."
     },
     "Multivitamin & Multimineral [A-Z for infant & children]": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Multivitamin (A comprehensive supplement containing essential vitamins and minerals to support overall health); Multimineral [A-Z for infant (A comprehensive nutritional supplement containing essential vitamins and minerals to support overall health and fill dietary gaps); children] (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
     },
     "Multivitamin & Multimineral [A-Z gold preparation]": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Multivitamin (A comprehensive supplement containing essential vitamins and minerals to support overall health); Multimineral [A-Z gold preparation] (A comprehensive nutritional supplement containing essential vitamins and minerals to support overall health and fill dietary gaps)."
     },
     "Multivitamin & Multimineral [A-Z junior infusion preparation]": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Multivitamin (A comprehensive supplement containing essential vitamins and minerals to support overall health); Multimineral [A-Z junior infusion preparation] (A comprehensive nutritional supplement containing essential vitamins and minerals to support overall health and fill dietary gaps)."
     },
     "Multivitamin & Multimineral [A-Z juniors syrup preparation]": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Multivitamin (A comprehensive supplement containing essential vitamins and minerals to support overall health); Multimineral [A-Z juniors syrup preparation] (A comprehensive nutritional supplement containing essential vitamins and minerals to support overall health and fill dietary gaps)."
     },
     "Multivitamin & Multimineral [A-Z silver preparation]": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Multivitamin (A comprehensive supplement containing essential vitamins and minerals to support overall health); Multimineral [A-Z silver preparation] (A comprehensive nutritional supplement containing essential vitamins and minerals to support overall health and fill dietary gaps)."
     },
     "Multivitamin & Multimineral [A-Z syrup preparation]": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Multivitamin (A comprehensive supplement containing essential vitamins and minerals to support overall health); Multimineral [A-Z syrup preparation] (A comprehensive nutritional supplement containing essential vitamins and minerals to support overall health and fill dietary gaps)."
     },
     "Multivitamin & Multimineral [A-Z teen boys preparation]": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Multivitamin (A comprehensive supplement containing essential vitamins and minerals to support overall health); Multimineral [A-Z teen boys preparation] (A comprehensive nutritional supplement containing essential vitamins and minerals to support overall health and fill dietary gaps)."
     },
     "Multivitamin & Multimineral [A-Z teen girls preparation]": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Multivitamin (A comprehensive supplement containing essential vitamins and minerals to support overall health); Multimineral [A-Z teen girls preparation] (A comprehensive nutritional supplement containing essential vitamins and minerals to support overall health and fill dietary gaps)."
     },
     "Multivitamin + 5% Amino acid": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Multivitamin (A comprehensive supplement containing essential vitamins and minerals to support overall health); 5% Amino acid (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
     },
     "Multivitamin + Cod Liver Oil": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Multivitamin (A comprehensive supplement containing essential vitamins and minerals to support overall health); Cod Liver Oil (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
     },
     "Multivitamin + L-Lysine": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Multivitamin (A comprehensive supplement containing essential vitamins and minerals to support overall health); L-Lysine (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
     },
@@ -7596,26 +7596,26 @@
         "description": "A combination therapy containing: Multivitamin [Vitamin B complex (A comprehensive supplement containing essential vitamins and minerals to support overall health); Vitamin C] (An essential antioxidant vitamin (Vitamin C) used to support immune function, collagen synthesis, and iron absorption)."
     },
     "Multivitamin [water & fat soluble] + 5% Dextrose": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Multivitamin [water (A comprehensive supplement containing essential vitamins and minerals to support overall health); fat soluble] (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); 5% Dextrose (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
     },
     "Multivitamin [water & fat soluble] + Normal Saline": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Multivitamin [water (A comprehensive supplement containing essential vitamins and minerals to support overall health); fat soluble] (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Normal Saline (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
     },
     "Multivitamin [water soluble] + 5% Dextrose": {
         "is_allowed": true,
-        "is_otc": true,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Multivitamin [water soluble] (A comprehensive supplement containing essential vitamins and minerals to support overall health); 5% Dextrose (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
     },
     "Multivitamins & Multiminerals [A-Z prenatal preparation]": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Multivitamins (A comprehensive supplement containing essential vitamins and minerals to support overall health); Multiminerals [A-Z prenatal preparation] (A comprehensive nutritional supplement containing essential vitamins and minerals to support overall health and fill dietary gaps)."
     },
@@ -7656,7 +7656,7 @@
         "description": "A pharmaceutical agent used for therapeutic management of relevant clinical conditions."
     },
     "Myo-Inositol + Vitamin B6 + Folic acid": {
-        "is_allowed": true,
+        "is_allowed": false,
         "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Myo-Inositol (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Vitamin B6 (A comprehensive nutritional supplement containing essential vitamins and minerals to support overall health and fill dietary gaps); Folic acid (A B-vitamin (B9) essential for DNA synthesis, red blood cell production, and fetal development)."
@@ -7728,7 +7728,7 @@
         "description": "A corticosteroid anti-inflammatory agent used to reduce swelling and allergic reactions."
     },
     "Naphazoline + Zinc Sulfate": {
-        "is_allowed": true,
+        "is_allowed": false,
         "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Naphazoline (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Zinc Sulfate (An essential mineral vital for immune function, wound healing, protein synthesis, and growth)."
@@ -7788,7 +7788,7 @@
         "description": "A pharmaceutical agent used for therapeutic management of relevant clinical conditions."
     },
     "Nebivolol + Hydrochlorothiazide": {
-        "is_allowed": true,
+        "is_allowed": false,
         "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Nebivolol (A beta-blocker used to lower blood pressure, reduce heart rate, and treat angina); Hydrochlorothiazide (A diuretic (water pill) used to treat high blood pressure and fluid retention (edema))."
@@ -7830,14 +7830,14 @@
         "description": "A combination therapy containing: Neomycin Sulfate (An antibiotic used to treat serious bacterial infections); Bacitracin Zinc (An essential mineral vital for immune function, wound healing, protein synthesis, and growth)."
     },
     "Neomycin Sulfate + Bacitracin Zinc + Polymyxin B Sulfate": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": true,
         "description": "A combination therapy containing: Neomycin Sulfate (An antibiotic used to treat serious bacterial infections); Bacitracin Zinc (An essential mineral vital for immune function, wound healing, protein synthesis, and growth); Polymyxin B Sulfate (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
     },
     "Neomycin Sulphate + Polymyxin B Sulphate + Pramoxine": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": true,
         "description": "A combination therapy containing: Neomycin Sulphate (An antibiotic used to treat serious bacterial infections); Polymyxin B Sulphate (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Pramoxine (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
     },
@@ -8010,8 +8010,8 @@
         "description": "A pharmaceutical agent used for therapeutic management of relevant clinical conditions."
     },
     "Norgestrel + Ethinyl Estradiol + Ferrous Fumarate": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Norgestrel (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Ethinyl Estradiol (A hormone replacement or endocrine agent used for therapeutic hormone balance and related clinical indications); Ferrous Fumarate (An essential mineral used to prevent and treat iron deficiency anemia)."
     },
@@ -8076,7 +8076,7 @@
         "description": "A fluoroquinolone antibiotic used to treat various bacterial infections, including urinary tract and respiratory infections."
     },
     "Ofloxacin + Clotrimazole + Beclomethasone + Lidocaine": {
-        "is_allowed": true,
+        "is_allowed": false,
         "is_otc": false,
         "is_antibiotic": true,
         "description": "A combination therapy containing: Ofloxacin (A fluoroquinolone antibiotic used to treat various bacterial infections, including urinary tract and respiratory infections); Clotrimazole (An antifungal medication used to treat fungal infections of the skin like athlete's foot); Beclomethasone (A corticosteroid anti-inflammatory agent used to reduce swelling and allergic reactions); Lidocaine (A local anesthetic used to numb tissue in a specific area)."
@@ -8106,7 +8106,7 @@
         "description": "An angiotensin II receptor blocker used to lower high blood pressure and protect kidney function."
     },
     "Olmesartan Medoxomil + Hydrochlorothiazide": {
-        "is_allowed": true,
+        "is_allowed": false,
         "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Olmesartan Medoxomil (An angiotensin II receptor blocker used to lower high blood pressure and protect kidney function); Hydrochlorothiazide (A diuretic (water pill) used to treat high blood pressure and fluid retention (edema))."
@@ -8136,7 +8136,7 @@
         "description": "A pharmaceutical agent used for therapeutic management of relevant clinical conditions."
     },
     "Omega-3 Fatty Acids+ Folic acid + Selenium + Coenzyme Q10 + Vitamin E + Catechins + Glycyrrhizin": {
-        "is_allowed": true,
+        "is_allowed": false,
         "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Omega-3 Fatty Acids (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Folic acid (A B-vitamin (B9) essential for DNA synthesis, red blood cell production, and fetal development); Selenium (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Coenzyme Q10 (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Vitamin E (A comprehensive nutritional supplement containing essential vitamins and minerals to support overall health and fill dietary gaps); Catechins (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Glycyrrhizin (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
@@ -8166,8 +8166,8 @@
         "description": "An immunizing agent used to induce active immunity and protect against specific infectious diseases."
     },
     "Oral rehydration salt [flavore & glucose based]": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Oral rehydration salt [flavore (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); glucose based] (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
     },
@@ -8304,7 +8304,7 @@
         "description": "A tetracycline antibiotic used to treat bacterial infections, acne, and tick-borne diseases."
     },
     "Oxytetracycline + Polymixin B Sulphate": {
-        "is_allowed": true,
+        "is_allowed": false,
         "is_otc": false,
         "is_antibiotic": true,
         "description": "A combination therapy containing: Oxytetracycline (A tetracycline antibiotic used to treat bacterial infections, acne, and tick-borne diseases); Polymixin B Sulphate (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
@@ -8400,14 +8400,14 @@
         "description": "A widely used pain reliever (analgesic) and fever reducer (antipyretic)."
     },
     "Paracetamol + Caffeine": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Paracetamol (A widely used pain reliever (analgesic) and fever reducer (antipyretic)); Caffeine (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
     },
     "Paracetamol\u00a0+\u00a0Tramadol\u00a0Hydrochloride": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Paracetamol (A widely used pain reliever (analgesic) and fever reducer (antipyretic)); Tramadol\u00a0Hydrochloride (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
     },
@@ -8568,8 +8568,8 @@
         "description": "A pharmaceutical agent used for therapeutic management of relevant clinical conditions."
     },
     "Permethrin + Crotamiton": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Permethrin (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Crotamiton (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
     },
@@ -8604,14 +8604,14 @@
         "description": "A barbiturate anticonvulsant used to control seizures and treat insomnia."
     },
     "Phenoxymethyl Penicillin [Penicillin V]": {
-        "is_allowed": false,
+        "is_allowed": true,
         "is_otc": false,
         "is_antibiotic": true,
         "description": "A penicillin antibiotic used to treat a wide range of bacterial infections."
     },
     "Phenylephrine + Promethazine": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Phenylephrine (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Promethazine (An antihistamine and antiemetic used to prevent nausea and motion sickness, and treat allergies)."
     },
@@ -8886,8 +8886,8 @@
         "description": "A corticosteroid anti-inflammatory agent used to reduce swelling and allergic reactions."
     },
     "Prednisolone + Neomycin Sulphate + Polymixin B Sulphate": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": true,
         "description": "A combination therapy containing: Prednisolone (A corticosteroid anti-inflammatory agent used to reduce swelling and allergic reactions); Neomycin Sulphate (An antibiotic used to treat serious bacterial infections); Polymixin B Sulphate (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
     },
@@ -9126,8 +9126,8 @@
         "description": "A pharmaceutical agent used for therapeutic management of relevant clinical conditions."
     },
     "Pyridoxine Hydrochloride": {
-        "is_allowed": false,
-        "is_otc": false,
+        "is_allowed": true,
+        "is_otc": true,
         "is_antibiotic": false,
         "description": "A pharmaceutical agent used for therapeutic management of relevant clinical conditions."
     },
@@ -9240,7 +9240,7 @@
         "description": "A pharmaceutical agent used for therapeutic management of relevant clinical conditions."
     },
     "Rabeprazole + Amoxicillin + Clarithromycin": {
-        "is_allowed": true,
+        "is_allowed": false,
         "is_otc": false,
         "is_antibiotic": true,
         "description": "A combination therapy containing: Rabeprazole (A proton pump inhibitor used to reduce stomach acid); Amoxicillin (A penicillin antibiotic used to treat a wide range of bacterial infections); Clarithromycin (A macrolide antibiotic used to treat bacterial infections such as respiratory and skin infections)."
@@ -9288,7 +9288,7 @@
         "description": "An ACE inhibitor used to lower blood pressure and treat heart failure."
     },
     "Ramipril + Hydrochlorothiazide": {
-        "is_allowed": true,
+        "is_allowed": false,
         "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Ramipril (An ACE inhibitor used to lower blood pressure and treat heart failure); Hydrochlorothiazide (A diuretic (water pill) used to treat high blood pressure and fluid retention (edema))."
@@ -9504,8 +9504,8 @@
         "description": "A bone-resorption inhibitor used for the treatment and prevention of osteoporosis and bone disorders."
     },
     "Risedronate Sodium + Calcium Carbonate": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Risedronate Sodium (A bone-resorption inhibitor used for the treatment and prevention of osteoporosis and bone disorders); Calcium Carbonate (An essential mineral used to prevent or treat low blood calcium levels, or as an antacid)."
     },
@@ -9654,7 +9654,7 @@
         "description": "A pharmaceutical agent used for therapeutic management of relevant clinical conditions."
     },
     "Saccharomyces Boulardii + Lactobacillus Rhamnosus + Zinc": {
-        "is_allowed": true,
+        "is_allowed": false,
         "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Saccharomyces Boulardii (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Lactobacillus Rhamnosus (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Zinc (An essential mineral vital for immune function, wound healing, protein synthesis, and growth)."
@@ -9708,20 +9708,20 @@
         "description": "A bronchodilator used to quickly relieve shortness of breath and wheezing in asthma and COPD."
     },
     "Salbutamol + Budesonide": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Salbutamol (A bronchodilator used to quickly relieve shortness of breath and wheezing in asthma and COPD); Budesonide (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
     },
     "Salbutamol + Ipratropium (Inhaler)": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Salbutamol (A bronchodilator used to quickly relieve shortness of breath and wheezing in asthma and COPD); Ipratropium (Inhaler) (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
     },
     "Salbutamol + Ipratropium (Solution for inhalation)": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Salbutamol (A bronchodilator used to quickly relieve shortness of breath and wheezing in asthma and COPD); Ipratropium (Solution for inhalation) (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
     },
@@ -9744,7 +9744,7 @@
         "description": "A combination therapy containing: Salicylic Acid (A dermatological preparation used for the topical treatment of acne and other skin conditions); Lactic Acid (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
     },
     "Salicylic acid + Zinc Pyrithione": {
-        "is_allowed": true,
+        "is_allowed": false,
         "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Salicylic acid (A dermatological preparation used for the topical treatment of acne and other skin conditions); Zinc Pyrithione (An essential mineral vital for immune function, wound healing, protein synthesis, and growth)."
@@ -10098,8 +10098,8 @@
         "description": "A combination therapy containing: Sodium Alginate (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Potassium Bicarbonate (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
     },
     "Sodium Alginate + Sodium Bicarbonate + Calcium Carbonate": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Sodium Alginate (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Sodium Bicarbonate (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Calcium Carbonate (An essential mineral used to prevent or treat low blood calcium levels, or as an antacid)."
     },
@@ -10146,14 +10146,14 @@
         "description": "An intravenous fluid used to provide water, electrolytes, and calories for hydration and nutrition."
     },
     "Sodium Chloride + Potassium Chloride + Sodium Acetate": {
-        "is_allowed": true,
+        "is_allowed": false,
         "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Sodium Chloride (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Potassium Chloride (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Sodium Acetate (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
     },
     "Sodium Cromoglicate + Xylometazoline Hydrochloride": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Sodium Cromoglicate (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Xylometazoline Hydrochloride (A nasal decongestant used to clear stuffy nose and sinus congestion)."
     },
@@ -10452,7 +10452,7 @@
         "description": "A combination therapy containing: Sulphadoxine (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Pyrimethamine (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
     },
     "Sulphamethoxazole + Trimethoprim": {
-        "is_allowed": true,
+        "is_allowed": false,
         "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination antibiotic (Co-trimoxazole) used to treat urinary tract infections, bronchitis, and middle ear infections."
@@ -10644,7 +10644,7 @@
         "description": "An angiotensin II receptor blocker used to lower high blood pressure and protect kidney function."
     },
     "Telmisartan + Hydrochlorothiazide": {
-        "is_allowed": true,
+        "is_allowed": false,
         "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Telmisartan (An angiotensin II receptor blocker used to lower high blood pressure and protect kidney function); Hydrochlorothiazide (A diuretic (water pill) used to treat high blood pressure and fluid retention (edema))."
@@ -10734,7 +10734,7 @@
         "description": "A hormone replacement or endocrine agent used for therapeutic hormone balance and related clinical indications."
     },
     "Tetanus + Diphtheria": {
-        "is_allowed": true,
+        "is_allowed": false,
         "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Tetanus (An immunizing agent used to induce active immunity and protect against specific infectious diseases); Diphtheria (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
@@ -10914,7 +10914,7 @@
         "description": "A pharmaceutical agent used for therapeutic management of relevant clinical conditions."
     },
     "Tolperisone + Lidocaine": {
-        "is_allowed": true,
+        "is_allowed": false,
         "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Tolperisone (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Lidocaine (A local anesthetic used to numb tissue in a specific area)."
@@ -11022,8 +11022,8 @@
         "description": "A dermatological preparation used for the topical treatment of acne and other skin conditions."
     },
     "Triamcinolone + Neomycin + Nystatin + Gramicidin": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": true,
         "description": "A combination therapy containing: Triamcinolone (A corticosteroid anti-inflammatory agent used to reduce swelling and allergic reactions); Neomycin (An antibiotic used to treat serious bacterial infections); Nystatin (A statin used to lower cholesterol levels and reduce risk of cardiovascular disease); Gramicidin (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
     },
@@ -11052,7 +11052,7 @@
         "description": "A corticosteroid anti-inflammatory agent used to reduce swelling and allergic reactions."
     },
     "Triamterene + Hydrochlorothiazide": {
-        "is_allowed": true,
+        "is_allowed": false,
         "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Triamterene (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Hydrochlorothiazide (A diuretic (water pill) used to treat high blood pressure and fluid retention (edema))."
@@ -11124,7 +11124,7 @@
         "description": "A pharmaceutical agent used for therapeutic management of relevant clinical conditions."
     },
     "Tropicamide + Phenylephrine + Lidocaine": {
-        "is_allowed": true,
+        "is_allowed": false,
         "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Tropicamide (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Phenylephrine (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Lidocaine (A local anesthetic used to numb tissue in a specific area)."
@@ -11268,8 +11268,8 @@
         "description": "A combination therapy containing: Undenatured Type II Collagen (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Glucosamine sulfate (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Chondroitin Sulfate (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Methylsulfonylmethane (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
     },
     "Undenatured Type II Collagen + Hyaluronic Acid + Boswellia Serrata + Vitamin C": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Undenatured Type II Collagen (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Hyaluronic Acid (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Boswellia Serrata (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Vitamin C (An essential antioxidant vitamin (Vitamin C) used to support immune function, collagen synthesis, and iron absorption)."
     },
@@ -11340,7 +11340,7 @@
         "description": "An angiotensin II receptor blocker used to lower high blood pressure and protect kidney function."
     },
     "Valsartan + Hydrochlorothiazide": {
-        "is_allowed": true,
+        "is_allowed": false,
         "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Valsartan (An angiotensin II receptor blocker used to lower high blood pressure and protect kidney function); Hydrochlorothiazide (A diuretic (water pill) used to treat high blood pressure and fluid retention (edema))."
@@ -11478,14 +11478,14 @@
         "description": "An essential vitamin vital for vision, immune function, and skin health."
     },
     "Vitamin B Complex & C + 20% Fat Emulsion": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Vitamin B Complex (A supplement containing a combination of B vitamins, essential for energy metabolism and neurological health); C (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); 20% Fat Emulsion (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
     },
     "Vitamin B Complex + Zinc": {
         "is_allowed": true,
-        "is_otc": true,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Vitamin B Complex (A supplement containing a combination of B vitamins, essential for energy metabolism and neurological health); Zinc (An essential mineral vital for immune function, wound healing, protein synthesis, and growth)."
     },
@@ -11502,20 +11502,20 @@
         "description": "A combination therapy containing: Vitamin B complex (A supplement containing a combination of B vitamins, essential for energy metabolism and neurological health); Vitamin C (An essential antioxidant vitamin (Vitamin C) used to support immune function, collagen synthesis, and iron absorption)."
     },
     "Vitamin B1, B2 & B6": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Vitamin B1, B2 (A comprehensive nutritional supplement containing essential vitamins and minerals to support overall health and fill dietary gaps); B6 (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
     },
     "Vitamin B1, B6 & B12": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Vitamin B1, B6 (A comprehensive nutritional supplement containing essential vitamins and minerals to support overall health and fill dietary gaps); B12 (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
     },
     "Vitamin B12 + Elemental Iron + Folic Acid": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Vitamin B12 (A comprehensive nutritional supplement containing essential vitamins and minerals to support overall health and fill dietary gaps); Elemental Iron (An essential mineral used to prevent and treat iron deficiency anemia); Folic Acid (A B-vitamin (B9) essential for DNA synthesis, red blood cell production, and fetal development)."
     },
@@ -11526,20 +11526,20 @@
         "description": "A combination therapy containing: Vitamin B6, B9 (A comprehensive nutritional supplement containing essential vitamins and minerals to support overall health and fill dietary gaps); B12 (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
     },
     "Vitamin C + Vitamin D3 + Folic acid": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Vitamin C (An essential antioxidant vitamin (Vitamin C) used to support immune function, collagen synthesis, and iron absorption); Vitamin D3 (A vitamin essential for calcium absorption, bone health, and immune support); Folic acid (A B-vitamin (B9) essential for DNA synthesis, red blood cell production, and fetal development)."
     },
     "Vitamin C + Vitamin E": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Vitamin C (An essential antioxidant vitamin (Vitamin C) used to support immune function, collagen synthesis, and iron absorption); Vitamin E (A comprehensive nutritional supplement containing essential vitamins and minerals to support overall health and fill dietary gaps)."
     },
     "Vitamin C + Vitamin E + Lutein + Copper + Zinc": {
-        "is_allowed": true,
-        "is_otc": true,
+        "is_allowed": false,
+        "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Vitamin C (An essential antioxidant vitamin (Vitamin C) used to support immune function, collagen synthesis, and iron absorption); Vitamin E (A comprehensive nutritional supplement containing essential vitamins and minerals to support overall health and fill dietary gaps); Lutein (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Copper (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Zinc (An essential mineral vital for immune function, wound healing, protein synthesis, and growth)."
     },
@@ -11580,13 +11580,13 @@
         "description": "A pharmaceutical agent used for therapeutic management of relevant clinical conditions."
     },
     "Vonoprazan + Amoxicillin": {
-        "is_allowed": true,
+        "is_allowed": false,
         "is_otc": false,
         "is_antibiotic": true,
         "description": "A combination therapy containing: Vonoprazan (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Amoxicillin (A penicillin antibiotic used to treat a wide range of bacterial infections)."
     },
     "Vonoprazan + Amoxicillin + Clarithromycin": {
-        "is_allowed": true,
+        "is_allowed": false,
         "is_otc": false,
         "is_antibiotic": true,
         "description": "A combination therapy containing: Vonoprazan (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Amoxicillin (A penicillin antibiotic used to treat a wide range of bacterial infections); Clarithromycin (A macrolide antibiotic used to treat bacterial infections such as respiratory and skin infections)."
@@ -11682,7 +11682,7 @@
         "description": "An essential mineral vital for immune function, wound healing, protein synthesis, and growth."
     },
     "Zinc Oxide + Castor Oil": {
-        "is_allowed": true,
+        "is_allowed": false,
         "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Zinc Oxide (An essential mineral vital for immune function, wound healing, protein synthesis, and growth); Castor Oil (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
@@ -11706,7 +11706,7 @@
         "description": "An essential mineral vital for immune function, wound healing, protein synthesis, and growth."
     },
     "Zinc oxide + Octinoxate + Enzacamene + Avobenzone": {
-        "is_allowed": true,
+        "is_allowed": false,
         "is_otc": false,
         "is_antibiotic": false,
         "description": "A combination therapy containing: Zinc oxide (An essential mineral vital for immune function, wound healing, protein synthesis, and growth); Octinoxate (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Enzacamene (A pharmaceutical agent used for therapeutic management of relevant clinical conditions); Avobenzone (A pharmaceutical agent used for therapeutic management of relevant clinical conditions)."
