@@ -122,65 +122,18 @@ class MainActivity : ComponentActivity() {
         }
 
         if (isLoading || medicines == null || genericsMetadata == null || uniqueBrands == null) {
-            // Live premium blurred drifting bubble background on splash screen!
             Box(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(MaterialTheme.colorScheme.background),
                 contentAlignment = Alignment.Center
             ) {
-                MovingBlurredBubblesBackground()
-
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center,
-                    modifier = Modifier.padding(24.dp)
-                ) {
-                    // Logo Box with subtle elevation shadow/glow effect
-                    Surface(
-                        modifier = Modifier.size(96.dp),
-                        shape = RoundedCornerShape(24.dp),
-                        color = MaterialTheme.colorScheme.surface.copy(alpha = 0.15f),
-                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.3f))
-                    ) {
-                        Box(
-                            contentAlignment = Alignment.Center,
-                            modifier = Modifier.fillMaxSize()
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.MedicalServices,
-                                contentDescription = "DMF Meds",
-                                tint = MaterialTheme.colorScheme.primary,
-                                modifier = Modifier.size(48.dp)
-                            )
-                        }
-                    }
-                    Spacer(modifier = Modifier.height(24.dp))
-                    Text(
-                        text = "DMF Meds",
-                        fontSize = 32.sp,
-                        fontWeight = FontWeight.ExtraBold,
-                        color = MaterialTheme.colorScheme.onBackground,
-                        letterSpacing = 1.sp
-                    )
-                    Text(
-                        text = "MATS / DMF Clinical Companion",
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Medium,
-                        color = MaterialTheme.colorScheme.primary.copy(alpha = 0.8f),
-                        modifier = Modifier.padding(top = 4.dp)
-                    )
-                    Spacer(modifier = Modifier.height(48.dp))
-                    CircularProgressIndicator(
-                        color = MaterialTheme.colorScheme.primary,
-                        strokeWidth = 3.dp,
-                        modifier = Modifier.size(32.dp)
-                    )
-                    Spacer(modifier = Modifier.height(12.dp))
-                    Text(
-                        text = "Loading Clinical Registry...",
-                        fontSize = 12.sp,
-                        color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.4f)
-                    )
-                }
+                Icon(
+                    imageVector = Icons.Default.MedicalServices,
+                    contentDescription = "DMF Meds",
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(96.dp)
+                )
             }
         } else {
             // Selected bottom navigation tab
@@ -272,9 +225,9 @@ class MainActivity : ComponentActivity() {
                             Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(vertical = 6.dp, horizontal = 12.dp),
+                                    .padding(vertical = 12.dp, horizontal = 12.dp),
                                 horizontalArrangement = Arrangement.SpaceAround,
-                                verticalAlignment = Alignment.CenterVertically
+                                verticalAlignment = Alignment.Bottom
                             ) {
                                 val tabs = listOf(
                                     Triple(0, Icons.Default.Info, Trans.information(isBangla)),
@@ -284,44 +237,39 @@ class MainActivity : ComponentActivity() {
 
                                 tabs.forEach { (index, icon, label) ->
                                     val isSelected = selectedTab == index
+                                    val offsetBy by androidx.compose.animation.core.animateDpAsState(
+                                        targetValue = if (isSelected) (-8).dp else 0.dp,
+                                        animationSpec = androidx.compose.animation.core.tween(200),
+                                        label = "nav_offset"
+                                    )
 
                                     Box(
                                         modifier = Modifier
+                                            .offset(y = offsetBy)
                                             .clickable(
                                                 interactionSource = remember { androidx.compose.foundation.interaction.MutableInteractionSource() },
                                                 indication = null
                                             ) { selectedTab = index }
-                                            .padding(horizontal = 8.dp, vertical = 4.dp)
+                                            .padding(horizontal = 12.dp, vertical = 4.dp),
+                                        contentAlignment = Alignment.Center
                                     ) {
-                                        Row(
-                                            verticalAlignment = Alignment.CenterVertically,
-                                            horizontalArrangement = Arrangement.Center,
-                                            modifier = if (isSelected) {
-                                                Modifier
-                                                    .background(
-                                                        color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.4f),
-                                                        shape = RoundedCornerShape(16.dp)
-                                                    )
-                                                    .padding(horizontal = 16.dp, vertical = 10.dp)
-                                            } else {
-                                                Modifier.padding(horizontal = 10.dp, vertical = 8.dp)
-                                            }
+                                        Column(
+                                            horizontalAlignment = Alignment.CenterHorizontally,
+                                            verticalArrangement = Arrangement.Center
                                         ) {
                                             Icon(
                                                 imageVector = icon,
                                                 contentDescription = label,
                                                 tint = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
-                                                modifier = Modifier.size(if (isSelected) 28.dp else 22.dp)
+                                                modifier = Modifier.size(24.dp)
                                             )
-                                            if (isSelected) {
-                                                Spacer(modifier = Modifier.width(6.dp))
-                                                Text(
-                                                    text = label,
-                                                    fontSize = 13.sp,
-                                                    fontWeight = FontWeight.Bold,
-                                                    color = MaterialTheme.colorScheme.primary
-                                                )
-                                            }
+                                            Spacer(modifier = Modifier.height(4.dp))
+                                            Text(
+                                                text = label,
+                                                fontSize = 11.sp,
+                                                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
+                                                color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                                            )
                                         }
                                     }
                                 }
@@ -339,6 +287,7 @@ class MainActivity : ComponentActivity() {
                     if (isInteractionCheckerOpen) {
                         InteractionCheckerScreen(
                             medicines = medicines!!,
+                            prefilledMedicine = selectedMedicineState.value,
                             onBack = { isInteractionCheckerOpen = false }
                         )
                     } else {

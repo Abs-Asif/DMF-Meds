@@ -113,23 +113,41 @@ fun DrugActScreen(onBack: () -> Unit) {
                 CircularProgressIndicator()
             }
         } else {
-            // Real-time search filter over sections/paragraphs
+            // Real-time search filter over sections/paragraphs with English-to-Bangla digit conversion
             val filteredElements = remember(searchQuery, elements) {
                 if (searchQuery.trim().isEmpty()) {
                     elements
                 } else {
                     val query = searchQuery.lowercase().trim()
-                    elements.filter { el ->
-                        when (el) {
-                            is ActElement.Title -> el.text.lowercase().contains(query)
-                            is ActElement.Subtitle -> el.text.lowercase().contains(query)
-                            is ActElement.ChapterHeader -> el.text.lowercase().contains(query)
-                            is ActElement.SectionHeader -> el.text.lowercase().contains(query)
-                            is ActElement.SectionContent -> el.text.lowercase().contains(query)
-                            is ActElement.Subsection -> el.text.textLowercaseContains(query)
-                            is ActElement.Paragraph -> el.text.lowercase().contains(query)
-                            else -> false
+                    // Helper to map English numbers to Bangla numbers
+                    val banglaQuery = query.map { char ->
+                        when (char) {
+                            '0' -> '০'
+                            '1' -> '১'
+                            '2' -> '২'
+                            '3' -> '৩'
+                            '4' -> '৪'
+                            '5' -> '৫'
+                            '6' -> '৬'
+                            '7' -> '৭'
+                            '8' -> '৮'
+                            '9' -> '৯'
+                            else -> char
                         }
+                    }.joinToString("")
+
+                    elements.filter { el ->
+                        val text = when (el) {
+                            is ActElement.Title -> el.text
+                            is ActElement.Subtitle -> el.text
+                            is ActElement.ChapterHeader -> el.text
+                            is ActElement.SectionHeader -> el.text
+                            is ActElement.SectionContent -> el.text
+                            is ActElement.Subsection -> el.text
+                            is ActElement.Paragraph -> el.text
+                            else -> ""
+                        }.lowercase()
+                        text.contains(query) || text.contains(banglaQuery)
                     }
                 }
             }
@@ -143,7 +161,7 @@ fun DrugActScreen(onBack: () -> Unit) {
                     .padding(horizontal = 16.dp, vertical = 12.dp),
                 placeholder = {
                     Text(
-                        text = "ধারার নম্বর বা শব্দ দিয়ে খুঁজুন...",
+                        text = "ধারার নম্বর বা শব্দ দিয়ে খুঁজুন (যেমন: ১ বা 1)...",
                         fontSize = 14.sp,
                         color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
                     )
@@ -168,12 +186,44 @@ fun DrugActScreen(onBack: () -> Unit) {
                 )
             )
 
+            if (searchQuery.trim().isNotEmpty()) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 20.dp, vertical = 4.dp),
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    val countBangla = filteredElements.size.toString().map { char ->
+                        when (char) {
+                            '0' -> '০'
+                            '1' -> '১'
+                            '2' -> '২'
+                            '3' -> '৩'
+                            '4' -> '৪'
+                            '5' -> '৫'
+                            '6' -> '৬'
+                            '7' -> '৭'
+                            '8' -> '৮'
+                            '9' -> '৯'
+                            else -> char
+                        }
+                    }.joinToString("")
+                    DMFText(
+                        text = "মোট ${countBangla}টি ধারা/অনুচ্ছেদ পাওয়া গেছে",
+                        fontSize = 11.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.primary,
+                        forceKalpurush = true
+                    )
+                }
+            }
+
             HorizontalDivider(color = MaterialTheme.colorScheme.outline.copy(alpha = 0.1f))
 
             // Main scrollable content
             if (filteredElements.isEmpty()) {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    DMFText("কোনো ধারা পাওয়া যায়নি।", color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    DMFText("কোনো ধারা পাওয়া যায়নি।", color = MaterialTheme.colorScheme.onSurfaceVariant, forceKalpurush = true)
                 }
             } else {
                 LazyColumn(

@@ -168,36 +168,23 @@ fun MedicineScreen(
         medicines.count { genericsMetadata[it.generic]?.isAllowed == true }
     }
 
-    // List of demo medicines for typing placeholder animation
-    val demoMedicines = listOf(
-        "Napa 500mg", "Seclo 20mg", "Fenadin 120mg", "Alatrol 10mg", "Xylomet 0.1%",
-        "Aspirin 75mg", "Omeprazole 20mg", "Paracetamol", "Zox 500mg", "Sergel 20mg"
-    )
+    // List of demo medicines for roll up placeholder animation
+    val demoMedicines = remember {
+        listOf(
+            "Napa 500mg", "Seclo 20mg", "Fenadin 120mg", "Alatrol 10mg", "Xylomet 0.1%",
+            "Aspirin 75mg", "Omeprazole 20mg", "Paracetamol", "Zox 500mg", "Sergel 20mg"
+        )
+    }
 
-    var placeholderText by remember { mutableStateOf("Search brand name, power...") }
+    var currentRollUpIndex by remember { mutableIntStateOf(0) }
 
-    // Coroutine-based typing animation in empty state
+    // Coroutine-based text roll-up animation in empty state
     LaunchedEffect(query, isSearchFocused) {
         if (query.isEmpty()) {
-            var listIndex = 0
             while (true) {
-                val fullText = "Try typing: " + demoMedicines[listIndex]
-                // Type in
-                for (i in 0..fullText.length) {
-                    placeholderText = fullText.substring(0, i)
-                    kotlinx.coroutines.delay(100)
-                }
-                kotlinx.coroutines.delay(1800) // Hold
-                // Type out
-                for (i in fullText.length downTo 0) {
-                    placeholderText = fullText.substring(0, i)
-                    kotlinx.coroutines.delay(50)
-                }
-                kotlinx.coroutines.delay(400)
-                listIndex = (listIndex + 1) % demoMedicines.size
+                kotlinx.coroutines.delay(2500)
+                currentRollUpIndex = (currentRollUpIndex + 1) % demoMedicines.size
             }
-        } else {
-            placeholderText = "Enter brand name, power..."
         }
     }
 
@@ -285,11 +272,37 @@ fun MedicineScreen(
                         .border(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.5f), RoundedCornerShape(28.dp)),
                     textStyle = LocalTextStyle.current.copy(fontSize = 18.sp, fontWeight = FontWeight.Medium),
                     placeholder = {
-                        DMFText(
-                            text = placeholderText,
-                            fontSize = 14.sp,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
-                        )
+                        if (query.isEmpty()) {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                DMFText(
+                                    text = "Try searching ",
+                                    fontSize = 14.sp,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+                                )
+                                AnimatedContent(
+                                    targetState = demoMedicines[currentRollUpIndex],
+                                    transitionSpec = {
+                                        // Slide in from top, slide out to bottom (moving top to bottom)
+                                        (slideInVertically { height -> -height } + fadeIn(animationSpec = tween(300)))
+                                            .togetherWith(slideOutVertically { height -> height } + fadeOut(animationSpec = tween(300)))
+                                    },
+                                    label = "rollupAnimation"
+                                ) { medName ->
+                                    DMFText(
+                                        text = medName,
+                                        fontSize = 14.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = MaterialTheme.colorScheme.primary.copy(alpha = 0.8f)
+                                    )
+                                }
+                            }
+                        } else {
+                            DMFText(
+                                text = "Enter brand name, power...",
+                                fontSize = 14.sp,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+                            )
+                        }
                     },
                     leadingIcon = {
                         Icon(
@@ -498,24 +511,24 @@ fun MedicineScreen(
                             ) {
                                 // Stats 1: Total Medicines
                                 Card(
-                                    modifier = Modifier.weight(1f),
+                                    modifier = Modifier.weight(1f).height(110.dp),
                                     shape = RoundedCornerShape(16.dp),
                                     colors = CardDefaults.cardColors(
                                         containerColor = MaterialTheme.colorScheme.surface
                                     ),
                                     elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
                                 ) {
-                                    Column(modifier = Modifier.padding(14.dp)) {
+                                    Column(modifier = Modifier.padding(12.dp)) {
                                         Icon(
                                             imageVector = Icons.Default.MedicalServices,
                                             contentDescription = null,
                                             tint = MaterialTheme.colorScheme.primary,
-                                            modifier = Modifier.size(24.dp)
+                                            modifier = Modifier.size(20.dp)
                                         )
-                                        Spacer(modifier = Modifier.height(12.dp))
+                                        Spacer(modifier = Modifier.height(6.dp))
                                         DMFText(
                                             text = medicines.size.toString(),
-                                            fontSize = 22.sp,
+                                            fontSize = 20.sp,
                                             fontWeight = FontWeight.ExtraBold,
                                             color = MaterialTheme.colorScheme.onSurface
                                         )
@@ -526,34 +539,29 @@ fun MedicineScreen(
                                             fontWeight = FontWeight.Bold,
                                             color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.8f)
                                         )
-                                        DMFText(
-                                            text = "Commercial brands loaded",
-                                            fontSize = 9.sp,
-                                            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
-                                        )
                                     }
                                 }
 
                                 // Stats 2: Allowed Medicines
                                 Card(
-                                    modifier = Modifier.weight(1f),
+                                    modifier = Modifier.weight(1f).height(110.dp),
                                     shape = RoundedCornerShape(16.dp),
                                     colors = CardDefaults.cardColors(
                                         containerColor = MaterialTheme.colorScheme.surface
                                     ),
                                     elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
                                 ) {
-                                    Column(modifier = Modifier.padding(14.dp)) {
+                                    Column(modifier = Modifier.padding(12.dp)) {
                                         Icon(
                                             imageVector = Icons.Default.CheckCircle,
                                             contentDescription = null,
                                             tint = Color(0xFF10B981),
-                                            modifier = Modifier.size(24.dp)
+                                            modifier = Modifier.size(20.dp)
                                         )
-                                        Spacer(modifier = Modifier.height(12.dp))
+                                        Spacer(modifier = Modifier.height(6.dp))
                                         DMFText(
                                             text = allowedCount.toString(),
-                                            fontSize = 22.sp,
+                                            fontSize = 20.sp,
                                             fontWeight = FontWeight.ExtraBold,
                                             color = Color(0xFF10B981)
                                         )
@@ -564,23 +572,9 @@ fun MedicineScreen(
                                             fontWeight = FontWeight.Bold,
                                             color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.8f)
                                         )
-                                        DMFText(
-                                            text = "Clinically verified brand drugs",
-                                            fontSize = 9.sp,
-                                            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
-                                        )
                                     }
                                 }
                             }
-
-                            DMFText(
-                                text = Trans.searchHelp(isBangla),
-                                fontSize = 11.sp,
-                                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f),
-                                textAlign = TextAlign.Center,
-                                modifier = Modifier.padding(horizontal = 24.dp),
-                                lineHeight = 16.sp
-                            )
                         }
                     }
                 }

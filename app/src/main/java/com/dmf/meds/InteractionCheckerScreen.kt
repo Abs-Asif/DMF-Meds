@@ -56,17 +56,22 @@ data class InteractionMatch(
 @Composable
 fun InteractionCheckerScreen(
     medicines: List<Medicine>,
+    prefilledMedicine: Medicine? = null,
     onBack: () -> Unit
 ) {
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
     val scope = rememberCoroutineScope()
 
-    // Initialize with 2 empty slots
+    // Initialize with prefilled medicine in Slot 1 if available
     var slots by remember {
         mutableStateOf(
             listOf(
-                SelectedDrugSlot(id = 1),
+                SelectedDrugSlot(
+                    id = 1,
+                    query = prefilledMedicine?.let { "${it.brand} ${it.power}" } ?: "",
+                    selectedMedicine = prefilledMedicine
+                ),
                 SelectedDrugSlot(id = 2)
             )
         )
@@ -81,118 +86,191 @@ fun InteractionCheckerScreen(
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
-        // App Bar
-        TopAppBar(
-            title = {
-                DMFText(
-                    text = "Drug Interaction Checker",
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onPrimaryContainer
-                )
-            },
-            navigationIcon = {
+        // Redesigned modern, clean Top Bar
+        Surface(
+            modifier = Modifier.fillMaxWidth(),
+            color = MaterialTheme.colorScheme.surface,
+            tonalElevation = 4.dp,
+            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.1f))
+        ) {
+            Row(
+                modifier = Modifier
+                    .statusBarsPadding()
+                    .fillMaxWidth()
+                    .height(64.dp)
+                    .padding(horizontal = 8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 IconButton(onClick = onBack) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "Back",
-                        tint = MaterialTheme.colorScheme.onPrimaryContainer
+                        tint = MaterialTheme.colorScheme.onSurface
                     )
                 }
-            },
-            colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = MaterialTheme.colorScheme.primaryContainer
-            )
-        )
+                Spacer(modifier = Modifier.width(8.dp))
+                DMFText(
+                    text = "Interaction Checker",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.ExtraBold,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+            }
+        }
 
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .weight(1f)
-                .padding(16.dp),
+                .padding(horizontal = 20.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            // Instructions Card
+            item {
+                Spacer(modifier = Modifier.height(16.dp))
+            }
+
+            // Beautiful Instruction Alert Card
             item {
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
+                        containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.2f)
                     ),
-                    shape = RoundedCornerShape(12.dp)
+                    shape = RoundedCornerShape(16.dp),
+                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.15f))
                 ) {
                     Row(
-                        modifier = Modifier.padding(12.dp),
-                        verticalAlignment = Alignment.CenterVertically
+                        modifier = Modifier.padding(16.dp),
+                        verticalAlignment = Alignment.Top
                     ) {
                         Icon(
                             imageVector = Icons.Default.Info,
-                            contentDescription = "Info",
+                            contentDescription = "Information",
                             tint = MaterialTheme.colorScheme.primary,
-                            modifier = Modifier.size(24.dp)
+                            modifier = Modifier.size(22.dp)
                         )
                         Spacer(modifier = Modifier.width(12.dp))
                         DMFText(
-                            text = "Add drugs using the input boxes and + button. Tap suggestions to select, then click 'Check Interactions' to check potential 1-1 drug interactions.",
+                            text = "Add drugs to the list, select suggestions to bind, and run 'Check Interactions' to perform clinically verified 1-1 safety checks.",
                             fontSize = 12.sp,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            lineHeight = 16.sp
+                            lineHeight = 18.sp,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                 }
             }
 
-            // Drug Inputs Form
+            // Section Title
             item {
-                Text(
-                    text = "Selected Drugs",
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.padding(bottom = 4.dp)
-                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    DMFText(
+                        text = "Clinical Query List",
+                        fontSize = 15.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                    DMFText(
+                        text = "${slots.size} slot(s)",
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
+                    )
+                }
             }
 
+            // Dynamic list of input rows
             items(slots, key = { it.id }) { slot ->
-                DrugInputSlotRow(
-                    slot = slot,
-                    medicines = medicines,
-                    onQueryChange = { q ->
-                        slots = slots.map {
-                            if (it.id == slot.id) it.copy(query = q) else it
-                        }
-                    },
-                    onSelect = { med ->
-                        slots = slots.map {
-                            if (it.id == slot.id) it.copy(query = "${med.brand} ${med.power}", selectedMedicine = med) else it
-                        }
-                        focusManager.clearFocus()
-                    },
-                    onClear = {
-                        slots = slots.map {
-                            if (it.id == slot.id) it.copy(query = "", selectedMedicine = null) else it
-                        }
-                    },
-                    onDelete = {
-                        if (slots.size > 2) {
-                            slots = slots.filter { it.id != slot.id }
-                        } else {
-                            slots = slots.map {
-                                if (it.id == slot.id) it.copy(query = "", selectedMedicine = null) else it
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(16.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surface
+                    ),
+                    border = BorderStroke(
+                        width = 1.5.dp,
+                        color = if (slot.selectedMedicine != null) Color(0xFF10B981).copy(alpha = 0.4f)
+                                else MaterialTheme.colorScheme.outline.copy(alpha = 0.15f)
+                    ),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
+                ) {
+                    Column(modifier = Modifier.padding(14.dp)) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            DMFText(
+                                text = "Drug ${slots.indexOf(slot) + 1}",
+                                fontSize = 11.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = if (slot.selectedMedicine != null) Color(0xFF10B981)
+                                        else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
+                            )
+                            if (slot.selectedMedicine != null) {
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Icon(
+                                        imageVector = Icons.Default.CheckCircle,
+                                        contentDescription = "Verified",
+                                        tint = Color(0xFF10B981),
+                                        modifier = Modifier.size(14.dp)
+                                    )
+                                    Spacer(modifier = Modifier.width(4.dp))
+                                    DMFText(
+                                        text = "Bound",
+                                        fontSize = 10.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = Color(0xFF10B981)
+                                    )
+                                }
                             }
                         }
+
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        DrugInputSlotRow(
+                            slot = slot,
+                            medicines = medicines,
+                            onQueryChange = { q ->
+                                slots = slots.map {
+                                    if (it.id == slot.id) it.copy(query = q) else it
+                                }
+                            },
+                            onSelect = { med ->
+                                slots = slots.map {
+                                    if (it.id == slot.id) it.copy(query = "${med.brand} ${med.power}", selectedMedicine = med) else it
+                                }
+                                focusManager.clearFocus()
+                            },
+                            onClear = {
+                                slots = slots.map {
+                                    if (it.id == slot.id) it.copy(query = "", selectedMedicine = null) else it
+                                }
+                            },
+                            onDelete = {
+                                if (slots.size > 2) {
+                                    slots = slots.filter { it.id != slot.id }
+                                } else {
+                                    slots = slots.map {
+                                        if (it.id == slot.id) it.copy(query = "", selectedMedicine = null) else it
+                                    }
+                                }
+                            }
+                        )
                     }
-                )
+                }
             }
 
             // Add Drug Button (+ icon)
             item {
-                Row(
+                val hasBlank = slots.any { it.selectedMedicine == null && it.query.trim().isEmpty() }
+                Box(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center
+                    contentAlignment = Alignment.Center
                 ) {
-                    val hasBlank = slots.any { it.selectedMedicine == null && it.query.trim().isEmpty() }
-
                     Button(
                         onClick = {
                             if (!hasBlank) {
@@ -201,23 +279,25 @@ fun InteractionCheckerScreen(
                             }
                         },
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.surfaceVariant,
-                            contentColor = MaterialTheme.colorScheme.primary
+                            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+                            contentColor = MaterialTheme.colorScheme.primary,
+                            disabledContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.2f),
+                            disabledContentColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f)
                         ),
-                        shape = RoundedCornerShape(16.dp),
+                        shape = RoundedCornerShape(24.dp),
                         enabled = !hasBlank,
-                        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
+                        contentPadding = PaddingValues(horizontal = 24.dp, vertical = 10.dp)
                     ) {
                         Icon(
                             imageVector = Icons.Default.Add,
                             contentDescription = "Add Drug",
-                            modifier = Modifier.size(20.dp)
+                            modifier = Modifier.size(18.dp)
                         )
                         Spacer(modifier = Modifier.width(6.dp))
                         DMFText(
                             text = "Add Another Drug",
-                            fontSize = 12.sp,
-                            fontWeight = FontWeight.SemiBold
+                            fontSize = 13.sp,
+                            fontWeight = FontWeight.Bold
                         )
                     }
                 }
@@ -228,31 +308,26 @@ fun InteractionCheckerScreen(
                 Button(
                     onClick = {
                         focusManager.clearFocus()
-                        // 1. Collapse any blank boxes
                         val activeSlots = slots.filter { it.selectedMedicine != null || it.query.trim().isNotEmpty() }
                         slots = activeSlots.ifEmpty {
                             listOf(SelectedDrugSlot(id = 1), SelectedDrugSlot(id = 2))
                         }
 
-                        // Get selected medicines
                         val selectedMeds = slots.mapNotNull { it.selectedMedicine }
                         if (selectedMeds.size < 2) {
                             interactionResults = emptyList()
                             return@Button
                         }
 
-                        // 2. Perform background 1-1 drug interaction check
                         isChecking = true
                         interactionResults = null
 
-                        // Launch coroutine on non-blocking background thread (Dispatchers.IO)
                         scope.launch(Dispatchers.IO) {
                             val matches = mutableListOf<InteractionMatch>()
                             try {
                                 val assetStream = context.assets.open("db_drug_interactions.csv")
                                 val reader = BufferedReader(InputStreamReader(assetStream))
 
-                                // Parse generics of selected medicines
                                 val medicinePairings = mutableListOf<Pair<Medicine, List<String>>>()
                                 for (med in selectedMeds) {
                                     val parts = med.generic.split(Regex("\\s*\\+\\s*|\\s*&\\s*|\\s+and\\s+|\\s+with\\s+|\\s+plus\\s+|\\s*/\\s*", RegexOption.IGNORE_CASE))
@@ -261,7 +336,6 @@ fun InteractionCheckerScreen(
                                     medicinePairings.add(Pair(med, parts))
                                 }
 
-                                // We only read CSV lines and check if the drugs match
                                 var line = reader.readLine()
                                 if (line != null && line.startsWith("Drug 1")) {
                                     line = reader.readLine() // skip header
@@ -276,7 +350,6 @@ fun InteractionCheckerScreen(
                                             val d2 = line.substring(firstComma + 1, secondComma).trim().lowercase(Locale.ROOT)
                                             val desc = line.substring(secondComma + 1).trim().removeSurrounding("\"")
 
-                                            // Check against all pairs of selected medicines
                                             for (i in 0 until medicinePairings.size) {
                                                 for (j in i + 1 until medicinePairings.size) {
                                                     val medA = medicinePairings[i].first
@@ -285,12 +358,10 @@ fun InteractionCheckerScreen(
                                                     val medB = medicinePairings[j].first
                                                     val ingredientsB = medicinePairings[j].second
 
-                                                    // Match d1 to A and d2 to B, or d1 to B and d2 to A
                                                     val match1 = ingredientsA.contains(d1) && ingredientsB.contains(d2)
                                                     val match2 = ingredientsA.contains(d2) && ingredientsB.contains(d1)
 
                                                     if (match1 || match2) {
-                                                        // Prevent duplicate entries
                                                         val alreadyMatched = matches.any {
                                                             (it.drug1Name == medA.brand && it.drug2Name == medB.brand) ||
                                                             (it.drug1Name == medB.brand && it.drug2Name == medA.brand)
@@ -319,31 +390,40 @@ fun InteractionCheckerScreen(
                                 e.printStackTrace()
                             }
 
-                            // Update UI state on Main Thread
                             withContext(Dispatchers.Main) {
                                 isChecking = false
                                 interactionResults = matches
                             }
                         }
                     },
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(52.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.primary
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.onPrimary
                     ),
-                    shape = RoundedCornerShape(12.dp)
+                    shape = RoundedCornerShape(16.dp)
                 ) {
                     if (isChecking) {
                         CircularProgressIndicator(
                             color = MaterialTheme.colorScheme.onPrimary,
-                            modifier = Modifier.size(20.dp)
+                            modifier = Modifier.size(24.dp)
                         )
                     } else {
-                        DMFText(
-                            text = "Check Interactions",
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.onPrimary
-                        )
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(
+                                imageVector = Icons.Default.CompareArrows,
+                                contentDescription = null,
+                                modifier = Modifier.size(20.dp)
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            DMFText(
+                                text = "Run Interaction Analysis",
+                                fontSize = 15.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
                     }
                 }
             }
@@ -355,64 +435,102 @@ fun InteractionCheckerScreen(
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(top = 8.dp),
-                        verticalArrangement = Arrangement.spacedBy(12.dp)
+                            .padding(bottom = 24.dp),
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically
+                        // Header Status Alert
+                        val isSafe = results.isEmpty()
+                        Card(
+                            modifier = Modifier.fillMaxWidth(),
+                            colors = CardDefaults.cardColors(
+                                containerColor = if (isSafe) Color(0xFF064E3B).copy(alpha = 0.2f)
+                                                else Color(0xFF7F1D1D).copy(alpha = 0.2f)
+                            ),
+                            border = BorderStroke(
+                                width = 1.5.dp,
+                                color = if (isSafe) Color(0xFF10B981) else Color(0xFFEF4444)
+                            ),
+                            shape = RoundedCornerShape(16.dp)
                         ) {
-                            Icon(
-                                imageVector = if (results.isEmpty()) Icons.Default.CheckCircle else Icons.Default.Warning,
-                                contentDescription = null,
-                                tint = if (results.isEmpty()) Color(0xFF10B981) else Color(0xFFEF4444),
-                                modifier = Modifier.size(24.dp)
-                            )
-                            Spacer(modifier = Modifier.width(8.dp))
-                            DMFText(
-                                text = if (results.isEmpty()) "No Interactions Found" else "${results.size} Potential Interaction(s) Found",
-                                fontSize = 15.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = if (results.isEmpty()) Color(0xFF10B981) else Color(0xFFEF4444)
-                            )
+                            Row(
+                                modifier = Modifier.padding(16.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Icon(
+                                    imageVector = if (isSafe) Icons.Default.CheckCircle else Icons.Default.Warning,
+                                    contentDescription = null,
+                                    tint = if (isSafe) Color(0xFF10B981) else Color(0xFFEF4444),
+                                    modifier = Modifier.size(28.dp)
+                                )
+                                Spacer(modifier = Modifier.width(12.dp))
+                                Column {
+                                    DMFText(
+                                        text = if (isSafe) "No Interaction Risks Detected" else "Potential Risks Detected",
+                                        fontSize = 16.sp,
+                                        fontWeight = FontWeight.ExtraBold,
+                                        color = if (isSafe) Color(0xFF34D399) else Color(0xFFF87171)
+                                    )
+                                    Spacer(modifier = Modifier.height(2.dp))
+                                    DMFText(
+                                        text = if (isSafe) "All selected drugs are mutually compatible for general use."
+                                               else "Found ${results.size} clinical interaction(s). Review details below.",
+                                        fontSize = 12.sp,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                    )
+                                }
+                            }
                         }
 
+                        // Listing of detected interactions
                         results.forEach { match ->
                             Card(
                                 modifier = Modifier.fillMaxWidth(),
                                 colors = CardDefaults.cardColors(
-                                    containerColor = Color(0xFF7F1D1D).copy(alpha = 0.3f)
+                                    containerColor = MaterialTheme.colorScheme.surface
                                 ),
-                                border = BorderStroke(1.dp, Color(0xFFEF4444).copy(alpha = 0.3f)),
-                                shape = RoundedCornerShape(12.dp)
+                                border = BorderStroke(1.dp, Color(0xFFEF4444).copy(alpha = 0.25f)),
+                                shape = RoundedCornerShape(16.dp),
+                                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
                             ) {
-                                Column(modifier = Modifier.padding(12.dp)) {
+                                Column(modifier = Modifier.padding(16.dp)) {
                                     Row(
                                         modifier = Modifier.fillMaxWidth(),
-                                        horizontalArrangement = Arrangement.SpaceBetween,
                                         verticalAlignment = Alignment.CenterVertically
                                     ) {
-                                        Column(modifier = Modifier.weight(1f)) {
+                                        Box(
+                                            modifier = Modifier
+                                                .background(Color(0xFF7F1D1D), RoundedCornerShape(8.dp))
+                                                .padding(horizontal = 8.dp, vertical = 4.dp)
+                                        ) {
                                             DMFText(
-                                                text = "${match.drug1Name} ↔ ${match.drug2Name}",
+                                                text = "ALERT",
                                                 fontWeight = FontWeight.ExtraBold,
-                                                fontSize = 14.sp,
-                                                color = Color(0xFFF87171)
-                                            )
-                                            Spacer(modifier = Modifier.height(2.dp))
-                                            DMFText(
-                                                text = "Generics: ${match.drug1Generic} vs ${match.drug2Generic}",
-                                                fontSize = 10.sp,
-                                                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
+                                                fontSize = 9.sp,
+                                                color = Color.White
                                             )
                                         }
+                                        Spacer(modifier = Modifier.width(10.dp))
+                                        DMFText(
+                                            text = "${match.drug1Name} ↔ ${match.drug2Name}",
+                                            fontWeight = FontWeight.Bold,
+                                            fontSize = 15.sp,
+                                            color = Color(0xFFF87171)
+                                        )
                                     }
-                                    Spacer(modifier = Modifier.height(8.dp))
-                                    HorizontalDivider(color = Color(0xFFEF4444).copy(alpha = 0.15f))
-                                    Spacer(modifier = Modifier.height(8.dp))
+                                    Spacer(modifier = Modifier.height(10.dp))
+                                    DMFText(
+                                        text = "Generics comparison: ${match.drug1Generic} vs ${match.drug2Generic}",
+                                        fontSize = 11.sp,
+                                        fontWeight = FontWeight.Medium,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
+                                    )
+                                    Spacer(modifier = Modifier.height(12.dp))
+                                    HorizontalDivider(color = MaterialTheme.colorScheme.outline.copy(alpha = 0.1f))
+                                    Spacer(modifier = Modifier.height(12.dp))
                                     DMFText(
                                         text = match.description,
-                                        fontSize = 12.sp,
-                                        lineHeight = 16.sp,
+                                        fontSize = 13.sp,
+                                        lineHeight = 18.sp,
                                         color = MaterialTheme.colorScheme.onSurface
                                     )
                                 }
@@ -420,6 +538,10 @@ fun InteractionCheckerScreen(
                         }
                     }
                 }
+            }
+
+            item {
+                Spacer(modifier = Modifier.height(32.dp))
             }
         }
     }
