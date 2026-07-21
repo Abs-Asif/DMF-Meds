@@ -13,14 +13,18 @@ object SearchEngine {
         if (m == 0) return n
         if (n == 0) return m
 
+        // Optimization: Lowercase input strings once to avoid redundant lowercaseChar() calls inside nested loop
+        val sLower = s.lowercase(Locale.ROOT)
+        val tLower = t.lowercase(Locale.ROOT)
+
         var prev = IntArray(n + 1) { it }
         var curr = IntArray(n + 1)
 
         for (i in 1..m) {
             curr[0] = i
-            val sChar = s[i - 1].lowercaseChar()
+            val sChar = sLower[i - 1]
             for (j in 1..n) {
-                val cost = if (sChar == t[j - 1].lowercaseChar()) 0 else 1
+                val cost = if (sChar == tLower[j - 1]) 0 else 1
                 curr[j] = minOf(
                     prev[j] + 1,       // deletion
                     curr[j - 1] + 1,   // insertion
@@ -48,20 +52,18 @@ object SearchEngine {
 
         val queryLower = trimmedQuery.lowercase(Locale.ROOT)
 
-        // 1. Try to find direct matches (prefix / substring)
+        // 1. Try to find direct matches (prefix / substring) using pre-calculated lowercase strings
         val matches = medicines.filter { med ->
-            val fullName = "${med.brand} ${med.power}".lowercase(Locale.ROOT)
-            fullName.contains(queryLower)
+            med.fullNameLower.contains(queryLower)
         }
 
         if (matches.isNotEmpty()) {
-            // Sort adaptive: prefix matches first, then substring matches
+            // Sort adaptive: prefix matches first, then substring matches using pre-calculated lowercase values
             val sortedMatches = matches.sortedWith(compareBy<Medicine> { med ->
-                val brandLower = med.brand.lowercase(Locale.ROOT)
                 // If brand name starts with query, highest priority (0)
-                if (brandLower.startsWith(queryLower)) 0
+                if (med.brandLower.startsWith(queryLower)) 0
                 // If full name starts with query, next priority (1)
-                else if ("${med.brand} ${med.power}".lowercase(Locale.ROOT).startsWith(queryLower)) 1
+                else if (med.fullNameLower.startsWith(queryLower)) 1
                 // Otherwise substring match (2)
                 else 2
             }.thenBy { it.brand }.thenBy { it.power })
@@ -69,16 +71,18 @@ object SearchEngine {
             return@withContext SearchResultState.Success(sortedMatches.take(150))
         }
 
-        // 2. If no matches found, find fuzzy suggestions based on unique brand names
-        // Let's filter unique brands that are close to the query
-        val fuzzyResults = uniqueBrands.map { brand ->
-            val dist = getLevenshteinDistance(trimmedQuery, brand)
-            brand to dist
-        }
-        .filter { it.second <= 3 } // Edit distance of 3 or less
-        .sortedBy { it.second }
-        .take(10)
-        .map { it.first }
+        // 2. If no matches found, find fuzzy suggestions based on unique brand names.
+        // Optimization: Filter unique brands with length difference <= 3 before computing Levenshtein Distance,
+        // and use sequences to avoid intermediate collection allocations.
+        val qLen = trimmedQuery.length
+        val fuzzyResults = uniqueBrands.asSequence()
+            .filter { brand -> Math.abs(qLen - brand.length) <= 3 }
+            .map { brand -> brand to getLevenshteinDistance(trimmedQuery, brand) }
+            .filter { it.second <= 3 } // Edit distance of 3 or less
+            .sortedBy { it.second }
+            .take(10)
+            .map { it.first }
+            .toList()
 
         if (fuzzyResults.isNotEmpty()) {
             // Find representative medicines for these fuzzy brand names to show as suggestions

@@ -4,7 +4,49 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import kotlinx.coroutines.runBlocking
+import java.io.File
+import java.io.FileReader
+
 class SearchEngineTest {
+
+    @Test
+    fun testSearchSuggestionsBenchmark() = runBlocking {
+        var file = File("src/main/assets/medic_data.json")
+        if (!file.exists()) {
+            file = File("app/src/main/assets/medic_data.json")
+        }
+        if (!file.exists()) {
+            println("medic_data.json not found in test context, skipping benchmark.")
+            return@runBlocking
+        }
+
+        val gson = Gson()
+        val reader = FileReader(file)
+        val medicType = object : TypeToken<List<Medicine>>() {}.type
+        val medicines: List<Medicine> = gson.fromJson(reader, medicType)
+        reader.close()
+
+        val uniqueBrands = medicines.map { it.brand }.distinct().sorted()
+
+        println("Loaded ${medicines.size} medicines with ${uniqueBrands.size} unique brands for benchmarking.")
+
+        // 1. Direct search benchmark (matches exist)
+        val startTimeDirect = System.nanoTime()
+        val directResult = SearchEngine.getSuggestions("Napa", medicines, uniqueBrands)
+        val durationDirectMs = (System.nanoTime() - startTimeDirect) / 1_000_000.0
+        println("Direct query 'Napa' took $durationDirectMs ms")
+        assertTrue(directResult is SearchResultState.Success)
+
+        // 2. Fuzzy search benchmark (fallback)
+        val startTimeFuzzy = System.nanoTime()
+        val fuzzyResult = SearchEngine.getSuggestions("Nopaxz", medicines, uniqueBrands)
+        val durationFuzzyMs = (System.nanoTime() - startTimeFuzzy) / 1_000_000.0
+        println("Fuzzy query 'Nopaxz' took $durationFuzzyMs ms")
+        assertTrue(fuzzyResult is SearchResultState.Fallback)
+    }
 
     @Test
     fun testGetLevenshteinDistance() {
