@@ -14,13 +14,25 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
 
+// Bundle local font files
 val KalpurushFontFamily = FontFamily(
     Font(R.font.kalpurush, FontWeight.Normal)
+)
+
+val ScheherazadeFontFamily = FontFamily(
+    Font(R.font.scheherazade, FontWeight.Normal)
 )
 
 fun String.containsBangla(): Boolean {
     for (char in this) {
         if (char in '\u0980'..'\u09FF') return true
+    }
+    return false
+}
+
+fun String.containsArabic(): Boolean {
+    for (char in this) {
+        if (char in '\u0600'..'\u06FF') return true
     }
     return false
 }
@@ -35,14 +47,23 @@ fun DMFText(
     textAlign: TextAlign? = null,
     overflow: TextOverflow = TextOverflow.Clip,
     maxLines: Int = Int.MAX_VALUE,
-    lineHeight: TextUnit = TextUnit.Unspecified
+    lineHeight: TextUnit = TextUnit.Unspecified,
+    forceKalpurush: Boolean = false
 ) {
     val containsBn = text.containsBangla()
-    val family = if (containsBn) KalpurushFontFamily else FontFamily.Default
+    val containsAr = text.containsArabic()
 
-    // Scale up font size and line height if the text contains Bangla
+    val family = when {
+        containsAr -> ScheherazadeFontFamily
+        containsBn && forceKalpurush -> KalpurushFontFamily
+        else -> FontFamily.Default
+    }
+
+    // Scale up font size and line height if the text contains Bangla/Arabic for legibility
     val finalFontSize = if (containsBn && fontSize != TextUnit.Unspecified) {
         (fontSize.value * 1.25f).sp
+    } else if (containsAr && fontSize != TextUnit.Unspecified) {
+        (fontSize.value * 1.4f).sp // Slightly larger for Arabic
     } else {
         fontSize
     }
@@ -51,6 +72,10 @@ fun DMFText(
         (lineHeight.value * 1.25f).sp
     } else if (containsBn && fontSize != TextUnit.Unspecified) {
         (fontSize.value * 1.25f * 1.35f).sp
+    } else if (containsAr && lineHeight != TextUnit.Unspecified) {
+        (lineHeight.value * 1.4f).sp
+    } else if (containsAr && fontSize != TextUnit.Unspecified) {
+        (fontSize.value * 1.4f * 1.4f).sp
     } else {
         lineHeight
     }
@@ -71,12 +96,13 @@ fun DMFText(
 
 @Composable
 fun getAppFontFamily(isBangla: Boolean): FontFamily {
-    return KalpurushFontFamily
+    // Only use default sans-serif font family across the app to respect user's request
+    return FontFamily.Default
 }
 
 @Composable
 fun getTypography(isBangla: Boolean): Typography {
-    val family = KalpurushFontFamily
+    val family = FontFamily.Default
     return Typography(
         displayLarge = TextStyle(fontFamily = family),
         displayMedium = TextStyle(fontFamily = family),
@@ -107,7 +133,7 @@ object Trans {
     fun enterBrandName(isBangla: Boolean) = if (isBangla) "ব্র্যান্ডের নাম, পাওয়ার লিখুন..." else "Enter brand name, power..."
     fun noMedicinesFound(isBangla: Boolean) = if (isBangla) "কোনো ঔষধ পাওয়া যায়নি।" else "No medicines found."
     fun searchHelp(isBangla: Boolean) = if (isBangla) {
-        "প্রেসক্রিপশন সম্মতি যাচাই করতে এবং বিস্তারিত দেখতে একটি ঔষধের ব্র্যান্ডের নাম বা পাওয়ার লিখুন।"
+        "プレスক্রিপশন সম্মতি যাচাই করতে এবং বিস্তারিত দেখতে একটি ঔষধের ব্র্যান্ডের নাম বা পাওয়ার লিখুন।"
     } else {
         "Enter a medicine brand name or power to verify compliance and view info."
     }

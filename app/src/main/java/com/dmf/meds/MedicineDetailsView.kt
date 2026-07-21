@@ -128,98 +128,66 @@ fun MedicineDetailsView(
             }
         }
 
-        // Prescription Assessment Card (One single box, no nested boxes)
+        // Prescription Assessment (No container Card, no header, just the stats/remarks boxes directly as a cluster)
         item {
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-                shape = RoundedCornerShape(16.dp)
-            ) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    DMFText(
-                        text = Trans.prescriptionAssessment(isBangla),
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onSurface,
-                        modifier = Modifier.padding(bottom = 12.dp)
+            val items = remember(meta, isBangla) {
+                val activeItems = mutableListOf<AssessmentItem>()
+                if (meta != null) {
+                    // 1. Allowance
+                    val isAllowed = meta.isAllowed
+                    activeItems.add(
+                        AssessmentItem(
+                            title = if (isAllowed) "Allowed to Prescribe" else "Not Allowed to Prescribe",
+                            subtext = if (isAllowed) Trans.allowedSubtextYes(isBangla) else Trans.allowedSubtextNo(isBangla),
+                            isPositive = isAllowed,
+                            icon = if (isAllowed) Icons.Default.CheckCircle else Icons.Default.Cancel
+                        )
                     )
 
-                    // Collect active assessments dynamically
-                    val items = remember(meta, isBangla) {
-                        val activeItems = mutableListOf<AssessmentItem>()
-                        if (meta != null) {
-                            // 1. Allowance
-                            val isAllowed = meta.isAllowed
-                            activeItems.add(
-                                AssessmentItem(
-                                    title = if (isAllowed) "Allowed to Prescribe" else "Not Allowed to Prescribe",
-                                    subtext = if (isAllowed) Trans.allowedSubtextYes(isBangla) else Trans.allowedSubtextNo(isBangla),
-                                    isPositive = isAllowed,
-                                    icon = if (isAllowed) Icons.Default.CheckCircle else Icons.Default.Cancel
-                                )
+                    // 2. OTC (Optional)
+                    if (meta.isOtc) {
+                        activeItems.add(
+                            AssessmentItem(
+                                title = "OTC Medicine (Allowed by Default)",
+                                subtext = Trans.otcSubtext(isBangla),
+                                isPositive = true,
+                                icon = Icons.Default.Info
                             )
-
-                            // 2. OTC (Optional)
-                            if (meta.isOtc) {
-                                activeItems.add(
-                                    AssessmentItem(
-                                        title = "OTC Medicine (Allowed by Default)",
-                                        subtext = Trans.otcSubtext(isBangla),
-                                        isPositive = true,
-                                        icon = Icons.Default.Info
-                                    )
-                                )
-                            }
-
-                            // 3. Antibiotic (Optional)
-                            if (meta.isAntibiotic) {
-                                activeItems.add(
-                                    AssessmentItem(
-                                        title = "Antibiotic Medicine (Exercise Caution)",
-                                        subtext = Trans.antibioticSubtext(isBangla),
-                                        isPositive = false,
-                                        isWarning = true,
-                                        icon = Icons.Default.Warning
-                                    )
-                                )
-                            }
-                        } else {
-                            // Default Fallback
-                            activeItems.add(
-                                AssessmentItem(
-                                    title = "Not Allowed to Prescribe",
-                                    subtext = Trans.allowedSubtextNo(isBangla),
-                                    isPositive = false,
-                                    icon = Icons.Default.Cancel
-                                )
-                            )
-                        }
-                        activeItems
+                        )
                     }
 
-                    // Render items as a single combined container with custom rounded corners
-                    Column(
-                        verticalArrangement = Arrangement.spacedBy(4.dp)
-                    ) {
-                        items.forEachIndexed { index, item ->
-                            val shape = when (items.size) {
-                                1 -> RoundedCornerShape(12.dp)
-                                2 -> if (index == 0) {
-                                    RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp)
-                                } else {
-                                    RoundedCornerShape(bottomStart = 12.dp, bottomEnd = 12.dp)
-                                }
-                                else -> when (index) {
-                                    0 -> RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp)
-                                    items.size - 1 -> RoundedCornerShape(bottomStart = 12.dp, bottomEnd = 12.dp)
-                                    else -> RoundedCornerShape(0.dp) // middle is flat
-                                }
-                            }
-
-                            UnifiedRemarkRow(item = item, shape = shape)
-                        }
+                    // 3. Antibiotic (Optional)
+                    if (meta.isAntibiotic) {
+                        activeItems.add(
+                            AssessmentItem(
+                                title = "Antibiotic Medicine (Exercise Caution)",
+                                subtext = Trans.antibioticSubtext(isBangla),
+                                isPositive = false,
+                                isWarning = true,
+                                icon = Icons.Default.Warning
+                            )
+                        )
                     }
+                } else {
+                    // Default Fallback
+                    activeItems.add(
+                        AssessmentItem(
+                            title = "Not Allowed to Prescribe",
+                            subtext = Trans.allowedSubtextNo(isBangla),
+                            isPositive = false,
+                            icon = Icons.Default.Cancel
+                        )
+                    )
+                }
+                activeItems
+            }
+
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                items.forEach { item ->
+                    UnifiedRemarkRow(item = item, shape = RoundedCornerShape(12.dp))
                 }
             }
         }

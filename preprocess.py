@@ -182,7 +182,7 @@ def get_single_description(name):
         return "An oral antidiabetic medication used to improve glycemic control in patients with type 2 diabetes."
 
     if any(x in name_clean for x in ['acetylcysteine', 'carbocisteine', 'bromhexine', 'ambroxol', 'guaifenesin']):
-        return "A mucolytic or expectorant agent used to reduce the viscosity of mucus and assist in clearing the respiratory tract."
+        return "A muscle relaxant or expectorant agent used to reduce the viscosity of mucus and assist in clearing the respiratory tract."
 
     if 'charcoal' in name_clean:
         return "An adsorbent agent used in the emergency management of oral poisonings, drug overdoses, and abdominal gas."
@@ -203,8 +203,8 @@ def generate_description_for_generic(g_name):
     if g_lower in BASE_DESCRIPTIONS:
         return BASE_DESCRIPTIONS[g_lower]
 
-    # Split by + or & or and
-    parts = re.split(r'\s*\+\s*|\s*&\s*|\s+and\s+', g_name, flags=re.IGNORECASE)
+    # Split by delimiters
+    parts = re.split(r'\s*,\s*|\s*\+\s*|\s*&\s*|\s+and\s+|\s+with\s+|\s+plus\s+|\s*/\s*', g_name, flags=re.IGNORECASE)
     if len(parts) <= 1:
         return get_single_description(g_name)
 
@@ -217,11 +217,36 @@ def generate_description_for_generic(g_name):
 
     return "A combination therapy containing: " + "; ".join(descs) + "."
 
+def is_vitamin_or_mineral_constituent(g_name_lower):
+    p = g_name_lower.strip()
 
-# Classify Allowed and OTC
-# To make it extremely reliable, we will parse the generic name and check matching rules on single ingredients.
+    # Check simple B vitamin shorthands or numbers, e.g. "b1", "b2", "b6", "b12", "d3", "k2", etc.
+    if re.match(r'^(vitamin\s+)?([abcedk]\d*(-\d+)?)$', p):
+        return True
+
+    # Common vitamin/mineral names/keywords
+    keywords = [
+        'vitamin', 'thiamine', 'pyridoxine', 'cyanocobalamin', 'riboflavin', 'riboflavine',
+        'calcium', 'zinc', 'iron', 'ferrous', 'ferric', 'folic', 'folate', 'multivitamin',
+        'multimineral', 'cholecalciferol', 'calcitriol', 'ascorbic', 'tocopherol', 'tocopheryl',
+        'menaquinone', 'phytomenadione', 'cod liver oil', 'magnesium', 'manganese', 'copper',
+        'selenium', 'chromium', 'molybdenum', 'potassium', 'carbonate', 'phosphate', 'orotate',
+        'gluconate', 'fumarate', 'succinate', 'pantothenate', 'biotin', 'nicotinamide', 'niacin',
+        'coenzyme q10', 'glutathione', 'l-carnitine', 'l-arginine', 'amino acid', 'amino acids',
+        'nutrient', 'nutrients', 'supplement', 'antioxidant', 'prebiotic', 'probiotic', 'symbiotic',
+        'algae', 'coral', 'eggshell', 'elemental', 'citrate', 'lactate', 'pregnancy', 'mineral',
+        'minerals', 'b1', 'b2', 'b6', 'b12', 'd3', 'k2', 'b-complex'
+    ]
+    for kw in keywords:
+        if kw in p:
+            return True
+    return False
 
 def match_allowed_rule(g_name_lower):
+    # If it is a vitamin or mineral, it is allowed by default
+    if is_vitamin_or_mineral_constituent(g_name_lower):
+        return True
+
     # Standard single drugs mapping
     if 'condom' in g_name_lower:
         return True
@@ -277,7 +302,7 @@ def match_allowed_rule(g_name_lower):
         return True
     if 'magnesium hydroxide' in g_name_lower or 'milk of magnesia' in g_name_lower:
         return True
-    if g_name_lower == 'omeprazole':
+    if 'omeprazole' in g_name_lower:
         return True
     if 'oral rehydration' in g_name_lower or g_name_lower == 'ors' or 'rehydration salt' in g_name_lower or g_name_lower == 'ors sachet':
         return True
@@ -370,6 +395,10 @@ def match_allowed_rule(g_name_lower):
     return False
 
 def match_otc_rule(g_name_lower):
+    # If it is a vitamin or mineral, it is OTC by default
+    if is_vitamin_or_mineral_constituent(g_name_lower):
+        return True
+
     if 'condom' in g_name_lower:
         return True
     if g_name_lower == 'albendazole':
@@ -414,7 +443,7 @@ def match_otc_rule(g_name_lower):
         return True
     if 'neomycin' in g_name_lower or 'gentamicin' in g_name_lower or 'gentamycin' in g_name_lower or 'bacitracin' in g_name_lower or 'bactrocin' in g_name_lower:
         return True
-    if g_name_lower == 'omeprazole':
+    if 'omeprazole' in g_name_lower:
         return True
     if 'oral rehydration' in g_name_lower or g_name_lower == 'ors' or 'rehydration salt' in g_name_lower or g_name_lower == 'ors sachet':
         return True
@@ -465,8 +494,8 @@ def main():
         if 'condom' in g_lower:
             parts = [g_lower]
         else:
-            # Split by '+', '&', '/', or word 'and', 'with', 'plus'
-            parts = [p.strip().lower() for p in re.split(r'\s*\+\s*|\s*&\s*|\s+and\s+|\s+with\s+|\s+plus\s+|\s*/\s*', g, flags=re.IGNORECASE) if p.strip()]
+            # Split by '+', '&', '/', or word 'and', 'with', 'plus', or ','
+            parts = [p.strip().lower() for p in re.split(r'\s*,\s*|\s*\+\s*|\s*&\s*|\s+and\s+|\s+with\s+|\s+plus\s+|\s*/\s*', g, flags=re.IGNORECASE) if p.strip()]
 
         if len(parts) > 1:
             # Combined drug logic: allowed ONLY if ALL individual constituent generics are approved

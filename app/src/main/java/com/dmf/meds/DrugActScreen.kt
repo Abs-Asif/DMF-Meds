@@ -1,16 +1,12 @@
 package com.dmf.meds
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
@@ -20,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.Dispatchers
@@ -27,110 +24,77 @@ import kotlinx.coroutines.withContext
 import java.io.BufferedReader
 import java.io.InputStreamReader
 
-data class ActSection(
-    val number: String,
-    val title: String,
-    val body: String,
-    val chapterTitle: String
-)
-
-data class ActChapter(
-    val title: String,
-    val sections: List<ActSection>
-)
+sealed class ActElement {
+    data class Title(val text: String) : ActElement()
+    data class Subtitle(val text: String) : ActElement()
+    data class Date(val text: String) : ActElement()
+    data class ChapterHeader(val text: String) : ActElement()
+    data class SectionHeader(val text: String) : ActElement()
+    data class SectionContent(val text: String) : ActElement()
+    data class Subsection(val text: String, val indentLevel: Int) : ActElement()
+    data class Paragraph(val text: String) : ActElement()
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DrugActScreen(onBack: () -> Unit) {
     val context = LocalContext.current
-    var chapters by remember { mutableStateOf<List<ActChapter>>(emptyList()) }
-    var allSections by remember { mutableStateOf<List<ActSection>>(emptyList()) }
+    var elements by remember { mutableStateOf<List<ActElement>>(emptyList()) }
     var isLoading by remember { mutableStateOf(true) }
-
     var searchQuery by remember { mutableStateOf("") }
-    var selectedChapterIndex by remember { mutableStateOf(-1) }
 
     val listState = rememberLazyListState()
 
-    // Load and parse the Act asynchronously
+    // Parse and cache the legal act asynchronously
     LaunchedEffect(Unit) {
         withContext(Dispatchers.IO) {
             try {
                 val assetStream = context.assets.open("bmdc_act.md")
                 val reader = BufferedReader(InputStreamReader(assetStream))
-                val rawLines = reader.readLines()
+                val rawLines = reader.readLines().map { it.trim() }.filter { it.isNotEmpty() }
                 reader.close()
                 assetStream.close()
 
-                val parsedChapters = mutableListOf<ActChapter>()
-                var currentChapterTitle = "প্রারম্ভিক"
-                var currentSections = mutableListOf<ActSection>()
+                val parsedList = mutableListOf<ActElement>()
 
-                var lastSectionNum = ""
-                var lastSectionTitle = ""
-                val lastSectionBody = StringBuilder()
+                for (i in rawLines.indices) {
+                    val line = rawLines[i]
 
-                fun flushLastSection() {
-                    if (lastSectionNum.isNotEmpty()) {
-                        currentSections.add(
-                            ActSection(
-                                number = lastSectionNum,
-                                title = lastSectionTitle,
-                                body = lastSectionBody.toString().trim(),
-                                chapterTitle = currentChapterTitle
-                            )
-                        )
-                        lastSectionNum = ""
-                        lastSectionTitle = ""
-                        lastSectionBody.clear()
-                    }
-                }
-
-                fun flushLastChapter() {
-                    flushLastSection()
-                    if (currentSections.isNotEmpty() || currentChapterTitle != "প্রারম্ভিক") {
-                        parsedChapters.add(
-                            ActChapter(
-                                title = currentChapterTitle,
-                                sections = currentSections.toList()
-                            )
-                        )
-                        currentSections = mutableListOf()
-                    }
-                }
-
-                for (line in rawLines) {
-                    val trimmed = line.trim()
-                    if (trimmed.isEmpty()) continue
-
-                    // Check for Chapter headings (e.g., "প্রথম অধ্যায়", "দ্বিতীয় অধ্যায়" or starting with "# " / "## ")
-                    if (trimmed.contains("অধ্যায়") && !trimmed.contains("ধারা")) {
-                        flushLastChapter()
-                        currentChapterTitle = trimmed.replace("#", "").trim()
-                    } else if (trimmed.matches(Regex("^\\d+।.*")) || trimmed.matches(Regex("^[১২৩৪৫৬৭৮৯০]+।.*"))) {
-                        // Section detected: starts with number followed by '।'
-                        flushLastSection()
-                        val parts = trimmed.split("।", limit = 2)
-                        lastSectionNum = parts[0].trim() + "।"
-                        lastSectionTitle = if (parts.size > 1) parts[1].trim() else ""
-                    } else {
-                        // Append to section body
-                        if (lastSectionNum.isNotEmpty()) {
-                            lastSectionBody.append(trimmed).append("\n")
-                        } else {
-                            // General intro text or preamble
-                            if (trimmed.startsWith("# ") || trimmed.startsWith("## ")) {
-                                currentChapterTitle = trimmed.replace("#", "").trim()
+                    when {
+                        i == 0 -> {
+                            parsedList.add(ActElement.Title(line))
+                        }
+                        line.startsWith("(") && line.endsWith(")") -> {
+                            parsedList.add(ActElement.Subtitle(line))
+                        }
+                        line.startsWith("[") && line.endsWith("]") -> {
+                            parsedList.add(ActElement.Date(line))
+                        }
+                        line.contains("অধ্যায়") -> {
+                            parsedList.add(ActElement.ChapterHeader(line))
+                        }
+                        line.matches(Regex("^[১২৩৪৫৬৭৮৯০]+।.*")) -> {
+                            // Section content line, e.g. "১। (১) এই আইন..."
+                            parsedList.add(ActElement.SectionContent(line))
+                        }
+                        line.startsWith("(") && (line.contains(")") || line.contains("।")) -> {
+                            // Subsection e.g. "(১) ...", "(ক) ...", "(অ) ..."
+                            val indent = if (line.startsWith("(অ") || line.startsWith("(আ") || line.startsWith("(ই")) 2 else 1
+                            parsedList.add(ActElement.Subsection(line, indent))
+                        }
+                        else -> {
+                            // Check if next line is a section number. If so, this line is a section header!
+                            val nextLine = rawLines.getOrNull(i + 1) ?: ""
+                            if (nextLine.matches(Regex("^[১২৩৪৫৬৭৮৯০]+।.*"))) {
+                                parsedList.add(ActElement.SectionHeader(line))
                             } else {
-                                lastSectionBody.append(trimmed).append("\n")
+                                parsedList.add(ActElement.Paragraph(line))
                             }
                         }
                     }
                 }
-                flushLastChapter()
 
-                chapters = parsedChapters
-                allSections = parsedChapters.flatMap { it.sections }
+                elements = parsedList
                 isLoading = false
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -149,23 +113,25 @@ fun DrugActScreen(onBack: () -> Unit) {
                 CircularProgressIndicator()
             }
         } else {
-            // Filter sections based on search query or chapter selection
-            val filteredSections = remember(searchQuery, selectedChapterIndex, chapters, allSections) {
-                var list = if (selectedChapterIndex >= 0 && selectedChapterIndex < chapters.size) {
-                    chapters[selectedChapterIndex].sections
+            // Real-time search filter over sections/paragraphs
+            val filteredElements = remember(searchQuery, elements) {
+                if (searchQuery.trim().isEmpty()) {
+                    elements
                 } else {
-                    allSections
-                }
-
-                if (searchQuery.trim().isNotEmpty()) {
                     val query = searchQuery.lowercase().trim()
-                    list = list.filter { sec ->
-                        sec.number.lowercase().contains(query) ||
-                                sec.title.lowercase().contains(query) ||
-                                sec.body.lowercase().contains(query)
+                    elements.filter { el ->
+                        when (el) {
+                            is ActElement.Title -> el.text.lowercase().contains(query)
+                            is ActElement.Subtitle -> el.text.lowercase().contains(query)
+                            is ActElement.ChapterHeader -> el.text.lowercase().contains(query)
+                            is ActElement.SectionHeader -> el.text.lowercase().contains(query)
+                            is ActElement.SectionContent -> el.text.lowercase().contains(query)
+                            is ActElement.Subsection -> el.text.textLowercaseContains(query)
+                            is ActElement.Paragraph -> el.text.lowercase().contains(query)
+                            else -> false
+                        }
                     }
                 }
-                list
             }
 
             // Search Bar
@@ -174,8 +140,7 @@ fun DrugActScreen(onBack: () -> Unit) {
                 onValueChange = { searchQuery = it },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 8.dp)
-                    .border(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.3f), RoundedCornerShape(20.dp)),
+                    .padding(horizontal = 16.dp, vertical = 12.dp),
                 placeholder = {
                     Text(
                         text = "ধারার নম্বর বা শব্দ দিয়ে খুঁজুন...",
@@ -192,7 +157,7 @@ fun DrugActScreen(onBack: () -> Unit) {
                     }
                 },
                 singleLine = true,
-                shape = RoundedCornerShape(20.dp),
+                shape = RoundedCornerShape(24.dp),
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedContainerColor = MaterialTheme.colorScheme.surface,
                     unfocusedContainerColor = MaterialTheme.colorScheme.surface,
@@ -203,33 +168,10 @@ fun DrugActScreen(onBack: () -> Unit) {
                 )
             )
 
-            // Horizontal Scrollable Chapter Tabs
-            LazyRow(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 4.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                item {
-                    FilterChip(
-                        selected = selectedChapterIndex == -1,
-                        onClick = { selectedChapterIndex = -1 },
-                        label = { DMFText("সব ধারা", fontSize = 11.sp, fontWeight = FontWeight.SemiBold) }
-                    )
-                }
-                itemsIndexed(chapters) { index, chapter ->
-                    FilterChip(
-                        selected = selectedChapterIndex == index,
-                        onClick = { selectedChapterIndex = index },
-                        label = { DMFText(chapter.title, fontSize = 11.sp, fontWeight = FontWeight.SemiBold) }
-                    )
-                }
-            }
+            HorizontalDivider(color = MaterialTheme.colorScheme.outline.copy(alpha = 0.1f))
 
-            Spacer(modifier = Modifier.height(8.dp))
-
-            // Main sections list
-            if (filteredSections.isEmpty()) {
+            // Main scrollable content
+            if (filteredElements.isEmpty()) {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     DMFText("কোনো ধারা পাওয়া যায়নি।", color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
@@ -238,67 +180,137 @@ fun DrugActScreen(onBack: () -> Unit) {
                     state = listState,
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(horizontal = 16.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                        .padding(horizontal = 20.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    itemsIndexed(filteredSections) { index, section ->
-                        var isExpanded by remember(section) { mutableStateOf(false) }
+                    item {
+                        Spacer(modifier = Modifier.height(16.dp))
+                    }
 
-                        Card(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable { isExpanded = !isExpanded },
-                            shape = RoundedCornerShape(16.dp),
-                            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-                            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
-                        ) {
-                            Column(modifier = Modifier.padding(16.dp)) {
-                                Row(
+                    items(filteredElements) { element ->
+                        when (element) {
+                            is ActElement.Title -> {
+                                DMFText(
+                                    text = element.text,
+                                    fontSize = 20.sp,
+                                    fontWeight = FontWeight.ExtraBold,
+                                    color = MaterialTheme.colorScheme.primary,
+                                    textAlign = TextAlign.Center,
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(bottom = 6.dp),
+                                    forceKalpurush = true
+                                )
+                            }
+                            is ActElement.Subtitle -> {
+                                DMFText(
+                                    text = element.text,
+                                    fontSize = 14.sp,
+                                    fontWeight = FontWeight.Medium,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.8f),
+                                    textAlign = TextAlign.Center,
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(bottom = 6.dp),
+                                    forceKalpurush = true
+                                )
+                            }
+                            is ActElement.Date -> {
+                                DMFText(
+                                    text = element.text,
+                                    fontSize = 12.sp,
+                                    fontWeight = FontWeight.Normal,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
+                                    textAlign = TextAlign.Center,
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(bottom = 16.dp),
+                                    forceKalpurush = true
+                                )
+                            }
+                            is ActElement.ChapterHeader -> {
+                                Spacer(modifier = Modifier.height(24.dp))
+                                Column(
                                     modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.SpaceBetween,
-                                    verticalAlignment = Alignment.CenterVertically
+                                    horizontalAlignment = Alignment.CenterHorizontally
                                 ) {
-                                    Column(modifier = Modifier.weight(1f)) {
-                                        DMFText(
-                                            text = section.chapterTitle,
-                                            fontSize = 11.sp,
-                                            fontWeight = FontWeight.Bold,
-                                            color = MaterialTheme.colorScheme.primary
-                                        )
-                                        Spacer(modifier = Modifier.height(2.dp))
-                                        DMFText(
-                                            text = "${section.number} ${section.title}",
-                                            fontSize = 15.sp,
-                                            fontWeight = FontWeight.ExtraBold,
-                                            color = MaterialTheme.colorScheme.onSurface
-                                        )
-                                    }
-                                    Icon(
-                                        imageVector = Icons.Default.ChevronRight,
-                                        contentDescription = null,
-                                        tint = MaterialTheme.colorScheme.onSurfaceVariant
-                                    )
-                                }
-
-                                if (isExpanded) {
-                                    Spacer(modifier = Modifier.height(12.dp))
-                                    HorizontalDivider(color = MaterialTheme.colorScheme.outline.copy(alpha = 0.1f))
-                                    Spacer(modifier = Modifier.height(12.dp))
                                     DMFText(
-                                        text = section.body,
-                                        fontSize = 13.sp,
-                                        lineHeight = 18.sp,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                        text = element.text,
+                                        fontSize = 16.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = MaterialTheme.colorScheme.primary,
+                                        textAlign = TextAlign.Center,
+                                        forceKalpurush = true
+                                    )
+                                    Spacer(modifier = Modifier.height(6.dp))
+                                    HorizontalDivider(
+                                        modifier = Modifier.width(60.dp),
+                                        color = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
+                                        thickness = 2.dp
                                     )
                                 }
+                                Spacer(modifier = Modifier.height(12.dp))
+                            }
+                            is ActElement.SectionHeader -> {
+                                Spacer(modifier = Modifier.height(12.dp))
+                                DMFText(
+                                    text = element.text,
+                                    fontSize = 14.sp,
+                                    fontWeight = FontWeight.ExtraBold,
+                                    color = MaterialTheme.colorScheme.onSurface,
+                                    modifier = Modifier.fillMaxWidth(),
+                                    forceKalpurush = true
+                                )
+                            }
+                            is ActElement.SectionContent -> {
+                                DMFText(
+                                    text = element.text,
+                                    fontSize = 13.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    lineHeight = 18.sp,
+                                    color = MaterialTheme.colorScheme.onSurface,
+                                    modifier = Modifier.fillMaxWidth(),
+                                    forceKalpurush = true
+                                )
+                            }
+                            is ActElement.Subsection -> {
+                                val leadingPadding = if (element.indentLevel == 2) 28.dp else 14.dp
+                                DMFText(
+                                    text = element.text,
+                                    fontSize = 12.sp,
+                                    fontWeight = FontWeight.Normal,
+                                    lineHeight = 18.sp,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(start = leadingPadding, top = 2.dp, bottom = 2.dp),
+                                    forceKalpurush = true
+                                )
+                            }
+                            is ActElement.Paragraph -> {
+                                DMFText(
+                                    text = element.text,
+                                    fontSize = 13.sp,
+                                    fontWeight = FontWeight.Normal,
+                                    lineHeight = 20.sp,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    modifier = Modifier.fillMaxWidth(),
+                                    forceKalpurush = true
+                                )
                             }
                         }
                     }
+
                     item {
-                        Spacer(modifier = Modifier.height(24.dp))
+                        Spacer(modifier = Modifier.height(32.dp))
                     }
                 }
             }
         }
     }
+}
+
+// Extension function to prevent smart casting issues in kotlin
+private fun String.textLowercaseContains(query: String): Boolean {
+    return this.lowercase().contains(query)
 }
