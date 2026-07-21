@@ -23,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -39,6 +40,44 @@ data class Fatwa(
     val answer: String,
     val source: String
 )
+
+@Composable
+fun FatwaContentText(text: String) {
+    val paragraphs = text.split("\n")
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        paragraphs.forEach { paragraph ->
+            val trimmed = paragraph.trim()
+            if (trimmed.isNotEmpty()) {
+                if (trimmed.containsArabic()) {
+                    // Render beautiful Arabic verses / Hadiths
+                    Text(
+                        text = trimmed,
+                        fontSize = 24.sp,
+                        fontFamily = ScheherazadeFontFamily,
+                        color = Color(0xFFFBBF24), // amber gold for Arabic script in dark theme
+                        textAlign = TextAlign.Center,
+                        lineHeight = 36.sp,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 12.dp, horizontal = 8.dp)
+                    )
+                } else {
+                    // Render standard text
+                    DMFText(
+                        text = trimmed,
+                        fontSize = 13.sp,
+                        lineHeight = 22.sp,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        forceKalpurush = true
+                    )
+                }
+            }
+        }
+    }
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -106,7 +145,8 @@ fun FatawasScreen() {
                             DMFText(
                                 text = "ফতোয়া ও শরিয়ত সমাধান",
                                 fontSize = 16.sp,
-                                fontWeight = FontWeight.Bold
+                                fontWeight = FontWeight.Bold,
+                                forceKalpurush = true
                             )
                         },
                         navigationIcon = {
@@ -138,7 +178,8 @@ fun FatawasScreen() {
                                     text = activeFatwa.category,
                                     fontSize = 11.sp,
                                     fontWeight = FontWeight.Bold,
-                                    color = MaterialTheme.colorScheme.primary
+                                    color = MaterialTheme.colorScheme.primary,
+                                    forceKalpurush = true
                                 )
                             }
                         }
@@ -165,7 +206,8 @@ fun FatawasScreen() {
                                             text = "প্রশ্ন:",
                                             fontSize = 13.sp,
                                             fontWeight = FontWeight.Bold,
-                                            color = MaterialTheme.colorScheme.primary
+                                            color = MaterialTheme.colorScheme.primary,
+                                            forceKalpurush = true
                                         )
                                         Spacer(modifier = Modifier.height(4.dp))
                                         DMFText(
@@ -173,7 +215,8 @@ fun FatawasScreen() {
                                             fontSize = 14.sp,
                                             fontWeight = FontWeight.Bold,
                                             lineHeight = 20.sp,
-                                            color = MaterialTheme.colorScheme.onSurface
+                                            color = MaterialTheme.colorScheme.onSurface,
+                                            forceKalpurush = true
                                         )
                                     }
                                 }
@@ -188,7 +231,8 @@ fun FatawasScreen() {
                             fontSize = 14.sp,
                             fontWeight = FontWeight.ExtraBold,
                             color = MaterialTheme.colorScheme.primary,
-                            modifier = Modifier.padding(bottom = 8.dp)
+                            modifier = Modifier.padding(bottom = 8.dp),
+                            forceKalpurush = true
                         )
 
                         Card(
@@ -200,12 +244,8 @@ fun FatawasScreen() {
                                 .border(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.15f), RoundedCornerShape(16.dp))
                         ) {
                             Column(modifier = Modifier.padding(16.dp)) {
-                                DMFText(
-                                    text = activeFatwa.answer,
-                                    fontSize = 13.sp,
-                                    lineHeight = 22.sp,
-                                    color = MaterialTheme.colorScheme.onSurface
-                                )
+                                // Rich fatwa parsing & rendering (with beautiful custom Arabic support)
+                                FatwaContentText(text = activeFatwa.answer)
 
                                 Spacer(modifier = Modifier.height(16.dp))
                                 HorizontalDivider(color = MaterialTheme.colorScheme.outline.copy(alpha = 0.1f))
@@ -220,13 +260,15 @@ fun FatawasScreen() {
                                         text = "উৎস: islamqa.info",
                                         fontSize = 10.sp,
                                         fontWeight = FontWeight.Medium,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
+                                        forceKalpurush = true
                                     )
                                     DMFText(
                                         text = "ফতোয়া নং: ${activeFatwa.source.split("/").lastOrNull() ?: activeFatwa.id}",
                                         fontSize = 10.sp,
                                         fontWeight = FontWeight.Medium,
-                                        color = MaterialTheme.colorScheme.primary
+                                        color = MaterialTheme.colorScheme.primary,
+                                        forceKalpurush = true
                                     )
                                 }
                             }
@@ -256,14 +298,16 @@ fun FatawasScreen() {
                             text = "ইসলামি ফতোয়া ডেস্ক",
                             fontSize = 20.sp,
                             fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.onBackground
+                            color = MaterialTheme.colorScheme.onBackground,
+                            forceKalpurush = true
                         )
                     }
                     DMFText(
                         text = "চিকিৎসকদের নৈতিকতা, রোগীর অধিকার ও সরকারি আইন কানুন সম্পর্কিত দিকনির্দেশনা।",
                         fontSize = 11.sp,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.padding(top = 4.dp, bottom = 20.dp)
+                        modifier = Modifier.padding(top = 4.dp, bottom = 20.dp),
+                        forceKalpurush = true
                     )
 
                     LazyColumn(
@@ -290,7 +334,8 @@ fun FatawasScreen() {
                                         fontSize = 10.sp,
                                         fontWeight = FontWeight.Bold,
                                         color = MaterialTheme.colorScheme.primary,
-                                        modifier = Modifier.padding(bottom = 6.dp)
+                                        modifier = Modifier.padding(bottom = 6.dp),
+                                        forceKalpurush = true
                                     )
 
                                     // Question preview
@@ -307,7 +352,8 @@ fun FatawasScreen() {
                                             maxLines = 2,
                                             overflow = TextOverflow.Ellipsis,
                                             lineHeight = 18.sp,
-                                            modifier = Modifier.weight(1f)
+                                            modifier = Modifier.weight(1f),
+                                            forceKalpurush = true
                                         )
                                         Spacer(modifier = Modifier.width(8.dp))
                                         Icon(

@@ -44,7 +44,8 @@ enum class ArticleType {
     WEBVIEW,
     BMDC_ACT,
     APPROVED_LIST,
-    OTC_LIST
+    OTC_LIST,
+    ANTIBIOTIC_LIST
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -86,6 +87,12 @@ fun InfoScreen() {
                 descriptionKey = { Trans.otcListDesc(it) },
                 isArticle = true,
                 articleType = ArticleType.OTC_LIST
+            ),
+            InfoLink(
+                titleKey = { if (it) "অ্যান্টিবায়োটিক নির্দেশিকা" else "Antibiotic Guidelines" },
+                descriptionKey = { if (it) "বিএমডিসি অনুমোদিত এবং বহুল ব্যবহৃত অ্যান্টিবায়োটিকসমূহের তালিকা" else "BM&DC approved and common antibiotics reference guide" },
+                isArticle = true,
+                articleType = ArticleType.ANTIBIOTIC_LIST
             )
         )
     }
@@ -128,10 +135,13 @@ fun InfoScreen() {
                     DrugActScreen(onBack = { activeArticleType = null })
                 }
                 ArticleType.APPROVED_LIST -> {
-                    DrugListArticleView(filename = "allowed.txt")
+                    DrugListArticleView(filename = "allowed.txt", isAntibioticList = false)
                 }
                 ArticleType.OTC_LIST -> {
-                    DrugListArticleView(filename = "OTC.txt")
+                    DrugListArticleView(filename = "OTC.txt", isAntibioticList = false)
+                }
+                ArticleType.ANTIBIOTIC_LIST -> {
+                    DrugListArticleView(filename = "antibiotics.txt", isAntibioticList = true)
                 }
                 else -> {}
             }
@@ -236,7 +246,7 @@ fun InfoScreen() {
 }
 
 @Composable
-fun DrugListArticleView(filename: String) {
+fun DrugListArticleView(filename: String, isAntibioticList: Boolean = false) {
     val context = LocalContext.current
     var drugsList by remember { mutableStateOf<List<String>>(emptyList()) }
 
@@ -308,7 +318,8 @@ fun DrugListArticleView(filename: String) {
                                 text = drug,
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 14.sp,
-                                color = MaterialTheme.colorScheme.onSurface
+                                color = MaterialTheme.colorScheme.onSurface,
+                                forceKalpurush = true
                             )
                         }
                         Spacer(modifier = Modifier.height(10.dp))
@@ -317,8 +328,28 @@ fun DrugListArticleView(filename: String) {
                             text = indication,
                             fontSize = 12.sp,
                             lineHeight = 18.sp,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            forceKalpurush = true
                         )
+
+                        if (isAntibioticList) {
+                            Spacer(modifier = Modifier.height(10.dp))
+                            DMFText(
+                                text = "বিশেষ কার্যকারিতা (Best used for):",
+                                fontSize = 11.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.primary,
+                                forceKalpurush = true
+                            )
+                            Spacer(modifier = Modifier.height(2.dp))
+                            DMFText(
+                                text = Indications.getBestUsedFor(drug),
+                                fontSize = 12.sp,
+                                lineHeight = 18.sp,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                forceKalpurush = true
+                            )
+                        }
                     }
                 }
             }

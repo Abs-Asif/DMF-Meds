@@ -154,13 +154,52 @@ fun MedicineScreen(
     isSearchFocused: Boolean,
     onSearchFocusedChange: (Boolean) -> Unit,
     queryState: MutableState<String>,
-    selectedMedicineState: MutableState<Medicine?>
+    selectedMedicineState: MutableState<Medicine?>,
+    onOpenInteractionChecker: () -> Unit
 ) {
     var query by queryState
     var selectedMedicine by selectedMedicineState
     var searchResultState by remember { mutableStateOf<SearchResultState>(SearchResultState.Success(emptyList())) }
 
     val focusManager = LocalFocusManager.current
+
+    // Dynamically calculate allowed medicines count
+    val allowedCount = remember(medicines, genericsMetadata) {
+        medicines.count { genericsMetadata[it.generic]?.isAllowed == true }
+    }
+
+    // List of demo medicines for typing placeholder animation
+    val demoMedicines = listOf(
+        "Napa 500mg", "Seclo 20mg", "Fenadin 120mg", "Alatrol 10mg", "Xylomet 0.1%",
+        "Aspirin 75mg", "Omeprazole 20mg", "Paracetamol", "Zox 500mg", "Sergel 20mg"
+    )
+
+    var placeholderText by remember { mutableStateOf("Search brand name, power...") }
+
+    // Coroutine-based typing animation in empty state
+    LaunchedEffect(query, isSearchFocused) {
+        if (query.isEmpty()) {
+            var listIndex = 0
+            while (true) {
+                val fullText = "Try typing: " + demoMedicines[listIndex]
+                // Type in
+                for (i in 0..fullText.length) {
+                    placeholderText = fullText.substring(0, i)
+                    kotlinx.coroutines.delay(100)
+                }
+                kotlinx.coroutines.delay(1800) // Hold
+                // Type out
+                for (i in fullText.length downTo 0) {
+                    placeholderText = fullText.substring(0, i)
+                    kotlinx.coroutines.delay(50)
+                }
+                kotlinx.coroutines.delay(400)
+                listIndex = (listIndex + 1) % demoMedicines.size
+            }
+        } else {
+            placeholderText = "Enter brand name, power..."
+        }
+    }
 
     // Trigger suggestion search when query changes
     LaunchedEffect(query) {
@@ -244,11 +283,12 @@ fun MedicineScreen(
                         .fillMaxWidth()
                         .onFocusChanged { onSearchFocusedChange(it.isFocused) }
                         .border(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.5f), RoundedCornerShape(28.dp)),
+                    textStyle = LocalTextStyle.current.copy(fontSize = 18.sp, fontWeight = FontWeight.Medium),
                     placeholder = {
                         DMFText(
-                            text = Trans.enterBrandName(isBangla),
+                            text = placeholderText,
                             fontSize = 14.sp,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
+                            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
                         )
                     },
                     leadingIcon = {
@@ -287,6 +327,39 @@ fun MedicineScreen(
                         focusManager.clearFocus()
                     })
                 )
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            // Interaction Checker Button (Always visible on Search Page, beautifully styled)
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Button(
+                    onClick = onOpenInteractionChecker,
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.primaryContainer,
+                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                    ),
+                    shape = RoundedCornerShape(16.dp),
+                    contentPadding = PaddingValues(horizontal = 24.dp, vertical = 10.dp),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.CompareArrows,
+                        contentDescription = "Interaction Checker",
+                        modifier = Modifier.size(20.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    DMFText(
+                        text = "Interaction Checker",
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -405,15 +478,101 @@ fun MedicineScreen(
                         }
                     }
                 } else {
-                    // Search bar is empty, show nice helper
+                    // Search bar is empty, show nice helper & stats boxes
                     Box(
                         modifier = Modifier.fillMaxSize(),
                         contentAlignment = Alignment.TopCenter
                     ) {
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally,
-                            modifier = Modifier.padding(top = 40.dp)
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 20.dp, start = 16.dp, end = 16.dp)
                         ) {
+                            // Stats Cards (Row with 2 beautiful stats boxes)
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(bottom = 24.dp),
+                                horizontalArrangement = Arrangement.spacedBy(12.dp)
+                            ) {
+                                // Stats 1: Total Medicines
+                                Card(
+                                    modifier = Modifier.weight(1f),
+                                    shape = RoundedCornerShape(16.dp),
+                                    colors = CardDefaults.cardColors(
+                                        containerColor = MaterialTheme.colorScheme.surface
+                                    ),
+                                    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+                                ) {
+                                    Column(modifier = Modifier.padding(14.dp)) {
+                                        Icon(
+                                            imageVector = Icons.Default.MedicalServices,
+                                            contentDescription = null,
+                                            tint = MaterialTheme.colorScheme.primary,
+                                            modifier = Modifier.size(24.dp)
+                                        )
+                                        Spacer(modifier = Modifier.height(12.dp))
+                                        DMFText(
+                                            text = medicines.size.toString(),
+                                            fontSize = 22.sp,
+                                            fontWeight = FontWeight.ExtraBold,
+                                            color = MaterialTheme.colorScheme.onSurface
+                                        )
+                                        Spacer(modifier = Modifier.height(2.dp))
+                                        DMFText(
+                                            text = "Total Medicines",
+                                            fontSize = 11.sp,
+                                            fontWeight = FontWeight.Bold,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.8f)
+                                        )
+                                        DMFText(
+                                            text = "Commercial brands loaded",
+                                            fontSize = 9.sp,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+                                        )
+                                    }
+                                }
+
+                                // Stats 2: Allowed Medicines
+                                Card(
+                                    modifier = Modifier.weight(1f),
+                                    shape = RoundedCornerShape(16.dp),
+                                    colors = CardDefaults.cardColors(
+                                        containerColor = MaterialTheme.colorScheme.surface
+                                    ),
+                                    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+                                ) {
+                                    Column(modifier = Modifier.padding(14.dp)) {
+                                        Icon(
+                                            imageVector = Icons.Default.CheckCircle,
+                                            contentDescription = null,
+                                            tint = Color(0xFF10B981),
+                                            modifier = Modifier.size(24.dp)
+                                        )
+                                        Spacer(modifier = Modifier.height(12.dp))
+                                        DMFText(
+                                            text = allowedCount.toString(),
+                                            fontSize = 22.sp,
+                                            fontWeight = FontWeight.ExtraBold,
+                                            color = Color(0xFF10B981)
+                                        )
+                                        Spacer(modifier = Modifier.height(2.dp))
+                                        DMFText(
+                                            text = "Allowed to Prescribe",
+                                            fontSize = 11.sp,
+                                            fontWeight = FontWeight.Bold,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.8f)
+                                        )
+                                        DMFText(
+                                            text = "Clinically verified brand drugs",
+                                            fontSize = 9.sp,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+                                        )
+                                    }
+                                }
+                            }
+
                             DMFText(
                                 text = Trans.searchHelp(isBangla),
                                 fontSize = 11.sp,

@@ -66,6 +66,32 @@ object Indications {
         }
     }
 
+    /**
+     * Gets a detailed "best used for" description in Bangla for antibiotics.
+     */
+    fun getBestUsedFor(drugName: String): String {
+        val nameLower = drugName.lowercase(Locale.ROOT)
+
+        return when {
+            nameLower.contains("amoxicillin") -> "তীব্র টনসিলাইটিস, ওটিটিস মিডিয়া, সাইনুসাইটিস, ব্রঙ্কাইটিস, নিউমোনিয়া এবং মূত্রনালীর ইনফেকশন।"
+            nameLower.contains("ampicillin") -> "শ্বাসনালীর ইনফেকশন, পরিপাকতন্ত্রের ইনফেকশন এবং মূত্রনালীর তীব্র ব্যাকটেরিয়াজনিত সংক্রমণ।"
+            nameLower.contains("cloxacillin") -> "ত্বকের ইনফেকশন, ফোড়া, ক্ষত এবং ব্যাকটেরিয়াজনিত হাড় ও জয়েন্টের ইনফেকশন।"
+            nameLower.contains("trimethoprim") || nameLower.contains("co-trimoxazole") -> "ক্রনিক ব্রঙ্কাইটিস, মূত্রনালীর ইনফেকশন, কানের ইনফেকশন এবং শিগেলা বা ব্যাকটেরিয়াজনিত ডায়রিয়া।"
+            nameLower.contains("doxycycline") -> "ব্রণ বা একনে, টাইফাস জ্বর, কলেরা, ক্ল্যামাইডিয়াল ইনফেকশন এবং দীর্ঘমেয়াদী শ্বাসনালীর প্রদাহ।"
+            nameLower.contains("phenoxymethylpenicillin") -> "স্ট্রেপ্টোকক্কাল টনসিলাইটিস, ফ্যারিনজাইটিস এবং বাতজ্বর বা রিউম্যাটিক ফিভার প্রতিরোধে।"
+            nameLower.contains("procaine") -> "তীব্র ব্যাকটেরিয়াজনিত সিফিলিস, ডিপথেরিয়া এবং নরম কলার জটিল সংক্রমণ।"
+            nameLower.contains("tetracycline") -> "তীব্র ব্রণ, চোখের ব্যাকটেরিয়াজনিত কনজাংটিভাইটিস এবং অন্ত্রের বিভিন্ন সংক্রমণ।"
+            nameLower.contains("oxytetracycline") -> "ত্বকের সংক্রমণ, চোখের ঘা এবং পশুপাখির সংস্পর্শ থেকে ছড়ানো বিশেষ ব্যাকটেরিয়াজনিত রোগ।"
+            nameLower.contains("flucloxacillin") -> "নরম কলার সংক্রমণ, সেলুলাইটিস, কাটাছেঁড়ার ইনফেকশন এবং অস্ত্রোপচার পরবর্তী ইনফেকশন প্রতিরোধে।"
+            nameLower.contains("erythromycin") -> "পেনিসিলিন এলার্জি রোগীদের ক্ষেত্রে শ্বাসনালীর সংক্রমণ, হুপিং কাশি এবং ডিপথেরিয়ার চিকিৎসায়।"
+            nameLower.contains("azithromycin") -> "তীব্র টনসিলাইটিস, সাইনুসাইটিস, ব্রঙ্কাইটিস, নিউমোনিয়া, টাইফয়েড এবং মূত্রনালীর সংক্রমণ।"
+            nameLower.contains("ciprofloxacin") -> "টাইফয়েড জ্বর, তীব্র মূত্রনালীর ইনফেকশন, হাড় ও জয়েন্টের সংক্রমণ এবং ব্যাকটেরিয়াজনিত জটিল ডায়রিয়া।"
+            nameLower.contains("cefixime") -> "তীব্র মূত্রনালীর ইনফেকশন, নিউমোনিয়া, ব্রঙ্কাইটিস, কানের মধ্যবর্তী অংশের ইনফেকশন এবং টাইফয়েড জ্বর।"
+            nameLower.contains("metronidazole") -> "অ্যামিবায়োসিস, জিয়ার্ডিয়াসিস, অন্ত্রের ব্যাকটেরিয়াজনিত ইনফেকশন এবং দাঁত ও মাড়ির তীব্র ইনফেকশন।"
+            else -> "ব্যাকটেরিয়াজনিত বিভিন্ন জটিল ও সাধারণ ব্যাকটেরিয়াল ইনফেকশন উপশম ও চিকিৎসায়।"
+        }
+    }
+
     private fun containsAny(source: String, vararg keywords: String): Boolean {
         for (kw in keywords) {
             if (source.contains(kw)) return true

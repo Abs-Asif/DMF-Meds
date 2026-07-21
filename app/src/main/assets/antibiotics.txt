@@ -1,0 +1,15 @@
+1. Amoxicillin
+2. Ampicillin
+3. Cloxacillin
+4. Co-trimoxazole
+5. Doxycycline
+6. Phenoxymethylpenicillin
+7. Procaine Penicillin
+8. Tetracycline
+9. Oxytetracycline
+10. Flucloxacillin
+11. Erythromycin
+12. Azithromycin
+13. Ciprofloxacin
+14. Cefixime
+15. Metronidazole
