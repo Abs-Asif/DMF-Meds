@@ -16,6 +16,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Book
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.MenuBook
+import androidx.compose.material.icons.filled.Launch
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -55,14 +56,14 @@ fun FatwaContentText(text: String) {
                     // Render beautiful Arabic verses / Hadiths
                     Text(
                         text = trimmed,
-                        fontSize = 24.sp,
+                        fontSize = 18.sp,
                         fontFamily = ScheherazadeFontFamily,
                         color = Color(0xFFFBBF24), // amber gold for Arabic script in dark theme
-                        textAlign = TextAlign.Center,
-                        lineHeight = 36.sp,
+                        textAlign = TextAlign.Right,
+                        lineHeight = 28.sp,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = 12.dp, horizontal = 8.dp)
+                            .padding(vertical = 4.dp, horizontal = 8.dp)
                     )
                 } else {
                     // Render standard text
@@ -273,6 +274,43 @@ fun FatawasScreen() {
                                 }
                             }
                         }
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        // Beautiful Button to open original URL in browser
+                        Button(
+                            onClick = {
+                                try {
+                                    val intent = android.content.Intent(
+                                        android.content.Intent.ACTION_VIEW,
+                                        android.net.Uri.parse(activeFatwa.source)
+                                    )
+                                    context.startActivity(intent)
+                                } catch (e: Exception) {
+                                    e.printStackTrace()
+                                }
+                            },
+                            modifier = Modifier.fillMaxWidth(),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                                contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                            ),
+                            shape = RoundedCornerShape(12.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Launch,
+                                contentDescription = "Open Fatwa Online",
+                                modifier = Modifier.size(16.dp)
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            DMFText(
+                                text = "অনলাইন ফতোয়া দেখুন (islamqa.info)",
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.Bold,
+                                forceKalpurush = true
+                            )
+                        }
+
                         Spacer(modifier = Modifier.height(32.dp))
                     }
                 }

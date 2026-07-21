@@ -18,6 +18,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Launch
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -45,7 +47,8 @@ enum class ArticleType {
     BMDC_ACT,
     APPROVED_LIST,
     OTC_LIST,
-    ANTIBIOTIC_LIST
+    ANTIBIOTIC_LIST,
+    WHO_ESSENTIAL_LIST
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -93,6 +96,12 @@ fun InfoScreen() {
                 descriptionKey = { if (it) "বিএমডিসি অনুমোদিত এবং বহুল ব্যবহৃত অ্যান্টিবায়োটিকসমূহের তালিকা" else "BM&DC approved and common antibiotics reference guide" },
                 isArticle = true,
                 articleType = ArticleType.ANTIBIOTIC_LIST
+            ),
+            InfoLink(
+                titleKey = { if (it) "ডব্লিউএইচও অত্যাবশ্যকীয় ঔষধ" else "WHO Essential Medicines" },
+                descriptionKey = { if (it) "বিশ্ব স্বাস্থ্য সংস্থা (WHO) অনুমোদিত অত্যাবশ্যকীয় ঔষধের বৈশ্বিক তালিকা" else "World Health Organization list of essential medicines" },
+                isArticle = true,
+                articleType = ArticleType.WHO_ESSENTIAL_LIST
             )
         )
     }
@@ -142,6 +151,9 @@ fun InfoScreen() {
                 }
                 ArticleType.ANTIBIOTIC_LIST -> {
                     DrugListArticleView(filename = "antibiotics.txt", isAntibioticList = true)
+                }
+                ArticleType.WHO_ESSENTIAL_LIST -> {
+                    DrugListArticleView(filename = "who_essential_medicines.txt", isAntibioticList = false)
                 }
                 else -> {}
             }
@@ -249,6 +261,7 @@ fun InfoScreen() {
 fun DrugListArticleView(filename: String, isAntibioticList: Boolean = false) {
     val context = LocalContext.current
     var drugsList by remember { mutableStateOf<List<String>>(emptyList()) }
+    var searchQuery by remember { mutableStateOf("") }
 
     LaunchedEffect(filename) {
         try {
@@ -273,83 +286,148 @@ fun DrugListArticleView(filename: String, isAntibioticList: Boolean = false) {
         }
     }
 
+    val filteredDrugs = remember(searchQuery, drugsList) {
+        if (searchQuery.trim().isEmpty()) {
+            drugsList
+        } else {
+            val q = searchQuery.lowercase().trim()
+            drugsList.filter { drug ->
+                drug.lowercase().contains(q) ||
+                Indications.getBanglaIndication(drug).lowercase().contains(q) ||
+                (isAntibioticList && Indications.getBestUsedFor(drug).lowercase().contains(q))
+            }
+        }
+    }
+
     if (drugsList.isEmpty()) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             CircularProgressIndicator()
         }
     } else {
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            items(drugsList.size) { index ->
-                val drug = drugsList[index]
-                val indication = Indications.getBanglaIndication(drug)
+        Column(modifier = Modifier.fillMaxSize()) {
+            OutlinedTextField(
+                value = searchQuery,
+                onValueChange = { searchQuery = it },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 12.dp),
+                placeholder = {
+                    Text(
+                        text = "ঔষধের নাম বা রোগের উপসর্গ দিয়ে খুঁজুন...",
+                        fontSize = 14.sp,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
+                    )
+                },
+                leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
+                trailingIcon = {
+                    if (searchQuery.isNotEmpty()) {
+                        IconButton(onClick = { searchQuery = "" }) {
+                            Icon(Icons.Default.Close, contentDescription = "Clear")
+                        }
+                    }
+                },
+                singleLine = true,
+                shape = RoundedCornerShape(24.dp),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedContainerColor = MaterialTheme.colorScheme.surface,
+                    unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+                    focusedBorderColor = MaterialTheme.colorScheme.primary,
+                    unfocusedBorderColor = Color.Transparent,
+                    focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                    unfocusedTextColor = MaterialTheme.colorScheme.onSurface
+                )
+            )
 
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(16.dp),
-                    colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.surface
-                    ),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+            HorizontalDivider(color = MaterialTheme.colorScheme.outline.copy(alpha = 0.1f))
+
+            if (filteredDrugs.isEmpty()) {
+                Box(modifier = Modifier.fillMaxSize().weight(1f), contentAlignment = Alignment.Center) {
+                    DMFText("কোনো ঔষধ পাওয়া যায়নি।", color = MaterialTheme.colorScheme.onSurfaceVariant, forceKalpurush = true)
+                }
+            } else {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .weight(1f)
+                        .padding(horizontal = 16.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    Column(modifier = Modifier.padding(16.dp)) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Box(
-                                modifier = Modifier
-                                    .size(24.dp)
-                                    .background(MaterialTheme.colorScheme.primaryContainer, RoundedCornerShape(6.dp)),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text(
-                                    text = (index + 1).toString(),
-                                    fontWeight = FontWeight.Bold,
-                                    fontSize = 11.sp,
-                                    color = MaterialTheme.colorScheme.onPrimaryContainer
-                                )
-                            }
-                            Spacer(modifier = Modifier.width(10.dp))
-                            DMFText(
-                                text = drug,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 14.sp,
-                                color = MaterialTheme.colorScheme.onSurface,
-                                forceKalpurush = true
-                            )
-                        }
-                        Spacer(modifier = Modifier.height(10.dp))
-                        // Removed "Indication & Usage:" label. Directly display indication text using DMFText.
-                        DMFText(
-                            text = indication,
-                            fontSize = 12.sp,
-                            lineHeight = 18.sp,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            forceKalpurush = true
-                        )
+                    item {
+                        Spacer(modifier = Modifier.height(12.dp))
+                    }
 
-                        if (isAntibioticList) {
-                            Spacer(modifier = Modifier.height(10.dp))
-                            DMFText(
-                                text = "বিশেষ কার্যকারিতা (Best used for):",
-                                fontSize = 11.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.primary,
-                                forceKalpurush = true
-                            )
-                            Spacer(modifier = Modifier.height(2.dp))
-                            DMFText(
-                                text = Indications.getBestUsedFor(drug),
-                                fontSize = 12.sp,
-                                lineHeight = 18.sp,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                forceKalpurush = true
-                            )
+                    items(filteredDrugs.size) { index ->
+                        val drug = filteredDrugs[index]
+                        val originalIndex = drugsList.indexOf(drug) + 1
+                        val indication = Indications.getBanglaIndication(drug)
+
+                        Card(
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = RoundedCornerShape(16.dp),
+                            colors = CardDefaults.cardColors(
+                                containerColor = MaterialTheme.colorScheme.surface
+                            ),
+                            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+                        ) {
+                            Column(modifier = Modifier.padding(16.dp)) {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Box(
+                                        modifier = Modifier
+                                            .size(24.dp)
+                                            .background(MaterialTheme.colorScheme.primaryContainer, RoundedCornerShape(6.dp)),
+                                        contentAlignment = Alignment.Center
+                                    ) {
+                                        Text(
+                                            text = originalIndex.toString(),
+                                            fontWeight = FontWeight.Bold,
+                                            fontSize = 11.sp,
+                                            color = MaterialTheme.colorScheme.onPrimaryContainer
+                                        )
+                                    }
+                                    Spacer(modifier = Modifier.width(10.dp))
+                                    DMFText(
+                                        text = drug,
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = 14.sp,
+                                        color = MaterialTheme.colorScheme.onSurface,
+                                        forceKalpurush = true
+                                    )
+                                }
+                                Spacer(modifier = Modifier.height(10.dp))
+                                DMFText(
+                                    text = indication,
+                                    fontSize = 12.sp,
+                                    lineHeight = 18.sp,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    forceKalpurush = true
+                                )
+
+                                if (isAntibioticList) {
+                                    Spacer(modifier = Modifier.height(10.dp))
+                                    DMFText(
+                                        text = "বিশেষ কার্যকারিতা (Best used for):",
+                                        fontSize = 11.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = MaterialTheme.colorScheme.primary,
+                                        forceKalpurush = true
+                                    )
+                                    Spacer(modifier = Modifier.height(2.dp))
+                                    DMFText(
+                                        text = Indications.getBestUsedFor(drug),
+                                        fontSize = 12.sp,
+                                        lineHeight = 18.sp,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                        forceKalpurush = true
+                                    )
+                                }
+                            }
                         }
+                    }
+
+                    item {
+                        Spacer(modifier = Modifier.height(32.dp))
                     }
                 }
             }
