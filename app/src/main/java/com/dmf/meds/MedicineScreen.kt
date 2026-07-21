@@ -242,8 +242,7 @@ fun MedicineScreen(
                     },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .onFocusChanged { onSearchFocusedChange(it.isFocused) }
-                        .border(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.5f), RoundedCornerShape(28.dp)),
+                        .onFocusChanged { onSearchFocusedChange(it.isFocused) },
                     placeholder = {
                         DMFText(
                             text = Trans.enterBrandName(isBangla),
@@ -278,7 +277,7 @@ fun MedicineScreen(
                         focusedContainerColor = MaterialTheme.colorScheme.surface,
                         unfocusedContainerColor = MaterialTheme.colorScheme.surface,
                         focusedBorderColor = MaterialTheme.colorScheme.primary,
-                        unfocusedBorderColor = Color.Transparent,
+                        unfocusedBorderColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f),
                         focusedTextColor = MaterialTheme.colorScheme.onSurface,
                         unfocusedTextColor = MaterialTheme.colorScheme.onSurface
                     ),

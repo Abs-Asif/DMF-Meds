@@ -13,6 +13,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.ExpandLess
+import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -174,8 +176,7 @@ fun DrugActScreen(onBack: () -> Unit) {
                 onValueChange = { searchQuery = it },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 8.dp)
-                    .border(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.3f), RoundedCornerShape(20.dp)),
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
                 placeholder = {
                     Text(
                         text = "ধারার নম্বর বা শব্দ দিয়ে খুঁজুন...",
@@ -197,7 +198,7 @@ fun DrugActScreen(onBack: () -> Unit) {
                     focusedContainerColor = MaterialTheme.colorScheme.surface,
                     unfocusedContainerColor = MaterialTheme.colorScheme.surface,
                     focusedBorderColor = MaterialTheme.colorScheme.primary,
-                    unfocusedBorderColor = Color.Transparent,
+                    unfocusedBorderColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.3f),
                     focusedTextColor = MaterialTheme.colorScheme.onSurface,
                     unfocusedTextColor = MaterialTheme.colorScheme.onSurface
                 )
@@ -247,7 +248,10 @@ fun DrugActScreen(onBack: () -> Unit) {
                         Card(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .clickable { isExpanded = !isExpanded },
+                                .clickable(
+                                    role = androidx.compose.ui.semantics.Role.Button,
+                                    onClickLabel = if (isExpanded) "Collapse section details" else "Expand section details"
+                                ) { isExpanded = !isExpanded },
                             shape = RoundedCornerShape(16.dp),
                             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
                             elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
@@ -274,8 +278,8 @@ fun DrugActScreen(onBack: () -> Unit) {
                                         )
                                     }
                                     Icon(
-                                        imageVector = Icons.Default.ChevronRight,
-                                        contentDescription = null,
+                                        imageVector = if (isExpanded) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
+                                        contentDescription = if (isExpanded) "Collapse" else "Expand",
                                         tint = MaterialTheme.colorScheme.onSurfaceVariant
                                     )
                                 }

@@ -1,0 +1,3 @@
+## 2025-01-20 - [Jetpack Compose Accessibility & Focus Polish]
+**Learning:** Overlapping manual modifier borders (`Modifier.border(...)`) combined with transparent unfocused border colors in `OutlinedTextField` interferes with native Material 3 focus transitions and creates visually jarring borders. Assigning explicit semantics (`Role.Button`, dynamic `onClickLabel`, and correct expand/collapse icons and content descriptions) to expandable elements drastically improves both visual intuition and screen reader accessibility.
+**Action:** Use native `OutlinedTextFieldDefaults.colors` to specify unfocused states instead of manually drawing borders on text fields, and ensure expandable layouts always expose their state semantics and dynamic labels.
