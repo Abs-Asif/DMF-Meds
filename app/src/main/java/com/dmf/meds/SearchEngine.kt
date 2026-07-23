@@ -70,8 +70,12 @@ object SearchEngine {
         }
 
         // 2. If no matches found, find fuzzy suggestions based on unique brand names
-        // Let's filter unique brands that are close to the query
-        val fuzzyResults = uniqueBrands.map { brand ->
+        // Performance Optimization: Filter unique brands that have a length difference of <= 3 before calculating Levenshtein distance
+        // This avoids calculating edit distances for tens of thousands of obviously mismatching brands.
+        val queryLength = trimmedQuery.length
+        val fuzzyResults = uniqueBrands.filter { brand ->
+            Math.abs(brand.length - queryLength) <= 3
+        }.map { brand ->
             val dist = getLevenshteinDistance(trimmedQuery, brand)
             brand to dist
         }

@@ -336,6 +336,12 @@ fun InteractionCheckerScreen(
                                     medicinePairings.add(Pair(med, parts))
                                 }
 
+                                // Performance Optimization: Pre-compile a flat Set of all active ingredients across selected meds.
+                                // This allows us to perform O(1) containment checks on each line of the 191,000+ line CSV.
+                                // We can completely skip parsing d2, description, and running inner search loops for lines where
+                                // the first ingredient (d1) is not even present in the selected medicines.
+                                val activeIngredients = medicinePairings.flatMap { it.second }.toSet()
+
                                 var line = reader.readLine()
                                 if (line != null && line.startsWith("Drug 1")) {
                                     line = reader.readLine() // skip header
@@ -344,38 +350,42 @@ fun InteractionCheckerScreen(
                                 while (line != null) {
                                     val firstComma = line.indexOf(',')
                                     if (firstComma != -1) {
-                                        val secondComma = line.indexOf(',', firstComma + 1)
-                                        if (secondComma != -1) {
-                                            val d1 = line.substring(0, firstComma).trim().lowercase(Locale.ROOT)
-                                            val d2 = line.substring(firstComma + 1, secondComma).trim().lowercase(Locale.ROOT)
-                                            val desc = line.substring(secondComma + 1).trim().removeSurrounding("\"")
+                                        val d1 = line.substring(0, firstComma).trim().lowercase(Locale.ROOT)
+                                        if (activeIngredients.contains(d1)) {
+                                            val secondComma = line.indexOf(',', firstComma + 1)
+                                            if (secondComma != -1) {
+                                                val d2 = line.substring(firstComma + 1, secondComma).trim().lowercase(Locale.ROOT)
+                                                if (activeIngredients.contains(d2)) {
+                                                    val desc = line.substring(secondComma + 1).trim().removeSurrounding("\"")
 
-                                            for (i in 0 until medicinePairings.size) {
-                                                for (j in i + 1 until medicinePairings.size) {
-                                                    val medA = medicinePairings[i].first
-                                                    val ingredientsA = medicinePairings[i].second
+                                                    for (i in 0 until medicinePairings.size) {
+                                                        for (j in i + 1 until medicinePairings.size) {
+                                                            val medA = medicinePairings[i].first
+                                                            val ingredientsA = medicinePairings[i].second
 
-                                                    val medB = medicinePairings[j].first
-                                                    val ingredientsB = medicinePairings[j].second
+                                                            val medB = medicinePairings[j].first
+                                                            val ingredientsB = medicinePairings[j].second
 
-                                                    val match1 = ingredientsA.contains(d1) && ingredientsB.contains(d2)
-                                                    val match2 = ingredientsA.contains(d2) && ingredientsB.contains(d1)
+                                                            val match1 = ingredientsA.contains(d1) && ingredientsB.contains(d2)
+                                                            val match2 = ingredientsA.contains(d2) && ingredientsB.contains(d1)
 
-                                                    if (match1 || match2) {
-                                                        val alreadyMatched = matches.any {
-                                                            (it.drug1Name == medA.brand && it.drug2Name == medB.brand) ||
-                                                            (it.drug1Name == medB.brand && it.drug2Name == medA.brand)
-                                                        }
-                                                        if (!alreadyMatched) {
-                                                            matches.add(
-                                                                InteractionMatch(
-                                                                    drug1Name = medA.brand,
-                                                                    drug1Generic = medA.generic,
-                                                                    drug2Name = medB.brand,
-                                                                    drug2Generic = medB.generic,
-                                                                    description = desc
-                                                                )
-                                                            )
+                                                            if (match1 || match2) {
+                                                                val alreadyMatched = matches.any {
+                                                                    (it.drug1Name == medA.brand && it.drug2Name == medB.brand) ||
+                                                                    (it.drug1Name == medB.brand && it.drug2Name == medA.brand)
+                                                                }
+                                                                if (!alreadyMatched) {
+                                                                    matches.add(
+                                                                        InteractionMatch(
+                                                                            drug1Name = medA.brand,
+                                                                            drug1Generic = medA.generic,
+                                                                            drug2Name = medB.brand,
+                                                                            drug2Generic = medB.generic,
+                                                                            description = desc
+                                                                        )
+                                                                    )
+                                                                }
+                                                            }
                                                         }
                                                     }
                                                 }
