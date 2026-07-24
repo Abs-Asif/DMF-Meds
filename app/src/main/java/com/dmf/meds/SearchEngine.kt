@@ -48,23 +48,21 @@ object SearchEngine {
 
         val queryLower = trimmedQuery.lowercase(Locale.ROOT)
 
-        // 1. Try to find direct matches (prefix / substring)
+        // 1. Try to find direct matches (prefix / substring) using pre-cached lowercased properties
         val matches = medicines.filter { med ->
-            val fullName = "${med.brand} ${med.power}".lowercase(Locale.ROOT)
-            fullName.contains(queryLower)
+            med.lowerFullName.contains(queryLower)
         }
 
         if (matches.isNotEmpty()) {
             // Sort adaptive: prefix matches first, then substring matches
             val sortedMatches = matches.sortedWith(compareBy<Medicine> { med ->
-                val brandLower = med.brand.lowercase(Locale.ROOT)
                 // If brand name starts with query, highest priority (0)
-                if (brandLower.startsWith(queryLower)) 0
+                if (med.lowerBrand.startsWith(queryLower)) 0
                 // If full name starts with query, next priority (1)
-                else if ("${med.brand} ${med.power}".lowercase(Locale.ROOT).startsWith(queryLower)) 1
+                else if (med.lowerFullName.startsWith(queryLower)) 1
                 // Otherwise substring match (2)
                 else 2
-            }.thenBy { it.brand }.thenBy { it.power })
+            }.thenBy { it.lowerBrand }.thenBy { it.power })
 
             return@withContext SearchResultState.Success(sortedMatches.take(150))
         }
