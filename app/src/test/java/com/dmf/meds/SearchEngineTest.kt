@@ -1,10 +1,26 @@
 package com.dmf.meds
 
+import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class SearchEngineTest {
+
+    @Test
+    fun testGetSuggestions() = runBlocking {
+        val medicines = listOf(
+            Medicine("Napa", "500 mg", "Paracetamol", "Beximco"),
+            Medicine("Seclo", "20 mg", "Omeprazole", "SMC")
+        )
+        val uniqueBrands = listOf("Napa", "Seclo")
+
+        val result = SearchEngine.getSuggestions("nap", medicines, uniqueBrands)
+        assertTrue(result is SearchResultState.Success)
+        val meds = (result as SearchResultState.Success).medicines
+        assertEquals(1, meds.size)
+        assertEquals("Napa", meds[0].brand)
+    }
 
     @Test
     fun testGetLevenshteinDistance() {
