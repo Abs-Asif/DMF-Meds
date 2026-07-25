@@ -15,3 +15,13 @@
 
 **Action:**
 - Cache expensive, frequently queried fields on model classes using transient volatile backing fields with synchronized check-and-load getters to support Gson unsafe deserialization.
+
+## 2025-01-26 - [Pre-computing Index and Caching Localized Values for Jetpack Compose Lists]
+**Learning:**
+1. Jetpack Compose `LaunchedEffect` runs on `Dispatchers.Main` by default. Performing asset parsing or regular expression processing directly inside it blocks the main thread, leading to noticeable UI freeze on slower devices.
+2. In dynamic lists where items need to display their original line/index number, using `indexOf(item)` inside list rendering causes an $O(N)$ sequential array scan on scroll for every single item. When combined with dynamic regex keyword lookups (like fetching translation mappings inside cell rendering), this triggers severe frame drops.
+3. Defining a lightweight `DrugItem` model on background threads (`Dispatchers.IO`) to pre-calculate lowercase search keys, map index values, and resolve localized translation references transforms complex runtime operations on scroll into simple $O(1)$ property lookups.
+
+**Action:**
+- Offload parsing and mapping logic to `Dispatchers.IO` within `LaunchedEffect`.
+- Pre-compute all translation mappings, indexes, and lowercased fields in a dedicated data class rather than calculating them dynamically inside Compose list-item scope.

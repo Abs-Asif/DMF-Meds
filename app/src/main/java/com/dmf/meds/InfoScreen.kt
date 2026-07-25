@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -31,8 +32,11 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.io.BufferedReader
 import java.io.InputStreamReader
+import java.util.Locale
 
 data class InfoLink(
     val titleKey: (Boolean) -> String,
@@ -257,44 +261,92 @@ fun InfoScreen() {
     }
 }
 
+/**
+ * Data model for optimized rendering of items in the Drug List Article View.
+ * Pre-calculates lowercased values and indications on a background thread
+ * to avoid expensive allocations, regex processing, and linear lookups on the UI thread.
+ */
+data class DrugItem(
+    val originalIndex: Int,
+    val name: String,
+    val lowerName: String,
+    val indication: String,
+    val lowerIndication: String,
+    val bestUsedFor: String,
+    val lowerBestUsedFor: String
+)
+
 @Composable
 fun DrugListArticleView(filename: String, isAntibioticList: Boolean = false) {
     val context = LocalContext.current
-    var drugsList by remember { mutableStateOf<List<String>>(emptyList()) }
+    var drugsList by remember { mutableStateOf<List<DrugItem>>(emptyList()) }
     var searchQuery by remember { mutableStateOf("") }
 
+    // Optimization: Offload asset loading, parsing, and regex cleaning to Dispatchers.IO.
+    // Pre-computes lowercase representations and Indication fields to completely avoid
+    // real-time runtime overhead and garbage collection pressure when rendering or searching.
     LaunchedEffect(filename) {
-        try {
-            val assetStream = context.assets.open(filename)
-            val reader = BufferedReader(InputStreamReader(assetStream))
-            val list = mutableListOf<String>()
-            var line: String? = reader.readLine()
-            while (line != null) {
-                val trimmed = line.trim()
-                if (trimmed.isNotEmpty()) {
-                    // Extract name by removing leading digit numbering (e.g. "1. Aspirin" -> "Aspirin")
-                    val cleaned = trimmed.replaceFirst(Regex("^\\d+\\.\\s*"), "")
-                    list.add(cleaned)
+        withContext(Dispatchers.IO) {
+            try {
+                val assetStream = context.assets.open(filename)
+                val reader = BufferedReader(InputStreamReader(assetStream))
+                val list = mutableListOf<DrugItem>()
+                var index = 1
+                var line: String? = reader.readLine()
+                while (line != null) {
+                    val trimmed = line.trim()
+                    if (trimmed.isNotEmpty()) {
+                        // Extract name by removing leading digit numbering (e.g. "1. Aspirin" -> "Aspirin")
+                        val cleaned = trimmed.replaceFirst(Regex("^\\d+\\.\\s*"), "")
+                        val indication = Indications.getBanglaIndication(cleaned)
+                        val bestUsedFor = if (isAntibioticList) Indications.getBestUsedFor(cleaned) else ""
+
+                        list.add(
+                            DrugItem(
+                                originalIndex = index,
+                                name = cleaned,
+                                lowerName = cleaned.lowercase(Locale.ROOT),
+                                indication = indication,
+                                lowerIndication = indication.lowercase(Locale.ROOT),
+                                bestUsedFor = bestUsedFor,
+                                lowerBestUsedFor = bestUsedFor.lowercase(Locale.ROOT)
+                            )
+                        )
+                        index++
+                    }
+                    line = reader.readLine()
                 }
-                line = reader.readLine()
+                reader.close()
+                assetStream.close()
+                drugsList = list
+            } catch (e: Exception) {
+                val errorMsg = "Error loading list: ${e.message}"
+                drugsList = listOf(
+                    DrugItem(
+                        originalIndex = 1,
+                        name = errorMsg,
+                        lowerName = errorMsg.lowercase(Locale.ROOT),
+                        indication = "",
+                        lowerIndication = "",
+                        bestUsedFor = "",
+                        lowerBestUsedFor = ""
+                    )
+                )
             }
-            reader.close()
-            assetStream.close()
-            drugsList = list
-        } catch (e: Exception) {
-            drugsList = listOf("Error loading list: ${e.message}")
         }
     }
 
+    // Optimization: Filtering performs simple O(1) substring lookups on pre-computed
+    // lowercase fields, bypassing any dynamically formatted string allocations.
     val filteredDrugs = remember(searchQuery, drugsList) {
         if (searchQuery.trim().isEmpty()) {
             drugsList
         } else {
-            val q = searchQuery.lowercase().trim()
-            drugsList.filter { drug ->
-                drug.lowercase().contains(q) ||
-                Indications.getBanglaIndication(drug).lowercase().contains(q) ||
-                (isAntibioticList && Indications.getBestUsedFor(drug).lowercase().contains(q))
+            val q = searchQuery.lowercase(Locale.ROOT).trim()
+            drugsList.filter { item ->
+                item.lowerName.contains(q) ||
+                item.lowerIndication.contains(q) ||
+                (isAntibioticList && item.lowerBestUsedFor.contains(q))
             }
         }
     }
@@ -345,6 +397,9 @@ fun DrugListArticleView(filename: String, isAntibioticList: Boolean = false) {
                     DMFText("কোনো ঔষধ পাওয়া যায়নি।", color = MaterialTheme.colorScheme.onSurfaceVariant, forceKalpurush = true)
                 }
             } else {
+                // Optimization: Utilizing unique list-item keys for optimal Compose rendering and re-use.
+                // Replaced list index lookup drugsList.indexOf(drug) + 1 (O(N) operation per visible cell on scroll)
+                // with a direct O(1) property access on pre-computed originalIndex.
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxSize()
@@ -356,10 +411,12 @@ fun DrugListArticleView(filename: String, isAntibioticList: Boolean = false) {
                         Spacer(modifier = Modifier.height(12.dp))
                     }
 
-                    items(filteredDrugs.size) { index ->
-                        val drug = filteredDrugs[index]
-                        val originalIndex = drugsList.indexOf(drug) + 1
-                        val indication = Indications.getBanglaIndication(drug)
+                    items(
+                        items = filteredDrugs,
+                        key = { it.originalIndex }
+                    ) { drug ->
+                        val originalIndex = drug.originalIndex
+                        val indication = drug.indication
 
                         Card(
                             modifier = Modifier.fillMaxWidth(),
@@ -388,7 +445,7 @@ fun DrugListArticleView(filename: String, isAntibioticList: Boolean = false) {
                                     }
                                     Spacer(modifier = Modifier.width(10.dp))
                                     DMFText(
-                                        text = drug,
+                                        text = drug.name,
                                         fontWeight = FontWeight.Bold,
                                         fontSize = 14.sp,
                                         color = MaterialTheme.colorScheme.onSurface,
@@ -415,7 +472,7 @@ fun DrugListArticleView(filename: String, isAntibioticList: Boolean = false) {
                                     )
                                     Spacer(modifier = Modifier.height(2.dp))
                                     DMFText(
-                                        text = Indications.getBestUsedFor(drug),
+                                        text = drug.bestUsedFor,
                                         fontSize = 12.sp,
                                         lineHeight = 18.sp,
                                         color = MaterialTheme.colorScheme.onSurfaceVariant,
