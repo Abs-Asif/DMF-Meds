@@ -11,6 +11,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -257,44 +258,80 @@ fun InfoScreen() {
     }
 }
 
+data class DrugItem(
+    val originalIndex: Int,
+    val name: String,
+    val lowerName: String,
+    val indication: String,
+    val lowerIndication: String,
+    val bestUsedFor: String,
+    val lowerBestUsedFor: String
+)
+
 @Composable
 fun DrugListArticleView(filename: String, isAntibioticList: Boolean = false) {
     val context = LocalContext.current
-    var drugsList by remember { mutableStateOf<List<String>>(emptyList()) }
+    var drugsList by remember { mutableStateOf<List<DrugItem>>(emptyList()) }
     var searchQuery by remember { mutableStateOf("") }
 
     LaunchedEffect(filename) {
-        try {
-            val assetStream = context.assets.open(filename)
-            val reader = BufferedReader(InputStreamReader(assetStream))
-            val list = mutableListOf<String>()
-            var line: String? = reader.readLine()
-            while (line != null) {
-                val trimmed = line.trim()
-                if (trimmed.isNotEmpty()) {
-                    // Extract name by removing leading digit numbering (e.g. "1. Aspirin" -> "Aspirin")
-                    val cleaned = trimmed.replaceFirst(Regex("^\\d+\\.\\s*"), "")
-                    list.add(cleaned)
+        kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
+            try {
+                val assetStream = context.assets.open(filename)
+                val reader = BufferedReader(InputStreamReader(assetStream))
+                val list = mutableListOf<DrugItem>()
+                var line: String? = reader.readLine()
+                var index = 1
+                while (line != null) {
+                    val trimmed = line.trim()
+                    if (trimmed.isNotEmpty()) {
+                        // Extract name by removing leading digit numbering (e.g. "1. Aspirin" -> "Aspirin")
+                        val cleaned = trimmed.replaceFirst(Regex("^\\d+\\.\\s*"), "")
+                        val indication = Indications.getBanglaIndication(cleaned)
+                        val bestUsedFor = if (isAntibioticList) Indications.getBestUsedFor(cleaned) else ""
+                        list.add(
+                            DrugItem(
+                                originalIndex = index,
+                                name = cleaned,
+                                lowerName = cleaned.lowercase(java.util.Locale.ROOT),
+                                indication = indication,
+                                lowerIndication = indication.lowercase(java.util.Locale.ROOT),
+                                bestUsedFor = bestUsedFor,
+                                lowerBestUsedFor = bestUsedFor.lowercase(java.util.Locale.ROOT)
+                            )
+                        )
+                        index++
+                    }
+                    line = reader.readLine()
                 }
-                line = reader.readLine()
+                reader.close()
+                assetStream.close()
+                drugsList = list
+            } catch (e: Exception) {
+                drugsList = listOf(
+                    DrugItem(
+                        originalIndex = 1,
+                        name = "Error loading list",
+                        lowerName = "error loading list",
+                        indication = e.message ?: "",
+                        lowerIndication = (e.message ?: "").lowercase(java.util.Locale.ROOT),
+                        bestUsedFor = "",
+                        lowerBestUsedFor = ""
+                    )
+                )
             }
-            reader.close()
-            assetStream.close()
-            drugsList = list
-        } catch (e: Exception) {
-            drugsList = listOf("Error loading list: ${e.message}")
         }
     }
 
     val filteredDrugs = remember(searchQuery, drugsList) {
-        if (searchQuery.trim().isEmpty()) {
+        val q = searchQuery.trim().lowercase(java.util.Locale.ROOT)
+        if (q.isEmpty()) {
             drugsList
         } else {
-            val q = searchQuery.lowercase().trim()
             drugsList.filter { drug ->
-                drug.lowercase().contains(q) ||
-                Indications.getBanglaIndication(drug).lowercase().contains(q) ||
-                (isAntibioticList && Indications.getBestUsedFor(drug).lowercase().contains(q))
+                drug.lowerName.contains(q) ||
+                drug.lowerIndication.contains(q) ||
+                (isAntibioticList && drug.lowerBestUsedFor.contains(q))
             }
         }
     }
@@ -356,10 +393,12 @@ fun DrugListArticleView(filename: String, isAntibioticList: Boolean = false) {
                         Spacer(modifier = Modifier.height(12.dp))
                     }
 
-                    items(filteredDrugs.size) { index ->
-                        val drug = filteredDrugs[index]
-                        val originalIndex = drugsList.indexOf(drug) + 1
-                        val indication = Indications.getBanglaIndication(drug)
+                    items(
+                        items = filteredDrugs,
+                        key = { it.originalIndex }
+                    ) { drug ->
+                        val originalIndex = drug.originalIndex
+                        val indication = drug.indication
 
                         Card(
                             modifier = Modifier.fillMaxWidth(),
@@ -388,7 +427,7 @@ fun DrugListArticleView(filename: String, isAntibioticList: Boolean = false) {
                                     }
                                     Spacer(modifier = Modifier.width(10.dp))
                                     DMFText(
-                                        text = drug,
+                                        text = drug.name,
                                         fontWeight = FontWeight.Bold,
                                         fontSize = 14.sp,
                                         color = MaterialTheme.colorScheme.onSurface,
@@ -415,7 +454,7 @@ fun DrugListArticleView(filename: String, isAntibioticList: Boolean = false) {
                                     )
                                     Spacer(modifier = Modifier.height(2.dp))
                                     DMFText(
-                                        text = Indications.getBestUsedFor(drug),
+                                        text = drug.bestUsedFor,
                                         fontSize = 12.sp,
                                         lineHeight = 18.sp,
                                         color = MaterialTheme.colorScheme.onSurfaceVariant,

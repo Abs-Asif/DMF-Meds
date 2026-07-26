@@ -15,3 +15,12 @@
 
 **Action:**
 - Cache expensive, frequently queried fields on model classes using transient volatile backing fields with synchronized check-and-load getters to support Gson unsafe deserialization.
+
+## 2025-02-15 - [Pre-computing Composable List Items and Eliminating IndexOf O(N) Overhead]
+**Learning:**
+1. Performing $O(N)$ linear scans (such as `list.indexOf(item)`) inside scroll and render loops of a long list (e.g., `LazyColumn` items) creates an overall $O(N^2)$ complexity, causing massive UI frame drops and lag on mobile devices.
+2. Dynamically computing string operations (such as `.lowercase()`) or querying external lookup engines on every list filter/scroll action generates significant GC pressure. By mapping raw strings into a clean pre-computed model (`DrugItem`) inside a background thread (`Dispatchers.IO`), we can achieve $O(1)$ lookups and seamless 60fps rendering.
+
+**Action:**
+- Never call linear lookup methods like `.indexOf` inside active list item renderers.
+- Pre-compute and map all required search keys and visual metadata asynchronously in a separate data holder class before feeding it to list composables.
