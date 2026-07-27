@@ -15,3 +15,13 @@
 
 **Action:**
 - Cache expensive, frequently queried fields on model classes using transient volatile backing fields with synchronized check-and-load getters to support Gson unsafe deserialization.
+
+## 2025-01-26 - [Sorting Comparator String Operation Overhead & Bucket Partitioning]
+**Learning:**
+1. Performing string comparisons (like `startsWith` or `contains`) inside a custom sort comparator run in Timsort (where the comparison function is called $O(M \log M)$ times) is extremely expensive and causes heavy CPU throttling on mobile devices.
+2. By partitioning the matches into separate priority lists (buckets) in a single linear $O(N)$ pass, we do string operations at most once per element instead of $O(\log M)$ times.
+3. Sorting only the required buckets up to the display limit (e.g., 150 items) further eliminates sorting overhead entirely for discarded elements.
+
+**Action:**
+- Avoid complex, state-dependent, or string-manipulating logic inside custom sorting comparators.
+- Pre-classify matching items into prioritized buckets first, then sort only the necessary buckets using simpler property-based comparators.

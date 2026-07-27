@@ -23,6 +23,31 @@ class SearchEngineTest {
     }
 
     @Test
+    fun testGetSuggestionsOrderingAndBuckets() = runBlocking {
+        val medicines = listOf(
+            Medicine("X-brand", "naparelief", "Paracetamol", "Beximco"), // priority 2: contains "napa" (substring match)
+            Medicine("Napa", "500 mg", "Paracetamol", "Beximco"),       // priority 0: brand starts with "napa"
+            Medicine("Napa", "120 mg", "Paracetamol", "Beximco")        // priority 0: brand starts with "napa"
+        )
+        val uniqueBrands = listOf("Napa", "X-brand")
+
+        val result = SearchEngine.getSuggestions("napa", medicines, uniqueBrands)
+        assertTrue(result is SearchResultState.Success)
+        val meds = (result as SearchResultState.Success).medicines
+        assertEquals(3, meds.size)
+
+        // priority 0 comes first, sorted by brand, then power (so Napa 120 mg comes before Napa 500 mg)
+        assertEquals("Napa", meds[0].brand)
+        assertEquals("120 mg", meds[0].power)
+
+        assertEquals("Napa", meds[1].brand)
+        assertEquals("500 mg", meds[1].power)
+
+        // priority 2 comes last
+        assertEquals("X-brand", meds[2].brand)
+    }
+
+    @Test
     fun testGetLevenshteinDistance() {
         assertEquals(0, SearchEngine.getLevenshteinDistance("Napa", "Napa"))
         assertEquals(1, SearchEngine.getLevenshteinDistance("Seklo", "Seclo"))

@@ -49,22 +49,44 @@ object SearchEngine {
         val queryLower = trimmedQuery.lowercase(Locale.ROOT)
 
         // 1. Try to find direct matches (prefix / substring) using pre-cached lowercased properties
-        val matches = medicines.filter { med ->
-            med.lowerFullName.contains(queryLower)
+        // Performance Optimization: Avoid high-complexity O(M log M) string startsWith checks inside comparator.
+        // Instead, partition matching medicines into three priority buckets in a single O(N) pass,
+        // and only sort individual buckets as needed up to the 150-element result limit.
+        val priority0 = ArrayList<Medicine>()
+        val priority1 = ArrayList<Medicine>()
+        val priority2 = ArrayList<Medicine>()
+
+        for (med in medicines) {
+            val fullName = med.lowerFullName
+            if (fullName.contains(queryLower)) {
+                if (med.lowerBrand.startsWith(queryLower)) {
+                    priority0.add(med)
+                } else if (fullName.startsWith(queryLower)) {
+                    priority1.add(med)
+                } else {
+                    priority2.add(med)
+                }
+            }
         }
 
-        if (matches.isNotEmpty()) {
-            // Sort adaptive: prefix matches first, then substring matches
-            val sortedMatches = matches.sortedWith(compareBy<Medicine> { med ->
-                // If brand name starts with query, highest priority (0)
-                if (med.lowerBrand.startsWith(queryLower)) 0
-                // If full name starts with query, next priority (1)
-                else if (med.lowerFullName.startsWith(queryLower)) 1
-                // Otherwise substring match (2)
-                else 2
-            }.thenBy { it.lowerBrand }.thenBy { it.power })
+        if (priority0.isNotEmpty() || priority1.isNotEmpty() || priority2.isNotEmpty()) {
+            val resultList = ArrayList<Medicine>(150)
+            val brandPowerComparator = compareBy<Medicine> { it.lowerBrand }.thenBy { it.power }
 
-            return@withContext SearchResultState.Success(sortedMatches.take(150))
+            priority0.sortWith(brandPowerComparator)
+            resultList.addAll(priority0.take(150))
+
+            if (resultList.size < 150) {
+                priority1.sortWith(brandPowerComparator)
+                resultList.addAll(priority1.take(150 - resultList.size))
+            }
+
+            if (resultList.size < 150) {
+                priority2.sortWith(brandPowerComparator)
+                resultList.addAll(priority2.take(150 - resultList.size))
+            }
+
+            return@withContext SearchResultState.Success(resultList)
         }
 
         // 2. If no matches found, find fuzzy suggestions based on unique brand names
