@@ -4,6 +4,76 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.util.Locale
 
+data class PriceCalculationResult(
+    val packText: String,
+    val quantity: Int,
+    val totalPrice: Double,
+    val unitPrice: Double,
+    val formattedCalculation: String
+)
+
+fun parsePriceCalculation(packSizeInfo: String?): List<PriceCalculationResult> {
+    if (packSizeInfo.isNullOrBlank()) return emptyList()
+
+    val results = mutableListOf<PriceCalculationResult>()
+    val regex = Regex("\\(([^)]+)\\)")
+    val matches = regex.findAll(packSizeInfo)
+
+    for (match in matches) {
+        val inner = match.groups[1]?.value ?: continue
+        if (!inner.contains(":")) continue
+
+        val parts = inner.split(":")
+        val packText = parts[0].trim()
+        val priceText = parts[1].trim()
+
+        var quantity = 1
+        try {
+            if (packText.contains("x", ignoreCase = true)) {
+                val numbers = Regex("\\d+").findAll(packText).map { it.value.toInt() }.toList()
+                if (numbers.isNotEmpty()) {
+                    quantity = numbers.reduce { acc, i -> acc * i }
+                }
+            } else {
+                val matchNum = Regex("\\d+").find(packText)
+                if (matchNum != null) {
+                    quantity = matchNum.value.toInt()
+                }
+            }
+        } catch (e: Exception) {
+            quantity = 1
+        }
+
+        var totalPrice = 0.0
+        try {
+            val cleanPrice = priceText
+                .replace("৳", "")
+                .replace(",", "")
+                .trim()
+            totalPrice = cleanPrice.toDouble()
+        } catch (e: Exception) {
+            totalPrice = 0.0
+        }
+
+        if (quantity > 0 && totalPrice > 0.0) {
+            val unitPrice = totalPrice / quantity
+            val formattedUnitPrice = String.format(Locale.ROOT, "%.2f", unitPrice)
+            val formattedTotalPrice = String.format(Locale.ROOT, "%.2f", totalPrice)
+            val formattedCalculation = "৳ $formattedTotalPrice / $quantity = ৳ $formattedUnitPrice per unit"
+            results.add(
+                PriceCalculationResult(
+                    packText = packText,
+                    quantity = quantity,
+                    totalPrice = totalPrice,
+                    unitPrice = unitPrice,
+                    formattedCalculation = formattedCalculation
+                )
+            )
+        }
+    }
+    return results
+}
+
 object SearchEngine {
 
     // Helper to calculate Levenshtein Distance
@@ -103,12 +173,18 @@ object SearchEngine {
     }
 
     // Alternatives: same 'g' (generic) and 'p' (power) as selected medicine
+    // Sorted from cheap to expensive based on parsed unit price
     fun getAlternatives(selected: Medicine, medicines: List<Medicine>): List<Medicine> {
-        return medicines.filter {
+        val filtered = medicines.filter {
             it.generic.equals(selected.generic, ignoreCase = true) &&
                     it.power.equals(selected.power, ignoreCase = true) &&
                     !it.brand.equals(selected.brand, ignoreCase = true)
         }.distinctBy { it.brand }
+
+        return filtered.sortedWith(compareBy { med ->
+            val results = parsePriceCalculation(med.packSizeInfo)
+            if (results.isEmpty()) Double.MAX_VALUE else results.first().unitPrice
+        })
     }
 
     // Other Powers: same 'g' (generic) but excluding the exact selected medicine (complete list of other medicines with same generic)

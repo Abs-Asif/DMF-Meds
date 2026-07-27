@@ -27,6 +27,10 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import java.util.Locale
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.withStyle
 
 data class AssessmentItem(
     val title: String,
@@ -52,6 +56,63 @@ fun stripHtml(html: String?): String {
         .replace("&quot;", "\"")
         .replace("&#39;", "'")
         .trim()
+}
+
+fun getDosageFormIcon(dosageForm: String?): androidx.compose.ui.graphics.vector.ImageVector {
+    if (dosageForm == null) return Icons.Default.MedicalServices
+    val lower = dosageForm.lowercase(Locale.ROOT)
+    return when {
+        lower.contains("tablet") || lower.contains("caplet") || lower.contains("pills") -> Icons.Default.Medication
+        lower.contains("capsule") -> Icons.Default.Medication
+        lower.contains("injection") || lower.contains("infusion") || lower.contains("vaccine") || lower.contains("serum") -> Icons.Default.Vaccines
+        lower.contains("drop") || lower.contains("solution") || lower.contains("syrup") || lower.contains("suspension") || lower.contains("liquid") || lower.contains("emulsion") -> Icons.Default.WaterDrop
+        lower.contains("cream") || lower.contains("ointment") || lower.contains("gel") || lower.contains("paste") || lower.contains("lotion") || lower.contains("rub") -> Icons.Default.Healing
+        else -> Icons.Default.MedicalServices
+    }
+}
+
+fun parseHtmlToAnnotatedString(html: String?): AnnotatedString {
+    if (html == null) return buildAnnotatedString { }
+
+    val cleaned = html
+        .replace(Regex("<div[^>]*>"), "")
+        .replace("</div>", "")
+        .replace(Regex("<br\\s*/?>"), "\n")
+        .replace("<ul>", "")
+        .replace("</ul>", "")
+        .replace("<li>", "• ")
+        .replace("</li>", "\n")
+        .replace("&amp;", "&")
+        .replace("&lt;", "<")
+        .replace("&gt;", ">")
+        .replace("&quot;", "\"")
+        .replace("&#39;", "'")
+        .trim()
+
+    return buildAnnotatedString {
+        var currentIndex = 0
+        while (currentIndex < cleaned.length) {
+            val startTag = cleaned.indexOf("<strong>", currentIndex)
+            if (startTag == -1) {
+                append(cleaned.substring(currentIndex))
+                break
+            }
+            append(cleaned.substring(currentIndex, startTag))
+
+            val endTag = cleaned.indexOf("</strong>", startTag + 8)
+            if (endTag == -1) {
+                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                    append(cleaned.substring(startTag + 8))
+                }
+                break
+            }
+
+            withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                append(cleaned.substring(startTag + 8, endTag))
+            }
+            currentIndex = endTag + 9
+        }
+    }
 }
 
 @Composable
@@ -101,7 +162,28 @@ fun MedicineDetailsView(
                         )
                     }
 
-                    Spacer(modifier = Modifier.height(12.dp))
+                    if (!med.dosageForm.isNullOrBlank()) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.padding(top = 4.dp, bottom = 8.dp)
+                        ) {
+                            Icon(
+                                imageVector = getDosageFormIcon(med.dosageForm),
+                                contentDescription = med.dosageForm,
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.size(16.dp)
+                            )
+                            Spacer(modifier = Modifier.width(6.dp))
+                            DMFText(
+                                text = med.dosageForm,
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.SemiBold,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    } else {
+                        Spacer(modifier = Modifier.height(12.dp))
+                    }
 
                     // Generic Name
                     DMFText(
@@ -143,6 +225,45 @@ fun MedicineDetailsView(
                         fontWeight = FontWeight.Medium,
                         color = MaterialTheme.colorScheme.onSurface
                     )
+
+                    // Price & Calculation
+                    val priceResults = remember(med.packSizeInfo) {
+                        parsePriceCalculation(med.packSizeInfo)
+                    }
+                    if (priceResults.isNotEmpty() || !med.packSizeInfo.isNullOrBlank()) {
+                        Spacer(modifier = Modifier.height(12.dp))
+                        DMFText(
+                            text = "Price Info",
+                            fontSize = 11.sp,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
+                            fontWeight = FontWeight.SemiBold
+                        )
+                        if (priceResults.isEmpty()) {
+                            DMFText(
+                                text = med.packSizeInfo ?: "",
+                                fontSize = 13.sp,
+                                fontWeight = FontWeight.Medium,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                        } else {
+                            priceResults.forEach { result ->
+                                Column(modifier = Modifier.padding(vertical = 2.dp)) {
+                                    DMFText(
+                                        text = "Pack: (${result.packText}) - ৳ ${String.format(Locale.ROOT, "%.2f", result.totalPrice)}",
+                                        fontSize = 13.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = MaterialTheme.colorScheme.onSurface
+                                    )
+                                    DMFText(
+                                        text = "Calculation: ${result.formattedCalculation}",
+                                        fontSize = 11.sp,
+                                        color = MaterialTheme.colorScheme.primary,
+                                        fontWeight = FontWeight.Medium
+                                    )
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -230,12 +351,12 @@ fun MedicineDetailsView(
                 "Storage Conditions" to details.storageConditionsDescription
             )
             sections.forEach { (title, content) ->
-                val stripped = stripHtml(content)
-                if (stripped.isNotEmpty()) {
+                val annotated = parseHtmlToAnnotatedString(content)
+                if (annotated.text.isNotEmpty()) {
                     item {
                         ExpandableCard(title = title) {
                             DMFText(
-                                text = stripped,
+                                text = annotated,
                                 fontSize = 12.sp,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 lineHeight = 16.sp
@@ -260,7 +381,9 @@ fun MedicineDetailsView(
                     } else {
                         Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                             alternatives.take(30).forEach { alt ->
-                                CompactMedicineTile(alt)
+                                CompactMedicineTile(alt) {
+                                    onSelectMedicine(alt)
+                                }
                             }
                         }
                     }
@@ -276,7 +399,9 @@ fun MedicineDetailsView(
                     } else {
                         Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                             otherPowers.take(30).forEach { alt ->
-                                CompactMedicineTile(alt)
+                                CompactMedicineTile(alt) {
+                                    onSelectMedicine(alt)
+                                }
                             }
                         }
                     }
@@ -396,23 +521,39 @@ fun UnifiedRemarkRow(
 }
 
 @Composable
-fun CompactMedicineTile(med: Medicine) {
+fun CompactMedicineTile(med: Medicine, onClick: (() -> Unit)? = null) {
+    var modifier = Modifier
+        .fillMaxWidth()
+        .border(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.2f), RoundedCornerShape(8.dp))
+        .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f))
+
+    if (onClick != null) {
+        modifier = modifier.clickable { onClick() }
+    }
+
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .border(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.2f), RoundedCornerShape(8.dp))
-            .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f))
-            .padding(10.dp),
+        modifier = modifier.padding(10.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Column(modifier = Modifier.weight(1f)) {
-            DMFText(
-                text = med.brand,
-                fontSize = 13.sp,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onSurface
-            )
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                if (!med.dosageForm.isNullOrBlank()) {
+                    Icon(
+                        imageVector = getDosageFormIcon(med.dosageForm),
+                        contentDescription = med.dosageForm,
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.size(12.dp)
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                }
+                DMFText(
+                    text = med.brand,
+                    fontSize = 13.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+            }
             DMFText(
                 text = med.manufacturer,
                 fontSize = 10.sp,

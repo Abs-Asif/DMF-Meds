@@ -34,17 +34,18 @@ class SearchEngineTest {
     fun testGetAlternatives() {
         val selected = Medicine("Napa", "500 mg", "Paracetamol", "Beximco")
         val list = listOf(
-            Medicine("Napa", "500 mg", "Paracetamol", "Beximco"),
+            Medicine("Napa", "500 mg", "Paracetamol", "Beximco", packSizeInfo = "(6 x 10: ৳ 720.00)"), // unit price = 12.00
             Medicine("Napa", "120 mg/5 ml", "Paracetamol", "Beximco"), // different power
-            Medicine("Ace", "500 mg", "Paracetamol", "Square"), // same power, same generic (alternative)
-            Medicine("Fast", "500 mg", "Paracetamol", "Acme"), // same power, same generic (alternative)
+            Medicine("Ace", "500 mg", "Paracetamol", "Square", packSizeInfo = "(10 x 10: ৳ 150.00)"), // same power, same generic (alternative) - unit price = 1.50 (cheaper)
+            Medicine("Fast", "500 mg", "Paracetamol", "Acme", packSizeInfo = "(10 x 10: ৳ 800.00)"), // same power, same generic (alternative) - unit price = 8.00 (more expensive)
             Medicine("Seclo", "20 mg", "Omeprazole", "SMC") // different generic
         )
 
         val alts = SearchEngine.getAlternatives(selected, list)
         assertEquals(2, alts.size)
-        assertTrue(alts.any { it.brand == "Ace" })
-        assertTrue(alts.any { it.brand == "Fast" })
+        // Check order is cheap to expensive (Ace = 1.50, Fast = 8.00)
+        assertEquals("Ace", alts[0].brand)
+        assertEquals("Fast", alts[1].brand)
     }
 
     @Test
@@ -80,5 +81,46 @@ class SearchEngineTest {
         assertTrue(combos.contains("Paracetamol + Caffeine"))
         assertTrue(combos.contains("Paracetamol + Tramadol Hydrochloride"))
         assertTrue(!combos.contains("Paracetamol")) // Excluded exact match
+    }
+
+    @Test
+    fun testParsePriceCalculation() {
+        val res1 = parsePriceCalculation("(6 x 10: ৳ 720.00)")
+        assertEquals(1, res1.size)
+        assertEquals("6 x 10", res1[0].packText)
+        assertEquals(60, res1[0].quantity)
+        assertEquals(720.00, res1[0].totalPrice, 0.001)
+        assertEquals(12.00, res1[0].unitPrice, 0.001)
+
+        val res2 = parsePriceCalculation("(12's pack: ৳ 420.00)")
+        assertEquals(1, res2.size)
+        assertEquals("12's pack", res2[0].packText)
+        assertEquals(12, res2[0].quantity)
+        assertEquals(420.00, res2[0].totalPrice, 0.001)
+        assertEquals(35.00, res2[0].unitPrice, 0.001)
+
+        val res3 = parsePriceCalculation("(5's pack: ৳ 4,475.00),(5's pack: ৳ 6,750.00)")
+        assertEquals(2, res3.size)
+        assertEquals(5, res3[0].quantity)
+        assertEquals(4475.00, res3[0].totalPrice, 0.001)
+        assertEquals(895.00, res3[0].unitPrice, 0.001)
+        assertEquals(5, res3[1].quantity)
+        assertEquals(6750.00, res3[1].totalPrice, 0.001)
+        assertEquals(1350.00, res3[1].unitPrice, 0.001)
+    }
+
+    @Test
+    fun testGetBanglaIndication() {
+        // Test an OTC drug (Oral Rehydration Salt)
+        val indicationORS = Indications.getBanglaIndication("Oral Rehydration Salt")
+        assertTrue(indicationORS.contains("ডায়রিয়া"))
+
+        // Test a WHO essential drug (Abiraterone)
+        val indicationAbiraterone = Indications.getBanglaIndication("Abiraterone")
+        assertTrue(indicationAbiraterone.contains("ক্যান্সার"))
+
+        // Test fallback
+        val fallback = Indications.getBanglaIndication("Unknown Drug X")
+        assertTrue(fallback.contains("শারীরিক উপসর্গ"))
     }
 }

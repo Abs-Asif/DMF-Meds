@@ -9,6 +9,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
@@ -52,6 +53,64 @@ fun DMFText(
 ) {
     val containsBn = text.containsBangla()
     val containsAr = text.containsArabic()
+
+    val family = when {
+        containsAr -> ScheherazadeFontFamily
+        containsBn && forceKalpurush -> KalpurushFontFamily
+        else -> FontFamily.Default
+    }
+
+    // Scale up font size and line height if the text contains Bangla/Arabic for legibility
+    val finalFontSize = if (containsBn && fontSize != TextUnit.Unspecified) {
+        (fontSize.value * 1.25f).sp
+    } else if (containsAr && fontSize != TextUnit.Unspecified) {
+        (fontSize.value * 1.4f).sp // Slightly larger for Arabic
+    } else {
+        fontSize
+    }
+
+    val finalLineHeight = if (containsBn && lineHeight != TextUnit.Unspecified) {
+        (lineHeight.value * 1.25f).sp
+    } else if (containsBn && fontSize != TextUnit.Unspecified) {
+        (fontSize.value * 1.25f * 1.35f).sp
+    } else if (containsAr && lineHeight != TextUnit.Unspecified) {
+        (lineHeight.value * 1.4f).sp
+    } else if (containsAr && fontSize != TextUnit.Unspecified) {
+        (fontSize.value * 1.4f * 1.4f).sp
+    } else {
+        lineHeight
+    }
+
+    Text(
+        text = text,
+        modifier = modifier,
+        color = color,
+        fontSize = finalFontSize,
+        fontWeight = fontWeight,
+        fontFamily = family,
+        textAlign = textAlign,
+        overflow = overflow,
+        maxLines = maxLines,
+        lineHeight = finalLineHeight
+    )
+}
+
+@Composable
+fun DMFText(
+    text: AnnotatedString,
+    modifier: Modifier = Modifier,
+    color: Color = Color.Unspecified,
+    fontSize: TextUnit = TextUnit.Unspecified,
+    fontWeight: FontWeight? = null,
+    textAlign: TextAlign? = null,
+    overflow: TextOverflow = TextOverflow.Clip,
+    maxLines: Int = Int.MAX_VALUE,
+    lineHeight: TextUnit = TextUnit.Unspecified,
+    forceKalpurush: Boolean = false
+) {
+    val textStr = text.text
+    val containsBn = textStr.containsBangla()
+    val containsAr = textStr.containsArabic()
 
     val family = when {
         containsAr -> ScheherazadeFontFamily
