@@ -247,68 +247,7 @@ fun FatawasScreen() {
                             Column(modifier = Modifier.padding(16.dp)) {
                                 // Rich fatwa parsing & rendering (with beautiful custom Arabic support)
                                 FatwaContentText(text = activeFatwa.answer)
-
-                                Spacer(modifier = Modifier.height(16.dp))
-                                HorizontalDivider(color = MaterialTheme.colorScheme.outline.copy(alpha = 0.1f))
-                                Spacer(modifier = Modifier.height(12.dp))
-
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.SpaceBetween,
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    DMFText(
-                                        text = "উৎস: islamqa.info",
-                                        fontSize = 10.sp,
-                                        fontWeight = FontWeight.Medium,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
-                                        forceKalpurush = true
-                                    )
-                                    DMFText(
-                                        text = "ফতোয়া নং: ${activeFatwa.source.split("/").lastOrNull() ?: activeFatwa.id}",
-                                        fontSize = 10.sp,
-                                        fontWeight = FontWeight.Medium,
-                                        color = MaterialTheme.colorScheme.primary,
-                                        forceKalpurush = true
-                                    )
-                                }
                             }
-                        }
-
-                        Spacer(modifier = Modifier.height(16.dp))
-
-                        // Beautiful Button to open original URL in browser
-                        Button(
-                            onClick = {
-                                try {
-                                    val intent = android.content.Intent(
-                                        android.content.Intent.ACTION_VIEW,
-                                        android.net.Uri.parse(activeFatwa.source)
-                                    )
-                                    context.startActivity(intent)
-                                } catch (e: Exception) {
-                                    e.printStackTrace()
-                                }
-                            },
-                            modifier = Modifier.fillMaxWidth(),
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = MaterialTheme.colorScheme.primaryContainer,
-                                contentColor = MaterialTheme.colorScheme.onPrimaryContainer
-                            ),
-                            shape = RoundedCornerShape(12.dp)
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Launch,
-                                contentDescription = "Open Fatwa Online",
-                                modifier = Modifier.size(16.dp)
-                            )
-                            Spacer(modifier = Modifier.width(8.dp))
-                            DMFText(
-                                text = "অনলাইন ফতোয়া দেখুন (islamqa.info)",
-                                fontSize = 12.sp,
-                                fontWeight = FontWeight.Bold,
-                                forceKalpurush = true
-                            )
                         }
 
                         Spacer(modifier = Modifier.height(32.dp))

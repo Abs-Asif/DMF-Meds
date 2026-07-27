@@ -150,6 +150,7 @@ fun MedicineScreen(
     medicines: List<Medicine>,
     uniqueBrands: List<String>,
     genericsMetadata: Map<String, GenericMetadata>,
+    genericDetails: Map<String, GenericDetail>,
     isBangla: Boolean,
     isSearchFocused: Boolean,
     onSearchFocusedChange: (Boolean) -> Unit,
@@ -398,6 +399,7 @@ fun MedicineScreen(
                         med = selectedMedicine!!,
                         medicines = medicines,
                         genericsMetadata = genericsMetadata,
+                        genericDetailsMap = genericDetails,
                         isBangla = isBangla,
                         onSelectMedicine = { newMed ->
                             selectedMedicine = newMed
@@ -573,6 +575,46 @@ fun MedicineScreen(
                                             color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.8f)
                                         )
                                     }
+                                }
+                            }
+
+                            Spacer(modifier = Modifier.height(32.dp))
+
+                            // Citation & Updated Info
+                            Card(
+                                modifier = Modifier.fillMaxWidth(),
+                                shape = RoundedCornerShape(16.dp),
+                                colors = CardDefaults.cardColors(
+                                    containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.7f)
+                                ),
+                                elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
+                            ) {
+                                Column(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(16.dp),
+                                    horizontalAlignment = Alignment.CenterHorizontally
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.Update,
+                                        contentDescription = null,
+                                        tint = MaterialTheme.colorScheme.primary,
+                                        modifier = Modifier.size(24.dp)
+                                    )
+                                    Spacer(modifier = Modifier.height(8.dp))
+                                    DMFText(
+                                        text = "Database Updated: July 2026",
+                                        fontSize = 13.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = MaterialTheme.colorScheme.onSurface
+                                    )
+                                    Spacer(modifier = Modifier.height(4.dp))
+                                    DMFText(
+                                        text = "Made by Abdullah Bari",
+                                        fontSize = 12.sp,
+                                        fontWeight = FontWeight.Medium,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
+                                    )
                                 }
                             }
                         }

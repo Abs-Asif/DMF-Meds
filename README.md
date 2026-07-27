@@ -1,4 +1,4 @@
-# 🩺 DMF Meds (Drug reference app for MATS/DMF practitioners)
+# <img src="app_icon.svg" width="48" height="48" align="center" style="vertical-align: middle; margin-right: 8px;" /> DMF Meds (Drug reference app for MATS/DMF practitioners)
 
 DMF Meds is a highly performant, beautifully crafted, native Android application built with **Kotlin**, **Jetpack Compose (Material 3)**, and **Gradle**. It acts as a comprehensive, offline-first clinical decision support system and drug reference registry specifically tailored for **Medical Assistant Training School (MATS)** and **Diploma in Medical Faculty (DMF)** practitioners in Bangladesh.
 
