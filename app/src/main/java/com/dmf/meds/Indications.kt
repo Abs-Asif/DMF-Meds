@@ -59,6 +59,54 @@ object Indications {
             containsAny(nameLower, "hyoscine", "mebeverine", "domperidone", "ondansetron") -> {
                 "পেট কামড়ানো, তলপেটের তীব্র ব্যথা, বমি বমি ভাব বা বমি হওয়া দূর করতে নির্দেশিত পাকস্থলীর ঔষধ।"
             }
+            // 13. Rehydration, Dehydration & Electrolytes (OTC & WHO Essential)
+            containsAny(nameLower, "oral rehydration", "ors", "saline", "glycerin", "suppository", "charcoal", "laxative", "lactulose", "senna", "bisacodyl") -> {
+                "ডায়রিয়া, অতিরিক্ত বমি বা পাতলা পায়খানা জনিত পানিশূন্যতা ও খনিজ লবণের ঘাটতি পূরণ এবং কোষ্ঠকাঠিন্য দূর করতে ব্যবহৃত।"
+            }
+            // 14. Asthma, COPD & Bronchodilators
+            containsAny(nameLower, "salbutamol", "inhaler", "ipratropium", "tiotropium", "montelukast", "theophylline", "budesonide", "fluticasone", "aclidinium", "asthma") -> {
+                "হাঁপানি (অ্যাজমা), শ্বাসনালীর সংকোচন, শ্বাসকষ্ট এবং দীর্ঘমেয়াদী ফুসফুসের রোগ (সিওপিডি) উপশমে অত্যন্ত কার্যকরী ঔষধ।"
+            }
+            // 15. Antivirals
+            containsAny(nameLower, "aciclovir", "acyclovir", "antiviral", "abacavir", "lamivudine", "dolutegravir", "tenofovir", "sofosbuvir", "ribavirin", "zidovudine", "entecavir") -> {
+                "ভাইরাসজনিত সংক্রমণ (যেমন: হারপিস, জন্ডিস বা হেপাটাইটিস, চিকেনপক্স এবং অন্যান্য ভাইরাল রোগ) প্রতিরোধ ও চিকিৎসায় ব্যবহৃত।"
+            }
+            // 16. Vaccines & Immunoglobulins
+            containsAny(nameLower, "vaccine", "immunoglobulin", "immunization", "rabies", "tetanus", "anthrax", "toxoid", "antivenom") -> {
+                "সংক্রামক রোগ (যেমন: ধনুষ্টংকার, জলাতঙ্ক, হেপাটাইটিস, cholera, যক্ষ্মা ইত্যাদি) প্রতিরোধে এবং রোগ প্রতিরোধ ক্ষমতা বৃদ্ধিতে ব্যবহৃত টিকা।"
+            }
+            // 17. Skin Care & Topical Steroids (OTC & WHO)
+            containsAny(nameLower, "sunscreen", "urea", "salicylic", "benzoic", "zinc oxide", "calamine", "coal tar", "hydrocortisone", "betamethasone", "clobetasol", "mupirocin", "permethrin", "scabicide") -> {
+                "ত্বকের বিভিন্ন চর্মরোগ, খোসপাঁচড়া, চুলকানি, একজিমা, প্রদাহ এবং ক্ষতিকারক অতিবেগুনি রশ্মি থেকে ত্বক সুরক্ষায় ব্যবহৃত।"
+            }
+            // 18. Gout & Arthritis
+            containsAny(nameLower, "allopurinol", "colchicine", "febuxostat", "uric acid", "gout") -> {
+                "রক্তে অতিরিক্ত ইউরিক অ্যাসিডের মাত্রা হ্রাস করা এবং বাতের তীব্র ব্যথা ও গাঁটের ফোলা ভাব উপশম ও চিকিৎসায় ব্যবহৃত।"
+            }
+            // 19. Psychotropic, Sedative & Anti-epileptic
+            containsAny(nameLower, "amitriptyline", "sertraline", "fluoxetine", "escitalopram", "citalopram", "diazepam", "lorazepam", "clonazepam", "midazolam", "phenobarbital", "carbamazepine", "valproate", "aripiprazole", "haloperidol", "antidepressant", "antipsychotic") -> {
+                "মানসিক দুশ্চিন্তা, অবসাদ, বিষণ্ণতা, অনিদ্রা দূর করা এবং মৃগীরোগ বা খিঁচুনি নিয়ন্ত্রণে ব্যবহৃত অত্যন্ত সংবেদনশীল স্নায়ুরোগের ঔষধ।"
+            }
+            // 20. Oncology & Chemotherapy
+            containsAny(nameLower, "abiraterone", "anastrozole", "afatinib", "tamoxifen", "methotrexate", "imatinib", "erlotinib", "cisplatin", "carboplatin", "cyclophosphamide", "fluorouracil", "doxorubicin") -> {
+                "ক্যান্সার বা টিউমার কোষের অস্বাভাবিক বৃদ্ধি রোধ ও চিকিৎসায় ব্যবহৃত অত্যন্ত সংবেদনশীল অনকোলজি বা কেমোথেরাপির ঔষধ।"
+            }
+            // 21. Anticoagulants & Blood Thinners
+            containsAny(nameLower, "acenocoumarol", "heparin", "warfarin", "enoxaparin", "clopidogrel", "streptokinase", "apixaban", "rivaroxaban", "aspirin 75", "aspirin 150") -> {
+                "রক্তনালীতে ক্ষতিকারক রক্ত জমাট বাঁধা প্রতিরোধ করতে, হার্ট অ্যাটাক বা স্ট্রোকের ঝুঁকি কমাতে ব্যবহৃত রক্ত পাতলাকারী ঔষধ।"
+            }
+            // 22. Diuretics
+            containsAny(nameLower, "acetazolamide", "mannitol", "furosemide", "spironolactone", "hydrochlorothiazide", "diuretic") -> {
+                "শরীরে অতিরিক্ত জমে থাকা পানি বা তরল বের করে দেওয়া, উচ্চ রক্তচাপ এবং চোখের অভ্যন্তরীণ চাপ (গ্লুকোমা) কমাতে ব্যবহৃত মূত্রবর্ধক।"
+            }
+            // 23. Mucolytics & Cough Expectorants
+            containsAny(nameLower, "acetylcysteine", "ambroxol", "bromhexine", "guaifenesin", "carbocisteine", "expectorant", "cough") -> {
+                "বুকের জমাট বাঁধা কফ তরল করে বের করে দেওয়া এবং কফজনিত তীব্র কাশি ও ফুসফুসের শ্বাসনালীর প্রদাহ উপশমে ব্যবহৃত।"
+            }
+            // 24. Antidotes & Poisoning
+            containsAny(nameLower, "charcoal", "atropine", "naloxone", "deferoxamine", "pralidoxime") -> {
+                "শরীরে যেকোনো ধরনের বিষক্রিয়া, ক্ষতিকারক উপাদান শোষণ এবং ঔষধের ওভারডোজের জরুরি চিকিৎসায় ব্যবহৃত জীবনরক্ষাকারী প্রতিষেধক।"
+            }
             // Fallback default Bangla indication
             else -> {
                 "বিএমডিসি নির্দেশিকা অনুযায়ী নির্দিষ্ট শারীরিক উপসর্গ উপশমে চিকিৎসায় ব্যবহৃত ঔষধ।"

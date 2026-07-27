@@ -643,12 +643,23 @@ fun SuggestionTile(med: Medicine, onClick: () -> Unit) {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                DMFText(
-                    text = med.brand,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 14.sp,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    if (!med.dosageForm.isNullOrBlank()) {
+                        Icon(
+                            imageVector = getDosageFormIcon(med.dosageForm),
+                            contentDescription = med.dosageForm,
+                            tint = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.size(16.dp)
+                        )
+                        Spacer(modifier = Modifier.width(6.dp))
+                    }
+                    DMFText(
+                        text = med.brand,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 14.sp,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                }
                 DMFText(
                     text = med.power,
                     fontWeight = FontWeight.Medium,

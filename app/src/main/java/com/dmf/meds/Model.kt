@@ -9,7 +9,9 @@ data class Medicine(
     @SerializedName("brand_name") val brand: String,
     @SerializedName("strength") val power: String,
     @SerializedName("generic") val generic: String,
-    @SerializedName("manufacturer") val manufacturer: String
+    @SerializedName("manufacturer") val manufacturer: String,
+    @SerializedName("dosage_form") val dosageForm: String? = null,
+    @SerializedName("pack_size_info") val packSizeInfo: String? = null
 ) {
     @Transient
     @Volatile
