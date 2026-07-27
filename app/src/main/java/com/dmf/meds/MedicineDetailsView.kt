@@ -36,11 +36,30 @@ data class AssessmentItem(
     val icon: androidx.compose.ui.graphics.vector.ImageVector
 )
 
+fun stripHtml(html: String?): String {
+    if (html == null) return ""
+    return html
+        .replace(Regex("<div[^>]*>"), "")
+        .replace("</div>", "")
+        .replace(Regex("<br\\s*/?>"), "\n")
+        .replace("<ul>", "")
+        .replace("</ul>", "")
+        .replace("<li>", "• ")
+        .replace("</li>", "\n")
+        .replace("&amp;", "&")
+        .replace("&lt;", "<")
+        .replace("&gt;", ">")
+        .replace("&quot;", "\"")
+        .replace("&#39;", "'")
+        .trim()
+}
+
 @Composable
 fun MedicineDetailsView(
     med: Medicine,
     medicines: List<Medicine>,
     genericsMetadata: Map<String, GenericMetadata>,
+    genericDetailsMap: Map<String, GenericDetail>,
     isBangla: Boolean,
     onSelectMedicine: (Medicine) -> Unit
 ) {
@@ -188,6 +207,41 @@ fun MedicineDetailsView(
             ) {
                 items.forEach { item ->
                     UnifiedRemarkRow(item = item, shape = RoundedCornerShape(12.dp))
+                }
+            }
+        }
+
+        // Monograph Details Sections
+        val details = genericDetailsMap[med.generic.lowercase(Locale.ROOT)]
+        if (details != null) {
+            val sections = listOf(
+                "Drug Class" to details.drugClass,
+                "Indication" to (details.indication ?: details.indicationDescription),
+                "Pharmacology" to details.pharmacologyDescription,
+                "Dosage & Administration" to (details.dosageDescription ?: details.administrationDescription),
+                "Interactions" to details.interactionDescription,
+                "Contraindications" to details.contraindicationsDescription,
+                "Side Effects" to details.sideEffectsDescription,
+                "Pregnancy & Lactation" to details.pregnancyAndLactationDescription,
+                "Precautions" to details.precautionsDescription,
+                "Pediatric Usage" to details.pediatricUsageDescription,
+                "Overdose Effects" to details.overdoseEffectsDescription,
+                "Reconstitution" to details.reconstitutionDescription,
+                "Storage Conditions" to details.storageConditionsDescription
+            )
+            sections.forEach { (title, content) ->
+                val stripped = stripHtml(content)
+                if (stripped.isNotEmpty()) {
+                    item {
+                        ExpandableCard(title = title) {
+                            DMFText(
+                                text = stripped,
+                                fontSize = 12.sp,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                lineHeight = 16.sp
+                            )
+                        }
+                    }
                 }
             }
         }

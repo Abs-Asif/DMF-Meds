@@ -479,11 +479,11 @@ def match_otc_rule(g_name_lower):
 
 def main():
     # Load raw data
-    with open('medic-data.json', 'r') as f:
+    with open('medicine_data.json', 'r') as f:
         medic_data = json.load(f)
 
     # Process unique generics
-    unique_g = sorted(list(set(x['g'] for x in medic_data)))
+    unique_g = sorted(list(set(x['generic'] for x in medic_data)))
     print(f"Total Unique Generics: {len(unique_g)}")
 
     processed_generics = {}

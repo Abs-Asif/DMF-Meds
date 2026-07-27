@@ -82,6 +82,7 @@ class MainActivity : ComponentActivity() {
         var medicines by remember { mutableStateOf<List<Medicine>?>(null) }
         var uniqueBrands by remember { mutableStateOf<List<String>?>(null) }
         var genericsMetadata by remember { mutableStateOf<Map<String, GenericMetadata>?>(null) }
+        var genericDetails by remember { mutableStateOf<Map<String, GenericDetail>?>(null) }
         var isLoading by remember { mutableStateOf(true) }
 
         // Load database asynchronously
@@ -91,7 +92,7 @@ class MainActivity : ComponentActivity() {
                     val gson = Gson()
 
                     // 1. Load medicines
-                    val medicStream = assets.open("medic_data.json")
+                    val medicStream = assets.open("medicine_data.json")
                     val reader = InputStreamReader(medicStream)
                     val medicType = object : TypeToken<List<Medicine>>() {}.type
                     val loadedMedicines: List<Medicine> = gson.fromJson(reader, medicType)
@@ -109,10 +110,20 @@ class MainActivity : ComponentActivity() {
                     genericReader.close()
                     genericStream.close()
 
+                    // 3. Load detailed generic information
+                    val genericDetailStream = assets.open("generic_data.json")
+                    val genericDetailReader = InputStreamReader(genericDetailStream)
+                    val genericDetailType = object : TypeToken<List<GenericDetail>>() {}.type
+                    val loadedDetails: List<GenericDetail> = gson.fromJson(genericDetailReader, genericDetailType)
+                    genericDetailReader.close()
+                    genericDetailStream.close()
+                    val detailsMap = loadedDetails.associateBy { it.genericName.lowercase(java.util.Locale.ROOT) }
+
                     // Update state
                     medicines = loadedMedicines
                     uniqueBrands = brands
                     genericsMetadata = loadedGenerics
+                    genericDetails = detailsMap
                 } catch (e: Exception) {
                     e.printStackTrace()
                 } finally {
@@ -121,18 +132,17 @@ class MainActivity : ComponentActivity() {
             }
         }
 
-        if (isLoading || medicines == null || genericsMetadata == null || uniqueBrands == null) {
+        if (isLoading || medicines == null || genericsMetadata == null || uniqueBrands == null || genericDetails == null) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(MaterialTheme.colorScheme.background),
                 contentAlignment = Alignment.Center
             ) {
-                Icon(
-                    imageVector = Icons.Default.MedicalServices,
+                androidx.compose.foundation.Image(
+                    painter = androidx.compose.ui.res.painterResource(id = R.drawable.ic_launcher),
                     contentDescription = "DMF Meds",
-                    tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(96.dp)
+                    modifier = Modifier.size(128.dp)
                 )
             }
         } else {
@@ -213,66 +223,42 @@ class MainActivity : ComponentActivity() {
             Scaffold(
                 bottomBar = {
                     if (!isInteractionCheckerOpen) {
-                        Surface(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 24.dp, vertical = 8.dp),
-                            shape = RoundedCornerShape(24.dp),
-                            color = MaterialTheme.colorScheme.surface.copy(alpha = 0.95f),
-                            tonalElevation = 8.dp,
-                            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.15f))
+                        NavigationBar(
+                            containerColor = MaterialTheme.colorScheme.surface,
+                            tonalElevation = 8.dp
                         ) {
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(vertical = 12.dp, horizontal = 12.dp),
-                                horizontalArrangement = Arrangement.SpaceAround,
-                                verticalAlignment = Alignment.Bottom
-                            ) {
-                                val tabs = listOf(
-                                    Triple(0, Icons.Default.Info, Trans.information(isBangla)),
-                                    Triple(1, Icons.Default.MedicalServices, Trans.medicines(isBangla)),
-                                    Triple(2, Icons.Default.Book, Trans.fatawas(isBangla))
-                                )
+                            val tabs = listOf(
+                                Triple(0, Icons.Default.Info, Trans.information(isBangla)),
+                                Triple(1, Icons.Default.MedicalServices, Trans.medicines(isBangla)),
+                                Triple(2, Icons.Default.Book, Trans.fatawas(isBangla))
+                            )
 
-                                tabs.forEach { (index, icon, label) ->
-                                    val isSelected = selectedTab == index
-                                    val offsetBy by androidx.compose.animation.core.animateDpAsState(
-                                        targetValue = if (isSelected) (-8).dp else 0.dp,
-                                        animationSpec = androidx.compose.animation.core.tween(200),
-                                        label = "nav_offset"
+                            tabs.forEach { (index, icon, label) ->
+                                val isSelected = selectedTab == index
+                                NavigationBarItem(
+                                    selected = isSelected,
+                                    onClick = { selectedTab = index },
+                                    icon = {
+                                        Icon(
+                                            imageVector = icon,
+                                            contentDescription = label,
+                                            modifier = Modifier.size(24.dp)
+                                        )
+                                    },
+                                    label = {
+                                        Text(
+                                            text = label,
+                                            fontSize = 12.sp,
+                                            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium
+                                        )
+                                    },
+                                    colors = NavigationBarItemDefaults.colors(
+                                        selectedIconColor = MaterialTheme.colorScheme.primary,
+                                        selectedTextColor = MaterialTheme.colorScheme.primary,
+                                        unselectedIconColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
+                                        unselectedTextColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
                                     )
-
-                                    Box(
-                                        modifier = Modifier
-                                            .offset(y = offsetBy)
-                                            .clickable(
-                                                interactionSource = remember { androidx.compose.foundation.interaction.MutableInteractionSource() },
-                                                indication = null
-                                            ) { selectedTab = index }
-                                            .padding(horizontal = 12.dp, vertical = 4.dp),
-                                        contentAlignment = Alignment.Center
-                                    ) {
-                                        Column(
-                                            horizontalAlignment = Alignment.CenterHorizontally,
-                                            verticalArrangement = Arrangement.Center
-                                        ) {
-                                            Icon(
-                                                imageVector = icon,
-                                                contentDescription = label,
-                                                tint = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
-                                                modifier = Modifier.size(24.dp)
-                                            )
-                                            Spacer(modifier = Modifier.height(4.dp))
-                                            Text(
-                                                text = label,
-                                                fontSize = 11.sp,
-                                                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
-                                                color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
-                                            )
-                                        }
-                                    }
-                                }
+                                )
                             }
                         }
                     }
@@ -297,6 +283,7 @@ class MainActivity : ComponentActivity() {
                                 medicines = medicines!!,
                                 uniqueBrands = uniqueBrands!!,
                                 genericsMetadata = genericsMetadata!!,
+                                genericDetails = genericDetails!!,
                                 isBangla = isBangla,
                                 isSearchFocused = isSearchActive,
                                 onSearchFocusedChange = { isSearchActive = it },
