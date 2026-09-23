@@ -156,7 +156,12 @@ fun MedicineScreen(
     onSearchFocusedChange: (Boolean) -> Unit,
     queryState: MutableState<String>,
     selectedMedicineState: MutableState<Medicine?>,
-    onOpenInteractionChecker: () -> Unit
+    onOpenInteractionChecker: () -> Unit,
+    lastUpdatedDate: String = "Default Database",
+    isUpdating: Boolean = false,
+    updateProgress: Float = 0f,
+    updateError: String? = null,
+    onTriggerUpdate: () -> Unit = {}
 ) {
     var query by queryState
     var selectedMedicine by selectedMedicineState
@@ -580,7 +585,7 @@ fun MedicineScreen(
 
                             Spacer(modifier = Modifier.height(32.dp))
 
-                            // Citation & Updated Info
+                            // Citation & Updated Info with Progress Bar & Sync Icon
                             Card(
                                 modifier = Modifier.fillMaxWidth(),
                                 shape = RoundedCornerShape(16.dp),
@@ -595,19 +600,76 @@ fun MedicineScreen(
                                         .padding(16.dp),
                                     horizontalAlignment = Alignment.CenterHorizontally
                                 ) {
-                                    Icon(
-                                        imageVector = Icons.Default.Update,
-                                        contentDescription = null,
-                                        tint = MaterialTheme.colorScheme.primary,
-                                        modifier = Modifier.size(24.dp)
-                                    )
-                                    Spacer(modifier = Modifier.height(8.dp))
-                                    DMFText(
-                                        text = "Database Updated: July 2026",
-                                        fontSize = 13.sp,
-                                        fontWeight = FontWeight.Bold,
-                                        color = MaterialTheme.colorScheme.onSurface
-                                    )
+                                    Row(
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        horizontalArrangement = Arrangement.Center
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Default.Update,
+                                            contentDescription = null,
+                                            tint = MaterialTheme.colorScheme.primary,
+                                            modifier = Modifier.size(24.dp)
+                                        )
+                                        Spacer(modifier = Modifier.width(8.dp))
+                                        DMFText(
+                                            text = "Database Updated: $lastUpdatedDate",
+                                            fontSize = 13.sp,
+                                            fontWeight = FontWeight.Bold,
+                                            color = MaterialTheme.colorScheme.onSurface
+                                        )
+                                        Spacer(modifier = Modifier.width(4.dp))
+                                        IconButton(
+                                            onClick = onTriggerUpdate,
+                                            enabled = !isUpdating,
+                                            modifier = Modifier.size(32.dp)
+                                        ) {
+                                            if (isUpdating) {
+                                                CircularProgressIndicator(
+                                                    modifier = Modifier.size(18.dp),
+                                                    strokeWidth = 2.dp,
+                                                    color = MaterialTheme.colorScheme.primary
+                                                )
+                                            } else {
+                                                Icon(
+                                                    imageVector = Icons.Default.Refresh,
+                                                    contentDescription = "Update Database",
+                                                    tint = MaterialTheme.colorScheme.primary,
+                                                    modifier = Modifier.size(20.dp)
+                                                )
+                                            }
+                                        }
+                                    }
+
+                                    if (isUpdating) {
+                                        Spacer(modifier = Modifier.height(8.dp))
+                                        LinearProgressIndicator(
+                                            progress = { updateProgress },
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .height(6.dp)
+                                                .padding(horizontal = 16.dp),
+                                            color = MaterialTheme.colorScheme.primary,
+                                            trackColor = MaterialTheme.colorScheme.surfaceVariant
+                                        )
+                                        Spacer(modifier = Modifier.height(4.dp))
+                                        DMFText(
+                                            text = "Downloading update... ${(updateProgress * 100).toInt()}%",
+                                            fontSize = 11.sp,
+                                            color = MaterialTheme.colorScheme.primary,
+                                            fontWeight = FontWeight.Medium
+                                        )
+                                    }
+
+                                    if (updateError != null) {
+                                        Spacer(modifier = Modifier.height(4.dp))
+                                        DMFText(
+                                            text = updateError,
+                                            fontSize = 11.sp,
+                                            color = MaterialTheme.colorScheme.error,
+                                            fontWeight = FontWeight.Medium
+                                        )
+                                    }
+
                                     Spacer(modifier = Modifier.height(4.dp))
                                     DMFText(
                                         text = "Made by Abdullah Bari",

@@ -46,9 +46,7 @@ enum class ArticleType {
     WEBVIEW,
     BMDC_ACT,
     APPROVED_LIST,
-    OTC_LIST,
-    ANTIBIOTIC_LIST,
-    WHO_ESSENTIAL_LIST
+    OTC_LIST
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -90,18 +88,6 @@ fun InfoScreen() {
                 descriptionKey = { Trans.otcListDesc(it) },
                 isArticle = true,
                 articleType = ArticleType.OTC_LIST
-            ),
-            InfoLink(
-                titleKey = { if (it) "অ্যান্টিবায়োটিক নির্দেশিকা" else "Antibiotic Guidelines" },
-                descriptionKey = { if (it) "বিএমডিসি অনুমোদিত এবং বহুল ব্যবহৃত অ্যান্টিবায়োটিকসমূহের তালিকা" else "BM&DC approved and common antibiotics reference guide" },
-                isArticle = true,
-                articleType = ArticleType.ANTIBIOTIC_LIST
-            ),
-            InfoLink(
-                titleKey = { if (it) "ডব্লিউএইচও অত্যাবশ্যকীয় ঔষধ" else "WHO Essential Medicines" },
-                descriptionKey = { if (it) "বিশ্ব স্বাস্থ্য সংস্থা (WHO) অনুমোদিত অত্যাবশ্যকীয় ঔষধের বৈশ্বিক তালিকা" else "World Health Organization list of essential medicines" },
-                isArticle = true,
-                articleType = ArticleType.WHO_ESSENTIAL_LIST
             )
         )
     }
@@ -148,12 +134,6 @@ fun InfoScreen() {
                 }
                 ArticleType.OTC_LIST -> {
                     DrugListArticleView(filename = "OTC.txt", isAntibioticList = false)
-                }
-                ArticleType.ANTIBIOTIC_LIST -> {
-                    DrugListArticleView(filename = "antibiotics.txt", isAntibioticList = true)
-                }
-                ArticleType.WHO_ESSENTIAL_LIST -> {
-                    DrugListArticleView(filename = "who_essential_medicines.txt", isAntibioticList = false)
                 }
                 else -> {}
             }

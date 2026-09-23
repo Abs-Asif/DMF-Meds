@@ -5,6 +5,24 @@ import java.util.Locale
 import kotlin.jvm.Transient
 import kotlin.jvm.Volatile
 
+data class RemoteMedicine(
+    @SerializedName("brand_name") val brandName: String,
+    @SerializedName("power") val power: String,
+    @SerializedName("generic_names") val genericNames: List<String> = emptyList(),
+    @SerializedName("manufacturer") val manufacturer: String,
+    @SerializedName("dosage_form") val dosageForm: String? = null
+) {
+    fun toMedicine(): Medicine {
+        return Medicine(
+            brand = brandName,
+            power = power,
+            generic = genericNames.joinToString(" + "),
+            manufacturer = manufacturer,
+            dosageForm = dosageForm
+        )
+    }
+}
+
 data class Medicine(
     @SerializedName("brand_name") val brand: String,
     @SerializedName("strength") val power: String,
