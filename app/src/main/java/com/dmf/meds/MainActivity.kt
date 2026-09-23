@@ -85,19 +85,50 @@ class MainActivity : ComponentActivity() {
         var genericDetails by remember { mutableStateOf<Map<String, GenericDetail>?>(null) }
         var isLoading by remember { mutableStateOf(true) }
 
+        // Update states
+        val context = androidx.compose.ui.platform.LocalContext.current
+        val coroutineScope = rememberCoroutineScope()
+        var lastUpdatedDate by remember { mutableStateOf(DatabaseManager.getLastUpdatedDate(context)) }
+        var isUpdating by remember { mutableStateOf(false) }
+        var updateProgress by remember { java.lang.Float.valueOf(0f); mutableFloatStateOf(0f) }
+        var updateError by remember { mutableStateOf<String?>(null) }
+        var showSaturdayPrompt by remember { mutableStateOf(false) }
+
+        fun triggerDatabaseUpdate() {
+            if (isUpdating) return
+            isUpdating = true
+            updateProgress = 0f
+            updateError = null
+            coroutineScope.launch(Dispatchers.IO) {
+                val result = DatabaseManager.downloadLatestDatabase(context) { progress ->
+                    coroutineScope.launch(Dispatchers.Main) {
+                        updateProgress = progress
+                    }
+                }
+                withContext(Dispatchers.Main) {
+                    isUpdating = false
+                    result.fold(
+                        onSuccess = { updatedMeds ->
+                            medicines = updatedMeds
+                            uniqueBrands = updatedMeds.map { it.brand }.distinct().sorted()
+                            lastUpdatedDate = DatabaseManager.getLastUpdatedDate(context)
+                        },
+                        onFailure = { error ->
+                            updateError = error.localizedMessage ?: "Failed to update database"
+                        }
+                    )
+                }
+            }
+        }
+
         // Load database asynchronously
         LaunchedEffect(Unit) {
             withContext(Dispatchers.IO) {
                 try {
                     val gson = Gson()
 
-                    // 1. Load medicines
-                    val medicStream = assets.open("medicine_data.json")
-                    val reader = InputStreamReader(medicStream)
-                    val medicType = object : TypeToken<List<Medicine>>() {}.type
-                    val loadedMedicines: List<Medicine> = gson.fromJson(reader, medicType)
-                    reader.close()
-                    medicStream.close()
+                    // 1. Load medicines using DatabaseManager (from list.json or asset fallback)
+                    val loadedMedicines: List<Medicine> = DatabaseManager.loadMedicines(context)
 
                     // Extract unique brands for Levenshtein fallback matching
                     val brands = loadedMedicines.map { it.brand }.distinct().sorted()
@@ -124,12 +155,65 @@ class MainActivity : ComponentActivity() {
                     uniqueBrands = brands
                     genericsMetadata = loadedGenerics
                     genericDetails = detailsMap
+
+                    // Check Saturday automatic update prompt
+                    if (DatabaseManager.shouldPromptSaturdayUpdate(context)) {
+                        withContext(Dispatchers.Main) {
+                            showSaturdayPrompt = true
+                        }
+                    }
                 } catch (e: Exception) {
                     e.printStackTrace()
                 } finally {
                     isLoading = false
                 }
             }
+        }
+
+        // Saturday Update Dialog Prompt
+        if (showSaturdayPrompt) {
+            AlertDialog(
+                onDismissRequest = {
+                    showSaturdayPrompt = false
+                    DatabaseManager.markSaturdayPrompted(context)
+                },
+                title = {
+                    Text(
+                        text = "Weekly Database Update",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 18.sp
+                    )
+                },
+                text = {
+                    Text(
+                        text = "It's Saturday! A new database update is available. Would you like to update the medicine list now?",
+                        fontSize = 14.sp
+                    )
+                },
+                confirmButton = {
+                    TextButton(
+                        onClick = {
+                            showSaturdayPrompt = false
+                            triggerDatabaseUpdate()
+                        }
+                    ) {
+                        Text("Update Now", fontWeight = FontWeight.Bold)
+                    }
+                },
+                dismissButton = {
+                    TextButton(
+                        onClick = {
+                            showSaturdayPrompt = false
+                            DatabaseManager.markSaturdayPrompted(context)
+                        }
+                    ) {
+                        Text("Later")
+                    }
+                },
+                containerColor = MaterialTheme.colorScheme.surface,
+                textContentColor = MaterialTheme.colorScheme.onSurface,
+                titleContentColor = MaterialTheme.colorScheme.onSurface
+            )
         }
 
         if (isLoading || medicines == null || genericsMetadata == null || uniqueBrands == null || genericDetails == null) {
@@ -289,7 +373,12 @@ class MainActivity : ComponentActivity() {
                                 onSearchFocusedChange = { isSearchActive = it },
                                 queryState = queryState,
                                 selectedMedicineState = selectedMedicineState,
-                                onOpenInteractionChecker = { isInteractionCheckerOpen = true }
+                                onOpenInteractionChecker = { isInteractionCheckerOpen = true },
+                                lastUpdatedDate = lastUpdatedDate,
+                                isUpdating = isUpdating,
+                                updateProgress = updateProgress,
+                                updateError = updateError,
+                                onTriggerUpdate = { triggerDatabaseUpdate() }
                             )
                             2 -> FatawasScreen()
                         }

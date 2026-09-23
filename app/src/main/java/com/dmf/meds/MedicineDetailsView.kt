@@ -226,44 +226,6 @@ fun MedicineDetailsView(
                         color = MaterialTheme.colorScheme.onSurface
                     )
 
-                    // Price & Calculation
-                    val priceResults = remember(med.packSizeInfo) {
-                        parsePriceCalculation(med.packSizeInfo)
-                    }
-                    if (priceResults.isNotEmpty() || !med.packSizeInfo.isNullOrBlank()) {
-                        Spacer(modifier = Modifier.height(12.dp))
-                        DMFText(
-                            text = "Price Info",
-                            fontSize = 11.sp,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
-                            fontWeight = FontWeight.SemiBold
-                        )
-                        if (priceResults.isEmpty()) {
-                            DMFText(
-                                text = med.packSizeInfo ?: "",
-                                fontSize = 13.sp,
-                                fontWeight = FontWeight.Medium,
-                                color = MaterialTheme.colorScheme.onSurface
-                            )
-                        } else {
-                            priceResults.forEach { result ->
-                                Column(modifier = Modifier.padding(vertical = 2.dp)) {
-                                    DMFText(
-                                        text = "Pack: (${result.packText}) - ৳ ${String.format(Locale.ROOT, "%.2f", result.totalPrice)}",
-                                        fontSize = 13.sp,
-                                        fontWeight = FontWeight.Bold,
-                                        color = MaterialTheme.colorScheme.onSurface
-                                    )
-                                    DMFText(
-                                        text = "Calculation: ${result.formattedCalculation}",
-                                        fontSize = 11.sp,
-                                        color = MaterialTheme.colorScheme.primary,
-                                        fontWeight = FontWeight.Medium
-                                    )
-                                }
-                            }
-                        }
-                    }
                 }
             }
         }
